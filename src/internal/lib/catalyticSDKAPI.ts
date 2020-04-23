@@ -20,315 +20,77 @@ class CatalyticSDKAPI extends CatalyticSDKAPIContext {
   }
 
   /**
-   * @summary Find Actions
+   * @summary Create new Credentials in the provided Catalytic team domain.
+   * Credentials must be approved prior to use.
    * @param [options] The optional parameters
-   * @returns Promise<Models.FindActionsResponse>
+   * @returns Promise<Models.CreateCredentialsResponse>
    */
-  findActions(options?: Models.CatalyticSDKAPIFindActionsOptionalParams): Promise<Models.FindActionsResponse>;
+  createCredentials(options?: Models.CatalyticSDKAPICreateCredentialsOptionalParams): Promise<Models.CreateCredentialsResponse>;
   /**
    * @param callback The callback
    */
-  findActions(callback: msRest.ServiceCallback<any>): void;
+  createCredentials(callback: msRest.ServiceCallback<any>): void;
   /**
    * @param options The optional parameters
    * @param callback The callback
    */
-  findActions(options: Models.CatalyticSDKAPIFindActionsOptionalParams, callback: msRest.ServiceCallback<any>): void;
-  findActions(options?: Models.CatalyticSDKAPIFindActionsOptionalParams | msRest.ServiceCallback<any>, callback?: msRest.ServiceCallback<any>): Promise<Models.FindActionsResponse> {
+  createCredentials(options: Models.CatalyticSDKAPICreateCredentialsOptionalParams, callback: msRest.ServiceCallback<any>): void;
+  createCredentials(options?: Models.CatalyticSDKAPICreateCredentialsOptionalParams | msRest.ServiceCallback<any>, callback?: msRest.ServiceCallback<any>): Promise<Models.CreateCredentialsResponse> {
     return this.sendOperationRequest(
       {
         options
       },
-      findActionsOperationSpec,
-      callback) as Promise<Models.FindActionsResponse>;
+      createCredentialsOperationSpec,
+      callback) as Promise<Models.CreateCredentialsResponse>;
   }
 
   /**
-   * @summary Define a new Action
+   * @summary Create new Credentials using provided Catalytic team domain and Approve using provided
+   * email and password.
    * @param [options] The optional parameters
-   * @returns Promise<Models.CreateActionResponse>
+   * @returns Promise<Models.CreateAndApproveCredentialsResponse>
    */
-  createAction(options?: Models.CatalyticSDKAPICreateActionOptionalParams): Promise<Models.CreateActionResponse>;
+  createAndApproveCredentials(options?: Models.CatalyticSDKAPICreateAndApproveCredentialsOptionalParams): Promise<Models.CreateAndApproveCredentialsResponse>;
   /**
    * @param callback The callback
    */
-  createAction(callback: msRest.ServiceCallback<any>): void;
+  createAndApproveCredentials(callback: msRest.ServiceCallback<any>): void;
   /**
    * @param options The optional parameters
    * @param callback The callback
    */
-  createAction(options: Models.CatalyticSDKAPICreateActionOptionalParams, callback: msRest.ServiceCallback<any>): void;
-  createAction(options?: Models.CatalyticSDKAPICreateActionOptionalParams | msRest.ServiceCallback<any>, callback?: msRest.ServiceCallback<any>): Promise<Models.CreateActionResponse> {
+  createAndApproveCredentials(options: Models.CatalyticSDKAPICreateAndApproveCredentialsOptionalParams, callback: msRest.ServiceCallback<any>): void;
+  createAndApproveCredentials(options?: Models.CatalyticSDKAPICreateAndApproveCredentialsOptionalParams | msRest.ServiceCallback<any>, callback?: msRest.ServiceCallback<any>): Promise<Models.CreateAndApproveCredentialsResponse> {
     return this.sendOperationRequest(
       {
         options
       },
-      createActionOperationSpec,
-      callback) as Promise<Models.CreateActionResponse>;
+      createAndApproveCredentialsOperationSpec,
+      callback) as Promise<Models.CreateAndApproveCredentialsResponse>;
   }
 
   /**
-   * @summary Gets details of a specific Action definition
-   * @param id The ID of the Action to get
+   * @summary Wait until Credentials are approved
    * @param [options] The optional parameters
-   * @returns Promise<Models.GetActionResponse>
+   * @returns Promise<Models.WaitForCredentialsApprovalResponse>
    */
-  getAction(id: string, options?: msRest.RequestOptionsBase): Promise<Models.GetActionResponse>;
-  /**
-   * @param id The ID of the Action to get
-   * @param callback The callback
-   */
-  getAction(id: string, callback: msRest.ServiceCallback<any>): void;
-  /**
-   * @param id The ID of the Action to get
-   * @param options The optional parameters
-   * @param callback The callback
-   */
-  getAction(id: string, options: msRest.RequestOptionsBase, callback: msRest.ServiceCallback<any>): void;
-  getAction(id: string, options?: msRest.RequestOptionsBase | msRest.ServiceCallback<any>, callback?: msRest.ServiceCallback<any>): Promise<Models.GetActionResponse> {
-    return this.sendOperationRequest(
-      {
-        id,
-        options
-      },
-      getActionOperationSpec,
-      callback) as Promise<Models.GetActionResponse>;
-  }
-
-  /**
-   * @summary Deletes a specific Action definition
-   * @param id The ID of the Action to delete
-   * @param [options] The optional parameters
-   * @returns Promise<Models.DeleteActionResponse>
-   */
-  deleteAction(id: string, options?: msRest.RequestOptionsBase): Promise<Models.DeleteActionResponse>;
-  /**
-   * @param id The ID of the Action to delete
-   * @param callback The callback
-   */
-  deleteAction(id: string, callback: msRest.ServiceCallback<any>): void;
-  /**
-   * @param id The ID of the Action to delete
-   * @param options The optional parameters
-   * @param callback The callback
-   */
-  deleteAction(id: string, options: msRest.RequestOptionsBase, callback: msRest.ServiceCallback<any>): void;
-  deleteAction(id: string, options?: msRest.RequestOptionsBase | msRest.ServiceCallback<any>, callback?: msRest.ServiceCallback<any>): Promise<Models.DeleteActionResponse> {
-    return this.sendOperationRequest(
-      {
-        id,
-        options
-      },
-      deleteActionOperationSpec,
-      callback) as Promise<Models.DeleteActionResponse>;
-  }
-
-  /**
-   * @summary Update an Action
-   * @param id The id of the action to update
-   * @param [options] The optional parameters
-   * @returns Promise<Models.UpdateActionResponse>
-   */
-  updateAction(id: string, options?: Models.CatalyticSDKAPIUpdateActionOptionalParams): Promise<Models.UpdateActionResponse>;
-  /**
-   * @param id The id of the action to update
-   * @param callback The callback
-   */
-  updateAction(id: string, callback: msRest.ServiceCallback<any>): void;
-  /**
-   * @param id The id of the action to update
-   * @param options The optional parameters
-   * @param callback The callback
-   */
-  updateAction(id: string, options: Models.CatalyticSDKAPIUpdateActionOptionalParams, callback: msRest.ServiceCallback<any>): void;
-  updateAction(id: string, options?: Models.CatalyticSDKAPIUpdateActionOptionalParams | msRest.ServiceCallback<any>, callback?: msRest.ServiceCallback<any>): Promise<Models.UpdateActionResponse> {
-    return this.sendOperationRequest(
-      {
-        id,
-        options
-      },
-      updateActionOperationSpec,
-      callback) as Promise<Models.UpdateActionResponse>;
-  }
-
-  /**
-   * @summary Find ActionWorkers
-   * @param [options] The optional parameters
-   * @returns Promise<Models.FindActionWorkersResponse>
-   */
-  findActionWorkers(options?: Models.CatalyticSDKAPIFindActionWorkersOptionalParams): Promise<Models.FindActionWorkersResponse>;
+  waitForCredentialsApproval(options?: Models.CatalyticSDKAPIWaitForCredentialsApprovalOptionalParams): Promise<Models.WaitForCredentialsApprovalResponse>;
   /**
    * @param callback The callback
    */
-  findActionWorkers(callback: msRest.ServiceCallback<any>): void;
+  waitForCredentialsApproval(callback: msRest.ServiceCallback<any>): void;
   /**
    * @param options The optional parameters
    * @param callback The callback
    */
-  findActionWorkers(options: Models.CatalyticSDKAPIFindActionWorkersOptionalParams, callback: msRest.ServiceCallback<any>): void;
-  findActionWorkers(options?: Models.CatalyticSDKAPIFindActionWorkersOptionalParams | msRest.ServiceCallback<any>, callback?: msRest.ServiceCallback<any>): Promise<Models.FindActionWorkersResponse> {
+  waitForCredentialsApproval(options: Models.CatalyticSDKAPIWaitForCredentialsApprovalOptionalParams, callback: msRest.ServiceCallback<any>): void;
+  waitForCredentialsApproval(options?: Models.CatalyticSDKAPIWaitForCredentialsApprovalOptionalParams | msRest.ServiceCallback<any>, callback?: msRest.ServiceCallback<any>): Promise<Models.WaitForCredentialsApprovalResponse> {
     return this.sendOperationRequest(
       {
         options
       },
-      findActionWorkersOperationSpec,
-      callback) as Promise<Models.FindActionWorkersResponse>;
-  }
-
-  /**
-   * @summary Define a new Action Worker
-   * @param [options] The optional parameters
-   * @returns Promise<Models.CreateActionWorkerResponse>
-   */
-  createActionWorker(options?: Models.CatalyticSDKAPICreateActionWorkerOptionalParams): Promise<Models.CreateActionWorkerResponse>;
-  /**
-   * @param callback The callback
-   */
-  createActionWorker(callback: msRest.ServiceCallback<any>): void;
-  /**
-   * @param options The optional parameters
-   * @param callback The callback
-   */
-  createActionWorker(options: Models.CatalyticSDKAPICreateActionWorkerOptionalParams, callback: msRest.ServiceCallback<any>): void;
-  createActionWorker(options?: Models.CatalyticSDKAPICreateActionWorkerOptionalParams | msRest.ServiceCallback<any>, callback?: msRest.ServiceCallback<any>): Promise<Models.CreateActionWorkerResponse> {
-    return this.sendOperationRequest(
-      {
-        options
-      },
-      createActionWorkerOperationSpec,
-      callback) as Promise<Models.CreateActionWorkerResponse>;
-  }
-
-  /**
-   * @summary Gets details of a specific Action Worker
-   * @param id The ID of the Action Worker to get
-   * @param [options] The optional parameters
-   * @returns Promise<Models.GetActionWorkerResponse>
-   */
-  getActionWorker(id: string, options?: msRest.RequestOptionsBase): Promise<Models.GetActionWorkerResponse>;
-  /**
-   * @param id The ID of the Action Worker to get
-   * @param callback The callback
-   */
-  getActionWorker(id: string, callback: msRest.ServiceCallback<any>): void;
-  /**
-   * @param id The ID of the Action Worker to get
-   * @param options The optional parameters
-   * @param callback The callback
-   */
-  getActionWorker(id: string, options: msRest.RequestOptionsBase, callback: msRest.ServiceCallback<any>): void;
-  getActionWorker(id: string, options?: msRest.RequestOptionsBase | msRest.ServiceCallback<any>, callback?: msRest.ServiceCallback<any>): Promise<Models.GetActionWorkerResponse> {
-    return this.sendOperationRequest(
-      {
-        id,
-        options
-      },
-      getActionWorkerOperationSpec,
-      callback) as Promise<Models.GetActionWorkerResponse>;
-  }
-
-  /**
-   * @summary Deletes a specific Action Worker
-   * @param id The ID of the Action Worker to delete
-   * @param [options] The optional parameters
-   * @returns Promise<Models.DeleteActionWorkerResponse>
-   */
-  deleteActionWorker(id: string, options?: msRest.RequestOptionsBase): Promise<Models.DeleteActionWorkerResponse>;
-  /**
-   * @param id The ID of the Action Worker to delete
-   * @param callback The callback
-   */
-  deleteActionWorker(id: string, callback: msRest.ServiceCallback<any>): void;
-  /**
-   * @param id The ID of the Action Worker to delete
-   * @param options The optional parameters
-   * @param callback The callback
-   */
-  deleteActionWorker(id: string, options: msRest.RequestOptionsBase, callback: msRest.ServiceCallback<any>): void;
-  deleteActionWorker(id: string, options?: msRest.RequestOptionsBase | msRest.ServiceCallback<any>, callback?: msRest.ServiceCallback<any>): Promise<Models.DeleteActionWorkerResponse> {
-    return this.sendOperationRequest(
-      {
-        id,
-        options
-      },
-      deleteActionWorkerOperationSpec,
-      callback) as Promise<Models.DeleteActionWorkerResponse>;
-  }
-
-  /**
-   * @summary Update an Action Worker
-   * @param id The id of the action worker to update
-   * @param [options] The optional parameters
-   * @returns Promise<Models.UpdateActionWorkerResponse>
-   */
-  updateActionWorker(id: string, options?: Models.CatalyticSDKAPIUpdateActionWorkerOptionalParams): Promise<Models.UpdateActionWorkerResponse>;
-  /**
-   * @param id The id of the action worker to update
-   * @param callback The callback
-   */
-  updateActionWorker(id: string, callback: msRest.ServiceCallback<any>): void;
-  /**
-   * @param id The id of the action worker to update
-   * @param options The optional parameters
-   * @param callback The callback
-   */
-  updateActionWorker(id: string, options: Models.CatalyticSDKAPIUpdateActionWorkerOptionalParams, callback: msRest.ServiceCallback<any>): void;
-  updateActionWorker(id: string, options?: Models.CatalyticSDKAPIUpdateActionWorkerOptionalParams | msRest.ServiceCallback<any>, callback?: msRest.ServiceCallback<any>): Promise<Models.UpdateActionWorkerResponse> {
-    return this.sendOperationRequest(
-      {
-        id,
-        options
-      },
-      updateActionWorkerOperationSpec,
-      callback) as Promise<Models.UpdateActionWorkerResponse>;
-  }
-
-  /**
-   * @summary Create a new Developer Key
-   * @param [options] The optional parameters
-   * @returns Promise<Models.CreateDeveloperKeyResponse>
-   */
-  createDeveloperKey(options?: Models.CatalyticSDKAPICreateDeveloperKeyOptionalParams): Promise<Models.CreateDeveloperKeyResponse>;
-  /**
-   * @param callback The callback
-   */
-  createDeveloperKey(callback: msRest.ServiceCallback<any>): void;
-  /**
-   * @param options The optional parameters
-   * @param callback The callback
-   */
-  createDeveloperKey(options: Models.CatalyticSDKAPICreateDeveloperKeyOptionalParams, callback: msRest.ServiceCallback<any>): void;
-  createDeveloperKey(options?: Models.CatalyticSDKAPICreateDeveloperKeyOptionalParams | msRest.ServiceCallback<any>, callback?: msRest.ServiceCallback<any>): Promise<Models.CreateDeveloperKeyResponse> {
-    return this.sendOperationRequest(
-      {
-        options
-      },
-      createDeveloperKeyOperationSpec,
-      callback) as Promise<Models.CreateDeveloperKeyResponse>;
-  }
-
-  /**
-   * @summary Wait until Developer Key is in approved state, the activate Developer Key
-   * @param [options] The optional parameters
-   * @returns Promise<Models.WaitForDeveloperKeyActivationResponse>
-   */
-  waitForDeveloperKeyActivation(options?: Models.CatalyticSDKAPIWaitForDeveloperKeyActivationOptionalParams): Promise<Models.WaitForDeveloperKeyActivationResponse>;
-  /**
-   * @param callback The callback
-   */
-  waitForDeveloperKeyActivation(callback: msRest.ServiceCallback<any>): void;
-  /**
-   * @param options The optional parameters
-   * @param callback The callback
-   */
-  waitForDeveloperKeyActivation(options: Models.CatalyticSDKAPIWaitForDeveloperKeyActivationOptionalParams, callback: msRest.ServiceCallback<any>): void;
-  waitForDeveloperKeyActivation(options?: Models.CatalyticSDKAPIWaitForDeveloperKeyActivationOptionalParams | msRest.ServiceCallback<any>, callback?: msRest.ServiceCallback<any>): Promise<Models.WaitForDeveloperKeyActivationResponse> {
-    return this.sendOperationRequest(
-      {
-        options
-      },
-      waitForDeveloperKeyActivationOperationSpec,
-      callback) as Promise<Models.WaitForDeveloperKeyActivationResponse>;
+      waitForCredentialsApprovalOperationSpec,
+      callback) as Promise<Models.WaitForCredentialsApprovalResponse>;
   }
 
   /**
@@ -388,6 +150,34 @@ class CatalyticSDKAPI extends CatalyticSDKAPIContext {
   }
 
   /**
+   * @summary Replace a Data Table with contents from a CSV or Excel file
+   * @param id The ID of the Data Table to download
+   * @param [options] The optional parameters
+   * @returns Promise<Models.ReplaceDataTableResponse>
+   */
+  replaceDataTable(id: string, options?: Models.CatalyticSDKAPIReplaceDataTableOptionalParams): Promise<Models.ReplaceDataTableResponse>;
+  /**
+   * @param id The ID of the Data Table to download
+   * @param callback The callback
+   */
+  replaceDataTable(id: string, callback: msRest.ServiceCallback<any>): void;
+  /**
+   * @param id The ID of the Data Table to download
+   * @param options The optional parameters
+   * @param callback The callback
+   */
+  replaceDataTable(id: string, options: Models.CatalyticSDKAPIReplaceDataTableOptionalParams, callback: msRest.ServiceCallback<any>): void;
+  replaceDataTable(id: string, options?: Models.CatalyticSDKAPIReplaceDataTableOptionalParams | msRest.ServiceCallback<any>, callback?: msRest.ServiceCallback<any>): Promise<Models.ReplaceDataTableResponse> {
+    return this.sendOperationRequest(
+      {
+        id,
+        options
+      },
+      replaceDataTableOperationSpec,
+      callback) as Promise<Models.ReplaceDataTableResponse>;
+  }
+
+  /**
    * @summary Upload a csv or excel file to create a data table
    * @param [options] The optional parameters
    * @returns Promise<Models.UploadDataTableResponse>
@@ -433,58 +223,6 @@ class CatalyticSDKAPI extends CatalyticSDKAPIContext {
       },
       findDataTablesOperationSpec,
       callback) as Promise<Models.FindDataTablesResponse>;
-  }
-
-  /**
-   * @summary Find Developer Keys
-   * @param [options] The optional parameters
-   * @returns Promise<Models.FindDeveloperKeysResponse>
-   */
-  findDeveloperKeys(options?: Models.CatalyticSDKAPIFindDeveloperKeysOptionalParams): Promise<Models.FindDeveloperKeysResponse>;
-  /**
-   * @param callback The callback
-   */
-  findDeveloperKeys(callback: msRest.ServiceCallback<any>): void;
-  /**
-   * @param options The optional parameters
-   * @param callback The callback
-   */
-  findDeveloperKeys(options: Models.CatalyticSDKAPIFindDeveloperKeysOptionalParams, callback: msRest.ServiceCallback<any>): void;
-  findDeveloperKeys(options?: Models.CatalyticSDKAPIFindDeveloperKeysOptionalParams | msRest.ServiceCallback<any>, callback?: msRest.ServiceCallback<any>): Promise<Models.FindDeveloperKeysResponse> {
-    return this.sendOperationRequest(
-      {
-        options
-      },
-      findDeveloperKeysOperationSpec,
-      callback) as Promise<Models.FindDeveloperKeysResponse>;
-  }
-
-  /**
-   * @summary Revoke Developer Key
-   * @param accessIdentifier The public Access Identifier of the Developer Key
-   * @param [options] The optional parameters
-   * @returns Promise<Models.RevokeDeveloperKeyResponse>
-   */
-  revokeDeveloperKey(accessIdentifier: string, options?: msRest.RequestOptionsBase): Promise<Models.RevokeDeveloperKeyResponse>;
-  /**
-   * @param accessIdentifier The public Access Identifier of the Developer Key
-   * @param callback The callback
-   */
-  revokeDeveloperKey(accessIdentifier: string, callback: msRest.ServiceCallback<any>): void;
-  /**
-   * @param accessIdentifier The public Access Identifier of the Developer Key
-   * @param options The optional parameters
-   * @param callback The callback
-   */
-  revokeDeveloperKey(accessIdentifier: string, options: msRest.RequestOptionsBase, callback: msRest.ServiceCallback<any>): void;
-  revokeDeveloperKey(accessIdentifier: string, options?: msRest.RequestOptionsBase | msRest.ServiceCallback<any>, callback?: msRest.ServiceCallback<any>): Promise<Models.RevokeDeveloperKeyResponse> {
-    return this.sendOperationRequest(
-      {
-        accessIdentifier,
-        options
-      },
-      revokeDeveloperKeyOperationSpec,
-      callback) as Promise<Models.RevokeDeveloperKeyResponse>;
   }
 
   /**
@@ -565,30 +303,6 @@ class CatalyticSDKAPI extends CatalyticSDKAPIContext {
       },
       uploadFilesOperationSpec,
       callback) as Promise<Models.UploadFilesResponse>;
-  }
-
-  /**
-   * @summary Find Files
-   * @param [options] The optional parameters
-   * @returns Promise<Models.FindFilesResponse>
-   */
-  findFiles(options?: Models.CatalyticSDKAPIFindFilesOptionalParams): Promise<Models.FindFilesResponse>;
-  /**
-   * @param callback The callback
-   */
-  findFiles(callback: msRest.ServiceCallback<any>): void;
-  /**
-   * @param options The optional parameters
-   * @param callback The callback
-   */
-  findFiles(options: Models.CatalyticSDKAPIFindFilesOptionalParams, callback: msRest.ServiceCallback<any>): void;
-  findFiles(options?: Models.CatalyticSDKAPIFindFilesOptionalParams | msRest.ServiceCallback<any>, callback?: msRest.ServiceCallback<any>): Promise<Models.FindFilesResponse> {
-    return this.sendOperationRequest(
-      {
-        options
-      },
-      findFilesOperationSpec,
-      callback) as Promise<Models.FindFilesResponse>;
   }
 
   /**
@@ -884,137 +598,364 @@ class CatalyticSDKAPI extends CatalyticSDKAPIContext {
   }
 
   /**
-   * @summary Find Pushbots
+   * @summary Find User Tokens
    * @param [options] The optional parameters
-   * @returns Promise<Models.FindPushbotsResponse>
+   * @returns Promise<Models.FindCredentialsResponse>
    */
-  findPushbots(options?: Models.CatalyticSDKAPIFindPushbotsOptionalParams): Promise<Models.FindPushbotsResponse>;
+  findCredentials(options?: Models.CatalyticSDKAPIFindCredentialsOptionalParams): Promise<Models.FindCredentialsResponse>;
   /**
    * @param callback The callback
    */
-  findPushbots(callback: msRest.ServiceCallback<any>): void;
+  findCredentials(callback: msRest.ServiceCallback<any>): void;
   /**
    * @param options The optional parameters
    * @param callback The callback
    */
-  findPushbots(options: Models.CatalyticSDKAPIFindPushbotsOptionalParams, callback: msRest.ServiceCallback<any>): void;
-  findPushbots(options?: Models.CatalyticSDKAPIFindPushbotsOptionalParams | msRest.ServiceCallback<any>, callback?: msRest.ServiceCallback<any>): Promise<Models.FindPushbotsResponse> {
+  findCredentials(options: Models.CatalyticSDKAPIFindCredentialsOptionalParams, callback: msRest.ServiceCallback<any>): void;
+  findCredentials(options?: Models.CatalyticSDKAPIFindCredentialsOptionalParams | msRest.ServiceCallback<any>, callback?: msRest.ServiceCallback<any>): Promise<Models.FindCredentialsResponse> {
     return this.sendOperationRequest(
       {
         options
       },
-      findPushbotsOperationSpec,
-      callback) as Promise<Models.FindPushbotsResponse>;
+      findCredentialsOperationSpec,
+      callback) as Promise<Models.FindCredentialsResponse>;
   }
 
   /**
-   * @summary Gets details of a specific Pushbot process template
-   * @param id The ID of the Pushbot to get
+   * @param id
    * @param [options] The optional parameters
-   * @returns Promise<Models.GetPushbotResponse>
+   * @returns Promise<Models.GetCredentialsResponse>
    */
-  getPushbot(id: string, options?: msRest.RequestOptionsBase): Promise<Models.GetPushbotResponse>;
+  getCredentials(id: string, options?: msRest.RequestOptionsBase): Promise<Models.GetCredentialsResponse>;
   /**
-   * @param id The ID of the Pushbot to get
+   * @param id
    * @param callback The callback
    */
-  getPushbot(id: string, callback: msRest.ServiceCallback<any>): void;
+  getCredentials(id: string, callback: msRest.ServiceCallback<any>): void;
   /**
-   * @param id The ID of the Pushbot to get
+   * @param id
    * @param options The optional parameters
    * @param callback The callback
    */
-  getPushbot(id: string, options: msRest.RequestOptionsBase, callback: msRest.ServiceCallback<any>): void;
-  getPushbot(id: string, options?: msRest.RequestOptionsBase | msRest.ServiceCallback<any>, callback?: msRest.ServiceCallback<any>): Promise<Models.GetPushbotResponse> {
+  getCredentials(id: string, options: msRest.RequestOptionsBase, callback: msRest.ServiceCallback<any>): void;
+  getCredentials(id: string, options?: msRest.RequestOptionsBase | msRest.ServiceCallback<any>, callback?: msRest.ServiceCallback<any>): Promise<Models.GetCredentialsResponse> {
     return this.sendOperationRequest(
       {
         id,
         options
       },
-      getPushbotOperationSpec,
-      callback) as Promise<Models.GetPushbotResponse>;
+      getCredentialsOperationSpec,
+      callback) as Promise<Models.GetCredentialsResponse>;
+  }
+
+  /**
+   * @summary Revoke User Token
+   * @param id The public Access Identifier of the Credentials
+   * @param [options] The optional parameters
+   * @returns Promise<Models.RevokeCredentialsResponse>
+   */
+  revokeCredentials(id: string, options?: msRest.RequestOptionsBase): Promise<Models.RevokeCredentialsResponse>;
+  /**
+   * @param id The public Access Identifier of the Credentials
+   * @param callback The callback
+   */
+  revokeCredentials(id: string, callback: msRest.ServiceCallback<any>): void;
+  /**
+   * @param id The public Access Identifier of the Credentials
+   * @param options The optional parameters
+   * @param callback The callback
+   */
+  revokeCredentials(id: string, options: msRest.RequestOptionsBase, callback: msRest.ServiceCallback<any>): void;
+  revokeCredentials(id: string, options?: msRest.RequestOptionsBase | msRest.ServiceCallback<any>, callback?: msRest.ServiceCallback<any>): Promise<Models.RevokeCredentialsResponse> {
+    return this.sendOperationRequest(
+      {
+        id,
+        options
+      },
+      revokeCredentialsOperationSpec,
+      callback) as Promise<Models.RevokeCredentialsResponse>;
+  }
+
+  /**
+   * @summary Gets details of a specific User
+   * @param id The ID or username of the User to get
+   * @param [options] The optional parameters
+   * @returns Promise<Models.GetUserResponse>
+   */
+  getUser(id: string, options?: msRest.RequestOptionsBase): Promise<Models.GetUserResponse>;
+  /**
+   * @param id The ID or username of the User to get
+   * @param callback The callback
+   */
+  getUser(id: string, callback: msRest.ServiceCallback<any>): void;
+  /**
+   * @param id The ID or username of the User to get
+   * @param options The optional parameters
+   * @param callback The callback
+   */
+  getUser(id: string, options: msRest.RequestOptionsBase, callback: msRest.ServiceCallback<any>): void;
+  getUser(id: string, options?: msRest.RequestOptionsBase | msRest.ServiceCallback<any>, callback?: msRest.ServiceCallback<any>): Promise<Models.GetUserResponse> {
+    return this.sendOperationRequest(
+      {
+        id,
+        options
+      },
+      getUserOperationSpec,
+      callback) as Promise<Models.GetUserResponse>;
+  }
+
+  /**
+   * @summary List all users on team
+   * @param [options] The optional parameters
+   * @returns Promise<Models.FindUsersResponse>
+   */
+  findUsers(options?: Models.CatalyticSDKAPIFindUsersOptionalParams): Promise<Models.FindUsersResponse>;
+  /**
+   * @param callback The callback
+   */
+  findUsers(callback: msRest.ServiceCallback<any>): void;
+  /**
+   * @param options The optional parameters
+   * @param callback The callback
+   */
+  findUsers(options: Models.CatalyticSDKAPIFindUsersOptionalParams, callback: msRest.ServiceCallback<any>): void;
+  findUsers(options?: Models.CatalyticSDKAPIFindUsersOptionalParams | msRest.ServiceCallback<any>, callback?: msRest.ServiceCallback<any>): Promise<Models.FindUsersResponse> {
+    return this.sendOperationRequest(
+      {
+        options
+      },
+      findUsersOperationSpec,
+      callback) as Promise<Models.FindUsersResponse>;
+  }
+
+  /**
+   * @summary Find Workflows
+   * @param [options] The optional parameters
+   * @returns Promise<Models.FindWorkflowsResponse>
+   */
+  findWorkflows(options?: Models.CatalyticSDKAPIFindWorkflowsOptionalParams): Promise<Models.FindWorkflowsResponse>;
+  /**
+   * @param callback The callback
+   */
+  findWorkflows(callback: msRest.ServiceCallback<any>): void;
+  /**
+   * @param options The optional parameters
+   * @param callback The callback
+   */
+  findWorkflows(options: Models.CatalyticSDKAPIFindWorkflowsOptionalParams, callback: msRest.ServiceCallback<any>): void;
+  findWorkflows(options?: Models.CatalyticSDKAPIFindWorkflowsOptionalParams | msRest.ServiceCallback<any>, callback?: msRest.ServiceCallback<any>): Promise<Models.FindWorkflowsResponse> {
+    return this.sendOperationRequest(
+      {
+        options
+      },
+      findWorkflowsOperationSpec,
+      callback) as Promise<Models.FindWorkflowsResponse>;
+  }
+
+  /**
+   * @summary Gets details of a specific Workflow process template
+   * @param id The ID of the Workflow to get
+   * @param [options] The optional parameters
+   * @returns Promise<Models.GetWorkflowResponse>
+   */
+  getWorkflow(id: string, options?: msRest.RequestOptionsBase): Promise<Models.GetWorkflowResponse>;
+  /**
+   * @param id The ID of the Workflow to get
+   * @param callback The callback
+   */
+  getWorkflow(id: string, callback: msRest.ServiceCallback<any>): void;
+  /**
+   * @param id The ID of the Workflow to get
+   * @param options The optional parameters
+   * @param callback The callback
+   */
+  getWorkflow(id: string, options: msRest.RequestOptionsBase, callback: msRest.ServiceCallback<any>): void;
+  getWorkflow(id: string, options?: msRest.RequestOptionsBase | msRest.ServiceCallback<any>, callback?: msRest.ServiceCallback<any>): Promise<Models.GetWorkflowResponse> {
+    return this.sendOperationRequest(
+      {
+        id,
+        options
+      },
+      getWorkflowOperationSpec,
+      callback) as Promise<Models.GetWorkflowResponse>;
+  }
+
+  /**
+   * @summary Imports a new Workflow
+   * @param [options] The optional parameters
+   * @returns Promise<Models.ImportWorkflowResponse>
+   */
+  importWorkflow(options?: Models.CatalyticSDKAPIImportWorkflowOptionalParams): Promise<Models.ImportWorkflowResponse>;
+  /**
+   * @param callback The callback
+   */
+  importWorkflow(callback: msRest.ServiceCallback<any>): void;
+  /**
+   * @param options The optional parameters
+   * @param callback The callback
+   */
+  importWorkflow(options: Models.CatalyticSDKAPIImportWorkflowOptionalParams, callback: msRest.ServiceCallback<any>): void;
+  importWorkflow(options?: Models.CatalyticSDKAPIImportWorkflowOptionalParams | msRest.ServiceCallback<any>, callback?: msRest.ServiceCallback<any>): Promise<Models.ImportWorkflowResponse> {
+    return this.sendOperationRequest(
+      {
+        options
+      },
+      importWorkflowOperationSpec,
+      callback) as Promise<Models.ImportWorkflowResponse>;
+  }
+
+  /**
+   * @summary Fetch an existing WorkflowImport request
+   * @param id The Workflow Import Id
+   * @param [options] The optional parameters
+   * @returns Promise<Models.GetWorkflowImportResponse>
+   */
+  getWorkflowImport(id: string, options?: msRest.RequestOptionsBase): Promise<Models.GetWorkflowImportResponse>;
+  /**
+   * @param id The Workflow Import Id
+   * @param callback The callback
+   */
+  getWorkflowImport(id: string, callback: msRest.ServiceCallback<any>): void;
+  /**
+   * @param id The Workflow Import Id
+   * @param options The optional parameters
+   * @param callback The callback
+   */
+  getWorkflowImport(id: string, options: msRest.RequestOptionsBase, callback: msRest.ServiceCallback<any>): void;
+  getWorkflowImport(id: string, options?: msRest.RequestOptionsBase | msRest.ServiceCallback<any>, callback?: msRest.ServiceCallback<any>): Promise<Models.GetWorkflowImportResponse> {
+    return this.sendOperationRequest(
+      {
+        id,
+        options
+      },
+      getWorkflowImportOperationSpec,
+      callback) as Promise<Models.GetWorkflowImportResponse>;
+  }
+
+  /**
+   * @summary Exports an existing Workflow
+   * @param id The ID of the Workflow to export
+   * @param [options] The optional parameters
+   * @returns Promise<Models.ExportWorkflowResponse>
+   */
+  exportWorkflow(id: string, options?: Models.CatalyticSDKAPIExportWorkflowOptionalParams): Promise<Models.ExportWorkflowResponse>;
+  /**
+   * @param id The ID of the Workflow to export
+   * @param callback The callback
+   */
+  exportWorkflow(id: string, callback: msRest.ServiceCallback<any>): void;
+  /**
+   * @param id The ID of the Workflow to export
+   * @param options The optional parameters
+   * @param callback The callback
+   */
+  exportWorkflow(id: string, options: Models.CatalyticSDKAPIExportWorkflowOptionalParams, callback: msRest.ServiceCallback<any>): void;
+  exportWorkflow(id: string, options?: Models.CatalyticSDKAPIExportWorkflowOptionalParams | msRest.ServiceCallback<any>, callback?: msRest.ServiceCallback<any>): Promise<Models.ExportWorkflowResponse> {
+    return this.sendOperationRequest(
+      {
+        id,
+        options
+      },
+      exportWorkflowOperationSpec,
+      callback) as Promise<Models.ExportWorkflowResponse>;
+  }
+
+  /**
+   * @summary Fetch an existing WorkflowExport request
+   * @param id The Workflow Export Id
+   * @param [options] The optional parameters
+   * @returns Promise<Models.GetWorkflowExportResponse>
+   */
+  getWorkflowExport(id: string, options?: msRest.RequestOptionsBase): Promise<Models.GetWorkflowExportResponse>;
+  /**
+   * @param id The Workflow Export Id
+   * @param callback The callback
+   */
+  getWorkflowExport(id: string, callback: msRest.ServiceCallback<any>): void;
+  /**
+   * @param id The Workflow Export Id
+   * @param options The optional parameters
+   * @param callback The callback
+   */
+  getWorkflowExport(id: string, options: msRest.RequestOptionsBase, callback: msRest.ServiceCallback<any>): void;
+  getWorkflowExport(id: string, options?: msRest.RequestOptionsBase | msRest.ServiceCallback<any>, callback?: msRest.ServiceCallback<any>): Promise<Models.GetWorkflowExportResponse> {
+    return this.sendOperationRequest(
+      {
+        id,
+        options
+      },
+      getWorkflowExportOperationSpec,
+      callback) as Promise<Models.GetWorkflowExportResponse>;
   }
 }
 
 // Operation Specifications
 const serializer = new msRest.Serializer(Mappers);
-const findActionsOperationSpec: msRest.OperationSpec = {
-  httpMethod: "GET",
-  path: "api/actions",
-  queryParameters: [
-    Parameters.query,
-    Parameters.status,
-    Parameters.processId,
-    Parameters.runId,
-    Parameters.owner,
-    Parameters.category,
-    Parameters.pageToken,
-    Parameters.pageSize
-  ],
-  responses: {
-    200: {
-      bodyMapper: Mappers.ActionsPage
-    },
-    401: {
-      bodyMapper: Mappers.ProblemDetails
-    },
-    default: {}
-  },
-  serializer
-};
-
-const createActionOperationSpec: msRest.OperationSpec = {
+const createCredentialsOperationSpec: msRest.OperationSpec = {
   httpMethod: "POST",
-  path: "api/actions",
+  path: "v1.0.1-pre-33/api/auth",
   requestBody: {
     parameterPath: [
       "options",
       "body"
     ],
-    mapper: Mappers.RegisterActionRequest
+    mapper: Mappers.CredentialsCreationRequest
+  },
+  contentType: "application/json-patch+json; charset=utf-8",
+  responses: {
+    201: {
+      bodyMapper: Mappers.Credentials
+    },
+    400: {
+      bodyMapper: Mappers.ProblemDetails
+    },
+    401: {
+      bodyMapper: Mappers.ProblemDetails
+    },
+    default: {}
+  },
+  serializer
+};
+
+const createAndApproveCredentialsOperationSpec: msRest.OperationSpec = {
+  httpMethod: "POST",
+  path: "v1.0.1-pre-33/api/auth/create-and-approve",
+  requestBody: {
+    parameterPath: [
+      "options",
+      "body"
+    ],
+    mapper: Mappers.CredentialsCreationWithEmailAndPasswordRequest
+  },
+  contentType: "application/json-patch+json; charset=utf-8",
+  responses: {
+    201: {
+      bodyMapper: Mappers.Credentials
+    },
+    400: {
+      bodyMapper: Mappers.ProblemDetails
+    },
+    401: {
+      bodyMapper: Mappers.ProblemDetails
+    },
+    default: {}
+  },
+  serializer
+};
+
+const waitForCredentialsApprovalOperationSpec: msRest.OperationSpec = {
+  httpMethod: "POST",
+  path: "v1.0.1-pre-33/api/auth/wait-for-approval",
+  requestBody: {
+    parameterPath: [
+      "options",
+      "body"
+    ],
+    mapper: Mappers.WaitForCredentialsApprovalRequest
   },
   contentType: "application/json-patch+json; charset=utf-8",
   responses: {
     200: {
-      bodyMapper: Mappers.Action
-    },
-    401: {
-      bodyMapper: Mappers.ProblemDetails
-    },
-    default: {}
-  },
-  serializer
-};
-
-const getActionOperationSpec: msRest.OperationSpec = {
-  httpMethod: "GET",
-  path: "api/actions/{id}",
-  urlParameters: [
-    Parameters.id
-  ],
-  responses: {
-    200: {
-      bodyMapper: Mappers.Action
-    },
-    401: {
-      bodyMapper: Mappers.ProblemDetails
-    },
-    404: {
-      bodyMapper: Mappers.ProblemDetails
-    },
-    default: {}
-  },
-  serializer
-};
-
-const deleteActionOperationSpec: msRest.OperationSpec = {
-  httpMethod: "DELETE",
-  path: "api/actions/{id}",
-  urlParameters: [
-    Parameters.id
-  ],
-  responses: {
-    204: {
       bodyMapper: {
         serializedName: "parsedResponse",
         type: {
@@ -1022,209 +963,10 @@ const deleteActionOperationSpec: msRest.OperationSpec = {
         }
       }
     },
-    401: {
-      bodyMapper: Mappers.ProblemDetails
-    },
-    404: {
-      bodyMapper: Mappers.ProblemDetails
-    },
-    default: {}
-  },
-  serializer
-};
-
-const updateActionOperationSpec: msRest.OperationSpec = {
-  httpMethod: "PATCH",
-  path: "api/actions/{id}",
-  urlParameters: [
-    Parameters.id
-  ],
-  requestBody: {
-    parameterPath: [
-      "options",
-      "body"
-    ],
-    mapper: Mappers.UpdateActionRequest
-  },
-  contentType: "application/json-patch+json; charset=utf-8",
-  responses: {
-    200: {
-      bodyMapper: Mappers.Action
-    },
-    401: {
-      bodyMapper: Mappers.ProblemDetails
-    },
-    404: {
-      bodyMapper: Mappers.ProblemDetails
-    },
-    default: {}
-  },
-  serializer
-};
-
-const findActionWorkersOperationSpec: msRest.OperationSpec = {
-  httpMethod: "GET",
-  path: "api/action-workers",
-  queryParameters: [
-    Parameters.query,
-    Parameters.status,
-    Parameters.processId,
-    Parameters.runId,
-    Parameters.owner,
-    Parameters.category,
-    Parameters.pageToken,
-    Parameters.pageSize
-  ],
-  responses: {
-    200: {
-      bodyMapper: Mappers.ActionWorkersPage
-    },
-    401: {
-      bodyMapper: Mappers.ProblemDetails
-    },
-    default: {}
-  },
-  serializer
-};
-
-const createActionWorkerOperationSpec: msRest.OperationSpec = {
-  httpMethod: "POST",
-  path: "api/action-workers",
-  requestBody: {
-    parameterPath: [
-      "options",
-      "body"
-    ],
-    mapper: Mappers.CreateActionWorkerRequest
-  },
-  contentType: "application/json-patch+json; charset=utf-8",
-  responses: {
-    200: {
-      bodyMapper: Mappers.ActionWorkerWithCredentials
-    },
-    401: {
-      bodyMapper: Mappers.ProblemDetails
-    },
-    default: {}
-  },
-  serializer
-};
-
-const getActionWorkerOperationSpec: msRest.OperationSpec = {
-  httpMethod: "GET",
-  path: "api/action-workers/{id}",
-  urlParameters: [
-    Parameters.id
-  ],
-  responses: {
-    200: {
-      bodyMapper: Mappers.ActionWorker
-    },
-    401: {
-      bodyMapper: Mappers.ProblemDetails
-    },
-    404: {
-      bodyMapper: Mappers.ProblemDetails
-    },
-    default: {}
-  },
-  serializer
-};
-
-const deleteActionWorkerOperationSpec: msRest.OperationSpec = {
-  httpMethod: "DELETE",
-  path: "api/action-workers/{id}",
-  urlParameters: [
-    Parameters.id
-  ],
-  responses: {
-    204: {
-      bodyMapper: {
-        serializedName: "parsedResponse",
-        type: {
-          name: "Object"
-        }
-      }
-    },
-    401: {
-      bodyMapper: Mappers.ProblemDetails
-    },
-    404: {
-      bodyMapper: Mappers.ProblemDetails
-    },
-    default: {}
-  },
-  serializer
-};
-
-const updateActionWorkerOperationSpec: msRest.OperationSpec = {
-  httpMethod: "PATCH",
-  path: "api/action-workers/{id}",
-  urlParameters: [
-    Parameters.id
-  ],
-  requestBody: {
-    parameterPath: [
-      "options",
-      "body"
-    ],
-    mapper: Mappers.UpdateActionWorkerRequest
-  },
-  contentType: "application/json-patch+json; charset=utf-8",
-  responses: {
-    200: {
-      bodyMapper: Mappers.ActionWorker
-    },
-    401: {
-      bodyMapper: Mappers.ProblemDetails
-    },
-    404: {
-      bodyMapper: Mappers.ProblemDetails
-    },
-    default: {}
-  },
-  serializer
-};
-
-const createDeveloperKeyOperationSpec: msRest.OperationSpec = {
-  httpMethod: "POST",
-  path: "api/auth",
-  requestBody: {
-    parameterPath: [
-      "options",
-      "body"
-    ],
-    mapper: Mappers.CreateDeveloperKeyRequest
-  },
-  contentType: "application/json-patch+json; charset=utf-8",
-  responses: {
-    200: {
-      bodyMapper: Mappers.DeveloperKey
-    },
     400: {
       bodyMapper: Mappers.ProblemDetails
     },
-    default: {}
-  },
-  serializer
-};
-
-const waitForDeveloperKeyActivationOperationSpec: msRest.OperationSpec = {
-  httpMethod: "POST",
-  path: "api/auth/:activate",
-  requestBody: {
-    parameterPath: [
-      "options",
-      "body"
-    ],
-    mapper: Mappers.DeveloperKeyActivationRequest
-  },
-  contentType: "application/json-patch+json; charset=utf-8",
-  responses: {
-    200: {
-      bodyMapper: Mappers.DeveloperKey
-    },
-    400: {
+    401: {
       bodyMapper: Mappers.ProblemDetails
     },
     default: {}
@@ -1234,7 +976,7 @@ const waitForDeveloperKeyActivationOperationSpec: msRest.OperationSpec = {
 
 const getDataTableOperationSpec: msRest.OperationSpec = {
   httpMethod: "GET",
-  path: "api/tables/{id}",
+  path: "v1.0.1-pre-33/api/tables/{id}",
   urlParameters: [
     Parameters.id
   ],
@@ -1255,7 +997,7 @@ const getDataTableOperationSpec: msRest.OperationSpec = {
 
 const downloadDataTableOperationSpec: msRest.OperationSpec = {
   httpMethod: "GET",
-  path: "api/tables/{id}:download",
+  path: "v1.0.1-pre-33/api/tables/{id}/download",
   urlParameters: [
     Parameters.id
   ],
@@ -1282,11 +1024,13 @@ const downloadDataTableOperationSpec: msRest.OperationSpec = {
   serializer
 };
 
-const uploadDataTableOperationSpec: msRest.OperationSpec = {
+const replaceDataTableOperationSpec: msRest.OperationSpec = {
   httpMethod: "POST",
-  path: "api/tables/:upload",
+  path: "v1.0.1-pre-33/api/tables/{id}:replace",
+  urlParameters: [
+    Parameters.id
+  ],
   queryParameters: [
-    Parameters.tableName,
     Parameters.headerRow,
     Parameters.sheetNumber
   ],
@@ -1301,6 +1045,33 @@ const uploadDataTableOperationSpec: msRest.OperationSpec = {
     401: {
       bodyMapper: Mappers.ProblemDetails
     },
+    404: {
+      bodyMapper: Mappers.ProblemDetails
+    },
+    default: {}
+  },
+  serializer
+};
+
+const uploadDataTableOperationSpec: msRest.OperationSpec = {
+  httpMethod: "POST",
+  path: "v1.0.1-pre-33/api/tables:upload",
+  queryParameters: [
+    Parameters.tableName,
+    Parameters.headerRow,
+    Parameters.sheetNumber
+  ],
+  formDataParameters: [
+    Parameters.files
+  ],
+  contentType: "multipart/form-data",
+  responses: {
+    201: {
+      bodyMapper: Mappers.DataTable
+    },
+    401: {
+      bodyMapper: Mappers.ProblemDetails
+    },
     default: {}
   },
   serializer
@@ -1308,7 +1079,7 @@ const uploadDataTableOperationSpec: msRest.OperationSpec = {
 
 const findDataTablesOperationSpec: msRest.OperationSpec = {
   httpMethod: "GET",
-  path: "api/tables",
+  path: "v1.0.1-pre-33/api/tables",
   queryParameters: [
     Parameters.query,
     Parameters.status,
@@ -1316,6 +1087,7 @@ const findDataTablesOperationSpec: msRest.OperationSpec = {
     Parameters.runId,
     Parameters.owner,
     Parameters.category,
+    Parameters.participatingUsers,
     Parameters.pageToken,
     Parameters.pageSize
   ],
@@ -1331,52 +1103,15 @@ const findDataTablesOperationSpec: msRest.OperationSpec = {
   serializer
 };
 
-const findDeveloperKeysOperationSpec: msRest.OperationSpec = {
-  httpMethod: "GET",
-  path: "api/developer-keys",
-  queryParameters: [
-    Parameters.pageToken,
-    Parameters.pageSize
-  ],
-  responses: {
-    200: {
-      bodyMapper: Mappers.DeveloperKeysPage
-    },
-    401: {
-      bodyMapper: Mappers.ProblemDetails
-    },
-    default: {}
-  },
-  serializer
-};
-
-const revokeDeveloperKeyOperationSpec: msRest.OperationSpec = {
-  httpMethod: "PATCH",
-  path: "api/developer-keys/{accessIdentifier}:revoke",
-  urlParameters: [
-    Parameters.accessIdentifier
-  ],
-  responses: {
-    200: {
-      bodyMapper: Mappers.DeveloperKey
-    },
-    401: {
-      bodyMapper: Mappers.ProblemDetails
-    },
-    default: {}
-  },
-  serializer
-};
-
 const getFileOperationSpec: msRest.OperationSpec = {
   httpMethod: "GET",
-  path: "api/files/{id}",
+  path: "v1.0.1-pre-33/api/files/{id}",
   urlParameters: [
     Parameters.id
   ],
   responses: {
     200: {
-      bodyMapper: Mappers.File
+      bodyMapper: Mappers.FileMetadata
     },
     401: {
       bodyMapper: Mappers.ProblemDetails
@@ -1391,7 +1126,7 @@ const getFileOperationSpec: msRest.OperationSpec = {
 
 const downloadFileOperationSpec: msRest.OperationSpec = {
   httpMethod: "GET",
-  path: "api/files/{id}:download",
+  path: "v1.0.1-pre-33/api/files/{id}/download",
   urlParameters: [
     Parameters.id
   ],
@@ -1417,39 +1152,14 @@ const downloadFileOperationSpec: msRest.OperationSpec = {
 
 const uploadFilesOperationSpec: msRest.OperationSpec = {
   httpMethod: "POST",
-  path: "api/files/:upload",
+  path: "v1.0.1-pre-33/api/files:upload",
   formDataParameters: [
     Parameters.files
   ],
   contentType: "multipart/form-data",
   responses: {
-    200: {
-      bodyMapper: Mappers.File
-    },
-    401: {
-      bodyMapper: Mappers.ProblemDetails
-    },
-    default: {}
-  },
-  serializer
-};
-
-const findFilesOperationSpec: msRest.OperationSpec = {
-  httpMethod: "GET",
-  path: "api/files",
-  queryParameters: [
-    Parameters.query,
-    Parameters.status,
-    Parameters.processId,
-    Parameters.runId,
-    Parameters.owner,
-    Parameters.category,
-    Parameters.pageToken,
-    Parameters.pageSize
-  ],
-  responses: {
-    200: {
-      bodyMapper: Mappers.FilesPage
+    201: {
+      bodyMapper: Mappers.FileMetadataPage
     },
     401: {
       bodyMapper: Mappers.ProblemDetails
@@ -1461,7 +1171,7 @@ const findFilesOperationSpec: msRest.OperationSpec = {
 
 const findInstancesOperationSpec: msRest.OperationSpec = {
   httpMethod: "GET",
-  path: "api/instances",
+  path: "v1.0.1-pre-33/api/instances",
   queryParameters: [
     Parameters.query,
     Parameters.status,
@@ -1469,6 +1179,7 @@ const findInstancesOperationSpec: msRest.OperationSpec = {
     Parameters.runId,
     Parameters.owner,
     Parameters.category,
+    Parameters.participatingUsers,
     Parameters.pageToken,
     Parameters.pageSize
   ],
@@ -1486,7 +1197,7 @@ const findInstancesOperationSpec: msRest.OperationSpec = {
 
 const startInstanceOperationSpec: msRest.OperationSpec = {
   httpMethod: "POST",
-  path: "api/instances",
+  path: "v1.0.1-pre-33/api/instances",
   requestBody: {
     parameterPath: [
       "options",
@@ -1496,7 +1207,7 @@ const startInstanceOperationSpec: msRest.OperationSpec = {
   },
   contentType: "application/json-patch+json; charset=utf-8",
   responses: {
-    200: {
+    201: {
       bodyMapper: Mappers.Instance
     },
     401: {
@@ -1509,7 +1220,7 @@ const startInstanceOperationSpec: msRest.OperationSpec = {
 
 const getInstanceOperationSpec: msRest.OperationSpec = {
   httpMethod: "GET",
-  path: "api/instances/{id}",
+  path: "v1.0.1-pre-33/api/instances/{id}",
   urlParameters: [
     Parameters.id
   ],
@@ -1529,8 +1240,8 @@ const getInstanceOperationSpec: msRest.OperationSpec = {
 };
 
 const stopInstanceOperationSpec: msRest.OperationSpec = {
-  httpMethod: "GET",
-  path: "api/instances/{id}:stop",
+  httpMethod: "POST",
+  path: "v1.0.1-pre-33/api/instances/{id}:stop",
   urlParameters: [
     Parameters.id
   ],
@@ -1551,7 +1262,7 @@ const stopInstanceOperationSpec: msRest.OperationSpec = {
 
 const findInstanceStepsOperationSpec: msRest.OperationSpec = {
   httpMethod: "GET",
-  path: "api/instances/{instanceId}/steps",
+  path: "v1.0.1-pre-33/api/instances/{instanceId}/steps",
   urlParameters: [
     Parameters.instanceId
   ],
@@ -1562,6 +1273,7 @@ const findInstanceStepsOperationSpec: msRest.OperationSpec = {
     Parameters.runId,
     Parameters.owner,
     Parameters.category,
+    Parameters.participatingUsers,
     Parameters.pageToken,
     Parameters.pageSize
   ],
@@ -1579,7 +1291,7 @@ const findInstanceStepsOperationSpec: msRest.OperationSpec = {
 
 const getInstanceStepOperationSpec: msRest.OperationSpec = {
   httpMethod: "GET",
-  path: "api/instances/{instanceId}/steps/{id}",
+  path: "v1.0.1-pre-33/api/instances/{instanceId}/steps/{id}",
   urlParameters: [
     Parameters.id,
     Parameters.instanceId
@@ -1601,7 +1313,7 @@ const getInstanceStepOperationSpec: msRest.OperationSpec = {
 
 const completeStepOperationSpec: msRest.OperationSpec = {
   httpMethod: "POST",
-  path: "api/instances/{instanceId}/steps/{id}:complete",
+  path: "v1.0.1-pre-33/api/instances/{instanceId}/steps/{id}:complete",
   urlParameters: [
     Parameters.id,
     Parameters.instanceId
@@ -1634,7 +1346,7 @@ const completeStepOperationSpec: msRest.OperationSpec = {
 
 const startStepOperationSpec: msRest.OperationSpec = {
   httpMethod: "POST",
-  path: "api/instances/{instanceId}/steps/{id}:start",
+  path: "v1.0.1-pre-33/api/instances/{instanceId}/steps/{id}:start",
   urlParameters: [
     Parameters.id,
     Parameters.instanceId
@@ -1659,7 +1371,7 @@ const startStepOperationSpec: msRest.OperationSpec = {
 
 const snoozeStepOperationSpec: msRest.OperationSpec = {
   httpMethod: "POST",
-  path: "api/instances/{instanceId}/steps/{id}:snooze",
+  path: "v1.0.1-pre-33/api/instances/{instanceId}/steps/{id}:snooze",
   urlParameters: [
     Parameters.id,
     Parameters.instanceId
@@ -1684,7 +1396,7 @@ const snoozeStepOperationSpec: msRest.OperationSpec = {
 
 const reassignStepOperationSpec: msRest.OperationSpec = {
   httpMethod: "POST",
-  path: "api/instances/{instanceId}/steps/{id}:reassign",
+  path: "v1.0.1-pre-33/api/instances/{instanceId}/steps/{id}:reassign",
   urlParameters: [
     Parameters.id,
     Parameters.instanceId
@@ -1694,7 +1406,7 @@ const reassignStepOperationSpec: msRest.OperationSpec = {
       "options",
       "body"
     ],
-    mapper: Mappers.ReassignTaskRequest
+    mapper: Mappers.ReassignStepRequest
   },
   contentType: "application/json-patch+json; charset=utf-8",
   responses: {
@@ -1715,9 +1427,9 @@ const reassignStepOperationSpec: msRest.OperationSpec = {
   serializer
 };
 
-const findPushbotsOperationSpec: msRest.OperationSpec = {
+const findCredentialsOperationSpec: msRest.OperationSpec = {
   httpMethod: "GET",
-  path: "api/pushbots",
+  path: "v1.0.1-pre-33/api/credentials",
   queryParameters: [
     Parameters.query,
     Parameters.status,
@@ -1725,12 +1437,114 @@ const findPushbotsOperationSpec: msRest.OperationSpec = {
     Parameters.runId,
     Parameters.owner,
     Parameters.category,
+    Parameters.participatingUsers,
     Parameters.pageToken,
     Parameters.pageSize
   ],
   responses: {
     200: {
-      bodyMapper: Mappers.PushbotsPage
+      bodyMapper: Mappers.CredentialsPage
+    },
+    400: {
+      bodyMapper: Mappers.ProblemDetails
+    },
+    401: {
+      bodyMapper: Mappers.ProblemDetails
+    },
+    403: {
+      bodyMapper: Mappers.ProblemDetails
+    },
+    default: {}
+  },
+  serializer
+};
+
+const getCredentialsOperationSpec: msRest.OperationSpec = {
+  httpMethod: "GET",
+  path: "v1.0.1-pre-33/api/credentials/{id}",
+  urlParameters: [
+    Parameters.id
+  ],
+  responses: {
+    200: {
+      bodyMapper: Mappers.Credentials
+    },
+    401: {
+      bodyMapper: Mappers.ProblemDetails
+    },
+    403: {
+      bodyMapper: Mappers.ProblemDetails
+    },
+    404: {
+      bodyMapper: Mappers.ProblemDetails
+    },
+    default: {}
+  },
+  serializer
+};
+
+const revokeCredentialsOperationSpec: msRest.OperationSpec = {
+  httpMethod: "POST",
+  path: "v1.0.1-pre-33/api/credentials/{id}:revoke",
+  urlParameters: [
+    Parameters.id
+  ],
+  responses: {
+    200: {
+      bodyMapper: Mappers.Credentials
+    },
+    401: {
+      bodyMapper: Mappers.ProblemDetails
+    },
+    403: {
+      bodyMapper: Mappers.ProblemDetails
+    },
+    404: {
+      bodyMapper: Mappers.ProblemDetails
+    },
+    default: {}
+  },
+  serializer
+};
+
+const getUserOperationSpec: msRest.OperationSpec = {
+  httpMethod: "GET",
+  path: "v1.0.1-pre-33/api/users/{id}",
+  urlParameters: [
+    Parameters.id
+  ],
+  responses: {
+    200: {
+      bodyMapper: Mappers.User
+    },
+    401: {
+      bodyMapper: Mappers.ProblemDetails
+    },
+    404: {
+      bodyMapper: Mappers.ProblemDetails
+    },
+    default: {}
+  },
+  serializer
+};
+
+const findUsersOperationSpec: msRest.OperationSpec = {
+  httpMethod: "GET",
+  path: "v1.0.1-pre-33/api/users",
+  queryParameters: [
+    Parameters.query,
+    Parameters.status,
+    Parameters.processId,
+    Parameters.runId,
+    Parameters.owner,
+    Parameters.category,
+    Parameters.participatingUsers,
+    Parameters.pageToken,
+    Parameters.pageSize
+  ],
+  responses: {
+    200: {
+      bodyMapper: Mappers.UsersPage
     },
     401: {
       bodyMapper: Mappers.ProblemDetails
@@ -1740,15 +1554,138 @@ const findPushbotsOperationSpec: msRest.OperationSpec = {
   serializer
 };
 
-const getPushbotOperationSpec: msRest.OperationSpec = {
+const findWorkflowsOperationSpec: msRest.OperationSpec = {
   httpMethod: "GET",
-  path: "api/pushbots/{id}",
+  path: "v1.0.1-pre-33/api/workflows",
+  queryParameters: [
+    Parameters.query,
+    Parameters.status,
+    Parameters.processId,
+    Parameters.runId,
+    Parameters.owner,
+    Parameters.category,
+    Parameters.participatingUsers,
+    Parameters.pageToken,
+    Parameters.pageSize
+  ],
+  responses: {
+    200: {
+      bodyMapper: Mappers.WorkflowsPage
+    },
+    401: {
+      bodyMapper: Mappers.ProblemDetails
+    },
+    default: {}
+  },
+  serializer
+};
+
+const getWorkflowOperationSpec: msRest.OperationSpec = {
+  httpMethod: "GET",
+  path: "v1.0.1-pre-33/api/workflows/{id}",
   urlParameters: [
     Parameters.id
   ],
   responses: {
     200: {
-      bodyMapper: Mappers.Pushbot
+      bodyMapper: Mappers.Workflow
+    },
+    401: {
+      bodyMapper: Mappers.ProblemDetails
+    },
+    404: {
+      bodyMapper: Mappers.ProblemDetails
+    },
+    default: {}
+  },
+  serializer
+};
+
+const importWorkflowOperationSpec: msRest.OperationSpec = {
+  httpMethod: "POST",
+  path: "v1.0.1-pre-33/api/workflows:import",
+  requestBody: {
+    parameterPath: [
+      "options",
+      "body"
+    ],
+    mapper: Mappers.WorkflowImportRequest
+  },
+  contentType: "application/json-patch+json; charset=utf-8",
+  responses: {
+    201: {
+      bodyMapper: Mappers.WorkflowImport
+    },
+    401: {
+      bodyMapper: Mappers.ProblemDetails
+    },
+    404: {
+      bodyMapper: Mappers.ProblemDetails
+    },
+    default: {}
+  },
+  serializer
+};
+
+const getWorkflowImportOperationSpec: msRest.OperationSpec = {
+  httpMethod: "GET",
+  path: "v1.0.1-pre-33/api/workflows/imports/{id}",
+  urlParameters: [
+    Parameters.id
+  ],
+  responses: {
+    200: {
+      bodyMapper: Mappers.WorkflowImport
+    },
+    401: {
+      bodyMapper: Mappers.ProblemDetails
+    },
+    404: {
+      bodyMapper: Mappers.ProblemDetails
+    },
+    default: {}
+  },
+  serializer
+};
+
+const exportWorkflowOperationSpec: msRest.OperationSpec = {
+  httpMethod: "POST",
+  path: "v1.0.1-pre-33/api/workflows/{id}:export",
+  urlParameters: [
+    Parameters.id
+  ],
+  requestBody: {
+    parameterPath: [
+      "options",
+      "body"
+    ],
+    mapper: Mappers.WorkflowExportRequest
+  },
+  contentType: "application/json-patch+json; charset=utf-8",
+  responses: {
+    201: {
+      bodyMapper: Mappers.WorkflowExport
+    },
+    401: {
+      bodyMapper: Mappers.ProblemDetails
+    },
+    404: {
+      bodyMapper: Mappers.ProblemDetails
+    },
+    default: {}
+  },
+  serializer
+};
+
+const getWorkflowExportOperationSpec: msRest.OperationSpec = {
+  httpMethod: "GET",
+  path: "v1.0.1-pre-33/api/workflows/exports/{id}",
+  urlParameters: [
+    Parameters.id
+  ],
+  responses: {
+    200: {
+      bodyMapper: Mappers.WorkflowExport
     },
     401: {
       bodyMapper: Mappers.ProblemDetails

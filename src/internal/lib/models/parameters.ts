@@ -6,16 +6,6 @@
 
 import * as msRest from "@azure/ms-rest-js";
 
-export const accessIdentifier: msRest.OperationURLParameter = {
-  parameterPath: "accessIdentifier",
-  mapper: {
-    required: true,
-    serializedName: "accessIdentifier",
-    type: {
-      name: "String"
-    }
-  }
-};
 export const category: msRest.OperationQueryParameter = {
   parameterPath: [
     "options",
@@ -121,6 +111,18 @@ export const pageToken: msRest.OperationQueryParameter = {
   ],
   mapper: {
     serializedName: "page_token",
+    type: {
+      name: "String"
+    }
+  }
+};
+export const participatingUsers: msRest.OperationQueryParameter = {
+  parameterPath: [
+    "options",
+    "participatingUsers"
+  ],
+  mapper: {
+    serializedName: "participating_users",
     type: {
       name: "String"
     }

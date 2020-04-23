@@ -28,7 +28,7 @@ export class CatalyticSDKAPIContext extends msRest.ServiceClient {
 
     super(undefined, options);
 
-    this.baseUri = options.baseUri || this.baseUri || "https://catalyticsdkapi.azurewebsites.net";
+    this.baseUri = options.baseUri || this.baseUri || "https://sdk.catalytic.com";
     this.requestContentType = "application/json; charset=utf-8";
 
   }

@@ -1,22 +1,45 @@
 import { CatalyticSDKAPI } from '../internal/lib/catalyticSDKAPI';
-import DeveloperKeyClient from './DeveloperKeyClient';
-import PushbotClient from './PushbotClient';
-import { CredentialsProvider } from './Credentials';
+import { CredentialsProvider } from '../entities/Credentials';
+import { CredentialsClient, DataTableClient, FileClient, InstanceClient, WorkflowClient, UserClient } from '.';
 
 export default class ClientProvider {
-    developerKeyClient: DeveloperKeyClient;
-    pushbotClient: PushbotClient;
+    credentialsClient: CredentialsClient;
+    dataTableClient: DataTableClient;
+    fileClient: FileClient;
+    instanceClient: InstanceClient;
+    userClient: UserClient;
+    workflowClient: WorkflowClient;
 
     constructor(internalClient: CatalyticSDKAPI, credentialsProvider: CredentialsProvider) {
-        this.developerKeyClient = new DeveloperKeyClient(internalClient, credentialsProvider);
-        this.pushbotClient = new PushbotClient(internalClient, credentialsProvider);
+        this.credentialsClient = new CredentialsClient(internalClient, credentialsProvider);
+        this.dataTableClient = new DataTableClient(internalClient, credentialsProvider);
+        this.fileClient = new FileClient(internalClient, credentialsProvider);
+        this.instanceClient = new InstanceClient(internalClient, credentialsProvider);
+        this.userClient = new UserClient(internalClient, credentialsProvider);
+        this.workflowClient = new WorkflowClient(internalClient, credentialsProvider);
     }
 
-    getDeveloperKeyClient(): DeveloperKeyClient {
-        return this.developerKeyClient;
+    getCredentialsClient(): CredentialsClient {
+        return this.credentialsClient;
     }
 
-    getPushbotClient(): PushbotClient {
-        return this.pushbotClient;
+    getDataTableClient(): DataTableClient {
+        return this.dataTableClient;
+    }
+
+    getFileClient(): FileClient {
+        return this.fileClient;
+    }
+
+    getInstanceClient(): InstanceClient {
+        return this.instanceClient;
+    }
+
+    getUserClient(): UserClient {
+        return this.userClient;
+    }
+
+    getWorkflowClient(): WorkflowClient {
+        return this.workflowClient;
     }
 }
