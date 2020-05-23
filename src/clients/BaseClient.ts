@@ -7,7 +7,7 @@ import InvalidCredentialsError from '../errors/InvalidCredentialsError';
 import ResourceNotFoundError from '../errors/ResourceNotFoundError';
 import UnauthorizedError from '../errors/UnauthorizedError';
 
-type InternalAPIResponse = {
+export type InternalAPIResponse = {
     body: any;
     // this is the type returned from all requests via generated methods
     _response: msRest.HttpResponse & {
@@ -64,4 +64,19 @@ export default class BaseClient {
                 throw new InternalError(message);
         }
     }
+}
+
+export class FindOptions {
+    /**
+     * Free text query terms to search for
+     */
+    query?: string;
+    /**
+     * The token representing the result page to get
+     */
+    pageToken?: string;
+    /**
+     * The page size requested
+     */
+    pageSize?: number;
 }
