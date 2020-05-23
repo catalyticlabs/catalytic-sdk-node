@@ -13,10 +13,9 @@ describe('WorkflowClient', function() {
     });
 
     it('should get a Workflow by ID', async function() {
-        const id = v4();
         const mockWorkflow = mock.mockWorkflow();
         let headers;
-        mockApi.get(`/api/workflows/${id}`).reply(function() {
+        mockApi.get(`/api/workflows/${mockWorkflow.id}`).reply(function() {
             headers = this.req.headers;
             return [200, mockWorkflow];
         });
@@ -24,7 +23,7 @@ describe('WorkflowClient', function() {
         const client = new CatalyticClient();
         client.credentials = mock.mockCredentials();
 
-        const result = await client.workflowClient.get(id);
+        const result = await client.workflowClient.get(mockWorkflow.id);
 
         expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockWorkflow)));
         expect(headers.authorization).to.be.ok.and.to.include(`Bearer ${client.credentials.token}`);

@@ -13,10 +13,9 @@ describe('DataTableClient', function() {
     });
 
     it('should get a DataTable by ID', async function() {
-        const id = v4();
         const mockDataTable = mock.mockDataTable();
         let headers;
-        mockApi.get(`/api/tables/${id}`).reply(function() {
+        mockApi.get(`/api/tables/${mockDataTable.id}`).reply(function() {
             headers = this.req.headers;
             return [200, mockDataTable];
         });
@@ -24,7 +23,7 @@ describe('DataTableClient', function() {
         const client = new CatalyticClient();
         client.credentials = mock.mockCredentials();
 
-        const result = await client.dataTableClient.get(id);
+        const result = await client.dataTableClient.get(mockDataTable.id);
 
         expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockDataTable)));
         expect(headers.authorization).to.be.ok.and.to.include(`Bearer ${client.credentials.token}`);

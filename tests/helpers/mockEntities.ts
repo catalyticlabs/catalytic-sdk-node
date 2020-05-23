@@ -21,7 +21,7 @@ export const mockDataTable = (): DataTable => {
         teamName: faker.company.companyName().toLowerCase()
     };
 
-    return new DataTable(values);
+    return values as DataTable;
 };
 
 export const mockFileMetadata = (): FileMetadata => {
@@ -31,7 +31,7 @@ export const mockFileMetadata = (): FileMetadata => {
         teamName: faker.company.companyName().toLowerCase()
     };
 
-    return new FileMetadata(values);
+    return values as FileMetadata;
 };
 
 export const mockInstance = (): Instance => {
@@ -43,7 +43,7 @@ export const mockInstance = (): Instance => {
         teamName: faker.company.companyName().toLowerCase()
     };
 
-    return new Instance(values);
+    return values as Instance;
 };
 
 export const mockUser = (): User => {
@@ -55,7 +55,7 @@ export const mockUser = (): User => {
         fullName: faker.name.firstName() + ' ' + faker.name.lastName()
     };
 
-    return new User(values);
+    return values as User;
 };
 
 export const mockWorkflow = (): Workflow => {
@@ -66,7 +66,7 @@ export const mockWorkflow = (): Workflow => {
         teamName: faker.company.companyName().toLowerCase()
     };
 
-    return new Workflow(values);
+    return values as Workflow;
 };
 
 export default { mockCredentials, mockDataTable, mockFileMetadata, mockInstance, mockUser, mockWorkflow };

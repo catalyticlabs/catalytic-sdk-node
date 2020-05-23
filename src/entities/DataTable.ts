@@ -3,12 +3,6 @@ import DataTableColumn from './DataTableColumn';
 import { DataTableType, Visibility } from './types';
 
 export default class DataTable implements CatalyticSDKAPIModels.DataTable {
-    constructor(dataTable?: CatalyticSDKAPIModels.DataTable) {
-        if (dataTable) {
-            this.fromInternal(dataTable);
-        }
-    }
-
     /**
      * The unique ID of the Data Table
      */
@@ -67,21 +61,4 @@ export default class DataTable implements CatalyticSDKAPIModels.DataTable {
      * The maximum number of cells in this Data Table
      */
     cellLimit?: number;
-
-    private fromInternal(dataTable: CatalyticSDKAPIModels.DataTable): void {
-        this.id = dataTable.id;
-        this.dataTableId = dataTable.dataTableId;
-        this.referenceName = dataTable.referenceName;
-        this.name = dataTable.name;
-        this.teamName = dataTable.teamName;
-        this.description = dataTable.description;
-        this.columns = dataTable.columns;
-        this.isArchived = dataTable.isArchived;
-        this.type = dataTable.type;
-        this.visibility = dataTable.visibility;
-        this.visibleToUsers = dataTable.visibleToUsers;
-        this.rowLimit = dataTable.rowLimit;
-        this.columnLimit = dataTable.columnLimit;
-        this.cellLimit = dataTable.cellLimit;
-    }
 }

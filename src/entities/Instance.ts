@@ -3,13 +3,7 @@ import InstanceStep from './InstanceStep';
 import { InstanceStatus, FieldVisibility, Visibility } from './types';
 import { CatalyticSDKAPIModels } from '../internal/lib/catalyticSDKAPI';
 
-export default class Instance {
-    constructor(instance?: CatalyticSDKAPIModels.Instance) {
-        if (instance) {
-            this.fromInternal(instance);
-        }
-    }
-
+export default class Instance implements CatalyticSDKAPIModels.Instance {
     /**
      * @member {string} id The unique ID of the Instance
      */
@@ -76,21 +70,4 @@ export default class Instance {
      * with this Instance
      */
     visibleToUsers?: string[];
-
-    private fromInternal(instance: CatalyticSDKAPIModels.Instance): void {
-        this.id = instance.id;
-        this.workflowId = instance.workflowId;
-        this.name = instance.name;
-        this.teamName = instance.teamName;
-        this.description = instance.description;
-        this.category = instance.category;
-        this.owner = instance.owner;
-        this.createdBy = instance.createdBy;
-        this.steps = instance.steps;
-        this.fields = instance.fields;
-        this.status = instance.status;
-        this.fieldVisibility = instance.fieldVisibility;
-        this.visibility = instance.visibility;
-        this.visibleToUsers = instance.visibleToUsers;
-    }
 }

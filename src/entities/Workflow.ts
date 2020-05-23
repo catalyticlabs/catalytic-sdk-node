@@ -4,11 +4,6 @@ import Field from './Field';
 import { FieldVisibility, InstanceVisibility } from './types';
 
 export default class Workflow implements CatalyticSDKAPIModels.Workflow {
-    constructor(workflow?: CatalyticSDKAPIModels.Workflow) {
-        if (workflow) {
-            this.fromInternal(workflow);
-        }
-    }
     /**
      * The unique ID of the Workflow
      */
@@ -95,32 +90,4 @@ export default class Workflow implements CatalyticSDKAPIModels.Workflow {
      * The maximum number of cells of any data table created in an Instance of this Workflow
      */
     dataTableCellLimit?: number;
-
-    /**
-     * Inherit the property values from an internal `CatalyticSDKAPIModels.Workflow` entity
-     * @param internalWorkflow The internal Workflow entity whose properties should be inherited by this Workflow instance
-     */
-    private fromInternal(internalWorkflow: CatalyticSDKAPIModels.Workflow): void {
-        this.id = internalWorkflow.id;
-        this.name = internalWorkflow.name;
-        this.teamName = internalWorkflow.teamName;
-        this.description = internalWorkflow.description;
-        this.category = internalWorkflow.category;
-        this.owner = internalWorkflow.owner;
-        this.createdBy = internalWorkflow.createdBy;
-        this.inputFields = internalWorkflow.inputFields;
-        this.isPublished = internalWorkflow.isPublished;
-        this.isArchived = internalWorkflow.isArchived;
-        this.fieldVisibility = internalWorkflow.fieldVisibility;
-        this.instanceVisibility = internalWorkflow.instanceVisibility;
-        this.adminUsers = internalWorkflow.adminUsers;
-        this.standardUsers = internalWorkflow.standardUsers;
-        this.taskCountLimit = internalWorkflow.taskCountLimit;
-        this.fieldCountLimit = internalWorkflow.fieldCountLimit;
-        this.fieldSizeLimit = internalWorkflow.fieldSizeLimit;
-        this.fieldTotalSizeLimit = internalWorkflow.fieldTotalSizeLimit;
-        this.dataTableRowLimit = internalWorkflow.dataTableRowLimit;
-        this.dataTableColumnLimit = internalWorkflow.dataTableColumnLimit;
-        this.dataTableCellLimit = internalWorkflow.dataTableCellLimit;
-    }
 }

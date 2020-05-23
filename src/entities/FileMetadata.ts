@@ -1,12 +1,6 @@
 import { CatalyticSDKAPIModels } from '../internal/lib/catalyticSDKAPI';
 
 export default class FileMetadata implements CatalyticSDKAPIModels.FileMetadata {
-    constructor(file?: CatalyticSDKAPIModels.FileMetadata) {
-        if (file) {
-            this.fromInternal(file);
-        }
-    }
-
     /**
      * The unique ID of the File in Catalytic
      */
@@ -46,16 +40,4 @@ export default class FileMetadata implements CatalyticSDKAPIModels.FileMetadata 
      * reference in a !:FilesPage
      */
     referenceName?: string;
-
-    private fromInternal(file: CatalyticSDKAPIModels.FileMetadata): void {
-        this.id = file.id;
-        this.name = file.name;
-        this.teamName = file.teamName;
-        this.contentType = file.contentType;
-        this.sizeInBytes = file.sizeInBytes;
-        this.displaySize = file.displaySize;
-        this.isPublic = file.isPublic;
-        this.md5Hash = file.md5Hash;
-        this.referenceName = file.referenceName;
-    }
 }

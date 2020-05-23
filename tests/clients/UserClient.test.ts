@@ -13,10 +13,9 @@ describe('UserClient', function() {
     });
 
     it('should get a User by ID', async function() {
-        const id = v4();
         const mockUser = mock.mockUser();
         let headers;
-        mockApi.get(`/api/users/${id}`).reply(function() {
+        mockApi.get(`/api/users/${mockUser.id}`).reply(function() {
             headers = this.req.headers;
             return [200, mockUser];
         });
@@ -24,7 +23,7 @@ describe('UserClient', function() {
         const client = new CatalyticClient();
         client.credentials = mock.mockCredentials();
 
-        const result = await client.userClient.get(id);
+        const result = await client.userClient.get(mockUser.id);
 
         expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockUser)));
         expect(headers.authorization).to.be.ok.and.to.include(`Bearer ${client.credentials.token}`);

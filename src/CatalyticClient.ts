@@ -1,5 +1,5 @@
 import { CatalyticSDKAPI } from './internal/lib/catalyticSDKAPI';
-import Credentials from './entities/Credentials';
+import Credentials, { CredentialsProvider } from './entities/Credentials';
 import ClientProvider from './clients/ClientProvider';
 import { version } from '../package.json';
 
@@ -33,8 +33,4 @@ export default class CatalyticClient implements CredentialsProvider {
         this.userClient = this.clientProvider.getUserClient();
         this.workflowClient = this.clientProvider.getWorkflowClient();
     }
-}
-
-export interface CredentialsProvider {
-    credentials: Credentials;
 }
