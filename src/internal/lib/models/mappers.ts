@@ -7,6 +7,29 @@
 import * as msRest from "@azure/ms-rest-js";
 
 
+export const CredentialsCreationRequest: msRest.CompositeMapper = {
+  serializedName: "CredentialsCreationRequest",
+  type: {
+    name: "Composite",
+    className: "CredentialsCreationRequest",
+    modelProperties: {
+      domain: {
+        required: true,
+        serializedName: "domain",
+        type: {
+          name: "String"
+        }
+      },
+      name: {
+        serializedName: "name",
+        type: {
+          name: "String"
+        }
+      }
+    }
+  }
+};
+
 export const ProblemDetails: msRest.CompositeMapper = {
   serializedName: "ProblemDetails",
   type: {
@@ -45,7 +68,6 @@ export const ProblemDetails: msRest.CompositeMapper = {
         }
       },
       extensions: {
-        readOnly: true,
         serializedName: "extensions",
         type: {
           name: "Dictionary",
@@ -60,669 +82,42 @@ export const ProblemDetails: msRest.CompositeMapper = {
   }
 };
 
-export const ActionInputDefinition: msRest.CompositeMapper = {
-  serializedName: "ActionInputDefinition",
+export const Credentials: msRest.CompositeMapper = {
+  serializedName: "Credentials",
   type: {
     name: "Composite",
-    className: "ActionInputDefinition",
-    modelProperties: {
-      isRequired: {
-        serializedName: "isRequired",
-        type: {
-          name: "Boolean"
-        }
-      },
-      defaultValueSerialized: {
-        serializedName: "defaultValueSerialized",
-        type: {
-          name: "String"
-        }
-      },
-      name: {
-        serializedName: "name",
-        type: {
-          name: "String"
-        }
-      },
-      description: {
-        serializedName: "description",
-        type: {
-          name: "String"
-        }
-      },
-      type: {
-        serializedName: "type",
-        type: {
-          name: "String"
-        }
-      }
-    }
-  }
-};
-
-export const ActionOutputDefinition: msRest.CompositeMapper = {
-  serializedName: "ActionOutputDefinition",
-  type: {
-    name: "Composite",
-    className: "ActionOutputDefinition",
-    modelProperties: {
-      name: {
-        serializedName: "name",
-        type: {
-          name: "String"
-        }
-      },
-      description: {
-        serializedName: "description",
-        type: {
-          name: "String"
-        }
-      },
-      type: {
-        serializedName: "type",
-        type: {
-          name: "String"
-        }
-      }
-    }
-  }
-};
-
-export const Action: msRest.CompositeMapper = {
-  serializedName: "Action",
-  type: {
-    name: "Composite",
-    className: "Action",
+    className: "Credentials",
     modelProperties: {
       id: {
+        required: true,
         serializedName: "id",
         type: {
           name: "Uuid"
         }
       },
-      teamName: {
-        serializedName: "teamName",
-        type: {
-          name: "String"
-        }
-      },
-      name: {
-        serializedName: "name",
-        type: {
-          name: "String"
-        }
-      },
-      description: {
-        serializedName: "description",
-        type: {
-          name: "String"
-        }
-      },
-      tags: {
-        readOnly: true,
-        serializedName: "tags",
-        type: {
-          name: "Sequence",
-          element: {
-            type: {
-              name: "String"
-            }
-          }
-        }
-      },
-      requiredWorkerTags: {
-        readOnly: true,
-        serializedName: "requiredWorkerTags",
-        type: {
-          name: "Sequence",
-          element: {
-            type: {
-              name: "String"
-            }
-          }
-        }
-      },
-      inputs: {
-        readOnly: true,
-        serializedName: "inputs",
-        type: {
-          name: "Sequence",
-          element: {
-            type: {
-              name: "Composite",
-              className: "ActionInputDefinition"
-            }
-          }
-        }
-      },
-      outputs: {
-        readOnly: true,
-        serializedName: "outputs",
-        type: {
-          name: "Sequence",
-          element: {
-            type: {
-              name: "Composite",
-              className: "ActionOutputDefinition"
-            }
-          }
-        }
-      },
-      isPublished: {
-        serializedName: "isPublished",
-        type: {
-          name: "Boolean"
-        }
-      }
-    }
-  }
-};
-
-export const ActionsPage: msRest.CompositeMapper = {
-  serializedName: "ActionsPage",
-  type: {
-    name: "Composite",
-    className: "ActionsPage",
-    modelProperties: {
-      actions: {
-        readOnly: true,
-        serializedName: "actions",
-        type: {
-          name: "Sequence",
-          element: {
-            type: {
-              name: "Composite",
-              className: "Action"
-            }
-          }
-        }
-      },
-      nextPageToken: {
-        serializedName: "nextPageToken",
-        type: {
-          name: "String"
-        }
-      },
-      count: {
-        readOnly: true,
-        serializedName: "count",
-        type: {
-          name: "Number"
-        }
-      }
-    }
-  }
-};
-
-export const RegisterActionRequest: msRest.CompositeMapper = {
-  serializedName: "RegisterActionRequest",
-  type: {
-    name: "Composite",
-    className: "RegisterActionRequest",
-    modelProperties: {
-      name: {
-        serializedName: "name",
-        type: {
-          name: "String"
-        }
-      },
-      description: {
-        serializedName: "description",
-        type: {
-          name: "String"
-        }
-      },
-      tags: {
-        readOnly: true,
-        serializedName: "tags",
-        type: {
-          name: "Sequence",
-          element: {
-            type: {
-              name: "String"
-            }
-          }
-        }
-      },
-      requiredWorkerTags: {
-        readOnly: true,
-        serializedName: "requiredWorkerTags",
-        type: {
-          name: "Sequence",
-          element: {
-            type: {
-              name: "String"
-            }
-          }
-        }
-      },
-      inputs: {
-        readOnly: true,
-        serializedName: "inputs",
-        type: {
-          name: "Sequence",
-          element: {
-            type: {
-              name: "Composite",
-              className: "ActionInputDefinition"
-            }
-          }
-        }
-      },
-      outputs: {
-        readOnly: true,
-        serializedName: "outputs",
-        type: {
-          name: "Sequence",
-          element: {
-            type: {
-              name: "Composite",
-              className: "ActionOutputDefinition"
-            }
-          }
-        }
-      },
-      isPublished: {
-        serializedName: "isPublished",
-        type: {
-          name: "Boolean"
-        }
-      }
-    }
-  }
-};
-
-export const UpdateActionRequest: msRest.CompositeMapper = {
-  serializedName: "UpdateActionRequest",
-  type: {
-    name: "Composite",
-    className: "UpdateActionRequest",
-    modelProperties: {
-      name: {
-        serializedName: "name",
-        type: {
-          name: "String"
-        }
-      },
-      description: {
-        serializedName: "description",
-        type: {
-          name: "String"
-        }
-      },
-      tags: {
-        serializedName: "tags",
-        type: {
-          name: "Sequence",
-          element: {
-            type: {
-              name: "String"
-            }
-          }
-        }
-      },
-      requiredWorkerTags: {
-        serializedName: "requiredWorkerTags",
-        type: {
-          name: "Sequence",
-          element: {
-            type: {
-              name: "String"
-            }
-          }
-        }
-      },
-      isPublished: {
-        nullable: true,
-        serializedName: "isPublished",
-        type: {
-          name: "Boolean"
-        }
-      }
-    }
-  }
-};
-
-export const ActionWorker: msRest.CompositeMapper = {
-  serializedName: "ActionWorker",
-  type: {
-    name: "Composite",
-    className: "ActionWorker",
-    modelProperties: {
-      id: {
-        serializedName: "id",
-        type: {
-          name: "Uuid"
-        }
-      },
-      teamName: {
-        serializedName: "teamName",
-        type: {
-          name: "String"
-        }
-      },
-      name: {
-        serializedName: "name",
-        type: {
-          name: "String"
-        }
-      },
-      description: {
-        serializedName: "description",
-        type: {
-          name: "String"
-        }
-      },
-      tags: {
-        readOnly: true,
-        serializedName: "tags",
-        type: {
-          name: "Sequence",
-          element: {
-            type: {
-              name: "String"
-            }
-          }
-        }
-      },
-      hostname: {
-        serializedName: "hostname",
-        type: {
-          name: "String"
-        }
-      },
-      ipAddress: {
-        serializedName: "ipAddress",
-        type: {
-          name: "String"
-        }
-      },
-      implementedActionIds: {
-        readOnly: true,
-        serializedName: "implementedActionIds",
-        type: {
-          name: "Sequence",
-          element: {
-            type: {
-              name: "Uuid"
-            }
-          }
-        }
-      },
-      lastSeenTime: {
-        serializedName: "lastSeenTime",
-        type: {
-          name: "DateTime"
-        }
-      }
-    }
-  }
-};
-
-export const ActionWorkersPage: msRest.CompositeMapper = {
-  serializedName: "ActionWorkersPage",
-  type: {
-    name: "Composite",
-    className: "ActionWorkersPage",
-    modelProperties: {
-      actionWorkers: {
-        readOnly: true,
-        serializedName: "actionWorkers",
-        type: {
-          name: "Sequence",
-          element: {
-            type: {
-              name: "Composite",
-              className: "ActionWorker"
-            }
-          }
-        }
-      },
-      nextPageToken: {
-        serializedName: "nextPageToken",
-        type: {
-          name: "String"
-        }
-      },
-      count: {
-        readOnly: true,
-        serializedName: "count",
-        type: {
-          name: "Number"
-        }
-      }
-    }
-  }
-};
-
-export const CreateActionWorkerRequest: msRest.CompositeMapper = {
-  serializedName: "CreateActionWorkerRequest",
-  type: {
-    name: "Composite",
-    className: "CreateActionWorkerRequest",
-    modelProperties: {
-      name: {
-        serializedName: "name",
-        type: {
-          name: "String"
-        }
-      },
-      description: {
-        serializedName: "description",
-        type: {
-          name: "String"
-        }
-      },
-      tags: {
-        serializedName: "tags",
-        type: {
-          name: "Sequence",
-          element: {
-            type: {
-              name: "String"
-            }
-          }
-        }
-      },
-      hostname: {
-        serializedName: "hostname",
-        type: {
-          name: "String"
-        }
-      },
-      ipAddress: {
-        serializedName: "ipAddress",
-        type: {
-          name: "String"
-        }
-      },
-      implementedActionIds: {
-        serializedName: "implementedActionIds",
-        type: {
-          name: "Sequence",
-          element: {
-            type: {
-              name: "Uuid"
-            }
-          }
-        }
-      }
-    }
-  }
-};
-
-export const ActionWorkerWithCredentials: msRest.CompositeMapper = {
-  serializedName: "ActionWorkerWithCredentials",
-  type: {
-    name: "Composite",
-    className: "ActionWorkerWithCredentials",
-    modelProperties: {
-      secretKey: {
-        serializedName: "secretKey",
-        type: {
-          name: "String"
-        }
-      },
-      id: {
-        serializedName: "id",
-        type: {
-          name: "Uuid"
-        }
-      },
-      teamName: {
-        serializedName: "teamName",
-        type: {
-          name: "String"
-        }
-      },
-      name: {
-        serializedName: "name",
-        type: {
-          name: "String"
-        }
-      },
-      description: {
-        serializedName: "description",
-        type: {
-          name: "String"
-        }
-      },
-      tags: {
-        readOnly: true,
-        serializedName: "tags",
-        type: {
-          name: "Sequence",
-          element: {
-            type: {
-              name: "String"
-            }
-          }
-        }
-      },
-      hostname: {
-        serializedName: "hostname",
-        type: {
-          name: "String"
-        }
-      },
-      ipAddress: {
-        serializedName: "ipAddress",
-        type: {
-          name: "String"
-        }
-      },
-      implementedActionIds: {
-        readOnly: true,
-        serializedName: "implementedActionIds",
-        type: {
-          name: "Sequence",
-          element: {
-            type: {
-              name: "Uuid"
-            }
-          }
-        }
-      },
-      lastSeenTime: {
-        serializedName: "lastSeenTime",
-        type: {
-          name: "DateTime"
-        }
-      }
-    }
-  }
-};
-
-export const UpdateActionWorkerRequest: msRest.CompositeMapper = {
-  serializedName: "UpdateActionWorkerRequest",
-  type: {
-    name: "Composite",
-    className: "UpdateActionWorkerRequest",
-    modelProperties: {
-      id: {
-        serializedName: "id",
-        type: {
-          name: "Uuid"
-        }
-      },
-      name: {
-        serializedName: "name",
-        type: {
-          name: "String"
-        }
-      },
-      description: {
-        serializedName: "description",
-        type: {
-          name: "String"
-        }
-      },
-      tags: {
-        serializedName: "tags",
-        type: {
-          name: "Sequence",
-          element: {
-            type: {
-              name: "String"
-            }
-          }
-        }
-      },
-      hostname: {
-        serializedName: "hostname",
-        type: {
-          name: "String"
-        }
-      },
-      ipAddress: {
-        serializedName: "ipAddress",
-        type: {
-          name: "String"
-        }
-      },
-      implementedActionIds: {
-        serializedName: "implementedActionIds",
-        type: {
-          name: "Sequence",
-          element: {
-            type: {
-              name: "Uuid"
-            }
-          }
-        }
-      }
-    }
-  }
-};
-
-export const CreateDeveloperKeyRequest: msRest.CompositeMapper = {
-  serializedName: "CreateDeveloperKeyRequest",
-  type: {
-    name: "Composite",
-    className: "CreateDeveloperKeyRequest",
-    modelProperties: {
       domain: {
         required: true,
         serializedName: "domain",
         type: {
           name: "String"
         }
-      }
-    }
-  }
-};
-
-export const DeveloperKey: msRest.CompositeMapper = {
-  serializedName: "DeveloperKey",
-  type: {
-    name: "Composite",
-    className: "DeveloperKey",
-    modelProperties: {
-      accessIdentifier: {
-        required: true,
-        serializedName: "accessIdentifier",
+      },
+      name: {
+        serializedName: "name",
         type: {
-          name: "Uuid"
+          name: "String"
+        }
+      },
+      type: {
+        serializedName: "type",
+        type: {
+          name: "String"
+        }
+      },
+      token: {
+        serializedName: "token",
+        type: {
+          name: "String"
         }
       },
       secret: {
@@ -731,17 +126,40 @@ export const DeveloperKey: msRest.CompositeMapper = {
           name: "String"
         }
       },
-      status: {
-        required: true,
-        serializedName: "status",
+      environment: {
+        serializedName: "environment",
         type: {
           name: "String"
         }
       },
-      createdById: {
-        serializedName: "createdById",
+      owner: {
+        serializedName: "owner",
         type: {
-          name: "Uuid"
+          name: "String"
+        }
+      }
+    }
+  }
+};
+
+export const CredentialsCreationWithEmailAndPasswordRequest: msRest.CompositeMapper = {
+  serializedName: "CredentialsCreationWithEmailAndPasswordRequest",
+  type: {
+    name: "Composite",
+    className: "CredentialsCreationWithEmailAndPasswordRequest",
+    modelProperties: {
+      email: {
+        required: true,
+        serializedName: "email",
+        type: {
+          name: "String"
+        }
+      },
+      password: {
+        required: true,
+        serializedName: "password",
+        type: {
+          name: "String"
         }
       },
       domain: {
@@ -756,48 +174,27 @@ export const DeveloperKey: msRest.CompositeMapper = {
         type: {
           name: "String"
         }
-      },
-      referenceName: {
-        readOnly: true,
-        serializedName: "referenceName",
-        type: {
-          name: "String"
-        }
-      },
-      id: {
-        readOnly: true,
-        serializedName: "id",
-        type: {
-          name: "Uuid"
-        }
       }
     }
   }
 };
 
-export const DeveloperKeyActivationRequest: msRest.CompositeMapper = {
-  serializedName: "DeveloperKeyActivationRequest",
+export const WaitForCredentialsApprovalRequest: msRest.CompositeMapper = {
+  serializedName: "WaitForCredentialsApprovalRequest",
   type: {
     name: "Composite",
-    className: "DeveloperKeyActivationRequest",
+    className: "WaitForCredentialsApprovalRequest",
     modelProperties: {
-      domain: {
+      token: {
         required: true,
-        serializedName: "domain",
+        serializedName: "token",
         type: {
           name: "String"
         }
       },
-      accessIdentifier: {
-        required: true,
-        serializedName: "accessIdentifier",
-        type: {
-          name: "String"
-        }
-      },
-      requestTimeoutMS: {
+      waitTimeMillis: {
         nullable: true,
-        serializedName: "requestTimeoutMS",
+        serializedName: "waitTimeMillis",
         type: {
           name: "Number"
         }
@@ -813,7 +210,6 @@ export const FieldRestrictions: msRest.CompositeMapper = {
     className: "FieldRestrictions",
     modelProperties: {
       choices: {
-        readOnly: true,
         serializedName: "choices",
         type: {
           name: "Sequence",
@@ -883,14 +279,12 @@ export const DataTable: msRest.CompositeMapper = {
         }
       },
       dataTableId: {
-        readOnly: true,
         serializedName: "dataTableId",
         type: {
           name: "Uuid"
         }
       },
       referenceName: {
-        readOnly: true,
         serializedName: "referenceName",
         type: {
           name: "String"
@@ -917,7 +311,6 @@ export const DataTable: msRest.CompositeMapper = {
         }
       },
       columns: {
-        readOnly: true,
         serializedName: "columns",
         type: {
           name: "Sequence",
@@ -947,33 +340,8 @@ export const DataTable: msRest.CompositeMapper = {
           name: "String"
         }
       },
-      adminUsers: {
-        readOnly: true,
-        serializedName: "adminUsers",
-        type: {
-          name: "Sequence",
-          element: {
-            type: {
-              name: "String"
-            }
-          }
-        }
-      },
-      standardUsers: {
-        readOnly: true,
-        serializedName: "standardUsers",
-        type: {
-          name: "Sequence",
-          element: {
-            type: {
-              name: "String"
-            }
-          }
-        }
-      },
-      readOnlyUsers: {
-        readOnly: true,
-        serializedName: "readOnlyUsers",
+      visibleToUsers: {
+        serializedName: "visibleToUsers",
         type: {
           name: "Sequence",
           element: {
@@ -1005,6 +373,34 @@ export const DataTable: msRest.CompositeMapper = {
   }
 };
 
+export const PagingOptions: msRest.CompositeMapper = {
+  serializedName: "PagingOptions",
+  type: {
+    name: "Composite",
+    className: "PagingOptions",
+    modelProperties: {
+      size: {
+        serializedName: "size",
+        type: {
+          name: "Number"
+        }
+      },
+      pageToken: {
+        serializedName: "pageToken",
+        type: {
+          name: "String"
+        }
+      },
+      getAllResults: {
+        serializedName: "getAllResults",
+        type: {
+          name: "Boolean"
+        }
+      }
+    }
+  }
+};
+
 export const DataTablesPage: msRest.CompositeMapper = {
   serializedName: "DataTablesPage",
   type: {
@@ -1012,7 +408,6 @@ export const DataTablesPage: msRest.CompositeMapper = {
     className: "DataTablesPage",
     modelProperties: {
       dataTables: {
-        readOnly: true,
         serializedName: "dataTables",
         type: {
           name: "Sequence",
@@ -1024,40 +419,11 @@ export const DataTablesPage: msRest.CompositeMapper = {
           }
         }
       },
-      nextPageToken: {
-        serializedName: "nextPageToken",
+      nextPageOptions: {
+        serializedName: "nextPageOptions",
         type: {
-          name: "String"
-        }
-      },
-      count: {
-        readOnly: true,
-        serializedName: "count",
-        type: {
-          name: "Number"
-        }
-      }
-    }
-  }
-};
-
-export const DeveloperKeysPage: msRest.CompositeMapper = {
-  serializedName: "DeveloperKeysPage",
-  type: {
-    name: "Composite",
-    className: "DeveloperKeysPage",
-    modelProperties: {
-      developerKeys: {
-        readOnly: true,
-        serializedName: "developerKeys",
-        type: {
-          name: "Sequence",
-          element: {
-            type: {
-              name: "Composite",
-              className: "DeveloperKey"
-            }
-          }
+          name: "Composite",
+          className: "PagingOptions"
         }
       },
       nextPageToken: {
@@ -1067,7 +433,6 @@ export const DeveloperKeysPage: msRest.CompositeMapper = {
         }
       },
       count: {
-        readOnly: true,
         serializedName: "count",
         type: {
           name: "Number"
@@ -1077,11 +442,11 @@ export const DeveloperKeysPage: msRest.CompositeMapper = {
   }
 };
 
-export const File: msRest.CompositeMapper = {
-  serializedName: "File",
+export const FileMetadata: msRest.CompositeMapper = {
+  serializedName: "FileMetadata",
   type: {
     name: "Composite",
-    className: "File",
+    className: "FileMetadata",
     modelProperties: {
       id: {
         serializedName: "id",
@@ -1132,7 +497,6 @@ export const File: msRest.CompositeMapper = {
         }
       },
       referenceName: {
-        readOnly: true,
         serializedName: "referenceName",
         type: {
           name: "String"
@@ -1142,23 +506,29 @@ export const File: msRest.CompositeMapper = {
   }
 };
 
-export const FilesPage: msRest.CompositeMapper = {
-  serializedName: "FilesPage",
+export const FileMetadataPage: msRest.CompositeMapper = {
+  serializedName: "FileMetadataPage",
   type: {
     name: "Composite",
-    className: "FilesPage",
+    className: "FileMetadataPage",
     modelProperties: {
       files: {
-        readOnly: true,
         serializedName: "files",
         type: {
           name: "Sequence",
           element: {
             type: {
               name: "Composite",
-              className: "File"
+              className: "FileMetadata"
             }
           }
+        }
+      },
+      nextPageOptions: {
+        serializedName: "nextPageOptions",
+        type: {
+          name: "Composite",
+          className: "PagingOptions"
         }
       },
       nextPageToken: {
@@ -1168,86 +538,9 @@ export const FilesPage: msRest.CompositeMapper = {
         }
       },
       count: {
-        readOnly: true,
         serializedName: "count",
         type: {
           name: "Number"
-        }
-      }
-    }
-  }
-};
-
-export const InstanceStep: msRest.CompositeMapper = {
-  serializedName: "InstanceStep",
-  type: {
-    name: "Composite",
-    className: "InstanceStep",
-    modelProperties: {
-      id: {
-        required: true,
-        serializedName: "id",
-        type: {
-          name: "Uuid"
-        }
-      },
-      instanceId: {
-        required: true,
-        serializedName: "instanceId",
-        type: {
-          name: "Uuid"
-        }
-      },
-      pushbotId: {
-        required: true,
-        serializedName: "pushbotId",
-        type: {
-          name: "Uuid"
-        }
-      },
-      name: {
-        required: true,
-        serializedName: "name",
-        type: {
-          name: "String"
-        }
-      },
-      referenceName: {
-        required: true,
-        serializedName: "referenceName",
-        type: {
-          name: "String"
-        }
-      },
-      teamName: {
-        required: true,
-        serializedName: "teamName",
-        type: {
-          name: "String"
-        }
-      },
-      position: {
-        serializedName: "position",
-        type: {
-          name: "Number"
-        }
-      },
-      description: {
-        serializedName: "description",
-        type: {
-          name: "String"
-        }
-      },
-      status: {
-        serializedName: "status",
-        type: {
-          name: "String"
-        }
-      },
-      assignedTo: {
-        serializedName: "assignedTo",
-        type: {
-          name: "String"
         }
       }
     }
@@ -1319,6 +612,87 @@ export const Field: msRest.CompositeMapper = {
   }
 };
 
+export const InstanceStep: msRest.CompositeMapper = {
+  serializedName: "InstanceStep",
+  type: {
+    name: "Composite",
+    className: "InstanceStep",
+    modelProperties: {
+      id: {
+        required: true,
+        serializedName: "id",
+        type: {
+          name: "Uuid"
+        }
+      },
+      instanceId: {
+        required: true,
+        serializedName: "instanceId",
+        type: {
+          name: "Uuid"
+        }
+      },
+      workflowId: {
+        required: true,
+        serializedName: "workflowId",
+        type: {
+          name: "Uuid"
+        }
+      },
+      name: {
+        required: true,
+        serializedName: "name",
+        type: {
+          name: "String"
+        }
+      },
+      teamName: {
+        required: true,
+        serializedName: "teamName",
+        type: {
+          name: "String"
+        }
+      },
+      position: {
+        serializedName: "position",
+        type: {
+          name: "Number"
+        }
+      },
+      description: {
+        serializedName: "description",
+        type: {
+          name: "String"
+        }
+      },
+      status: {
+        serializedName: "status",
+        type: {
+          name: "String"
+        }
+      },
+      assignedTo: {
+        serializedName: "assignedTo",
+        type: {
+          name: "String"
+        }
+      },
+      outputFields: {
+        serializedName: "outputFields",
+        type: {
+          name: "Sequence",
+          element: {
+            type: {
+              name: "Composite",
+              className: "Field"
+            }
+          }
+        }
+      }
+    }
+  }
+};
+
 export const Instance: msRest.CompositeMapper = {
   serializedName: "Instance",
   type: {
@@ -1332,9 +706,9 @@ export const Instance: msRest.CompositeMapper = {
           name: "Uuid"
         }
       },
-      pushbotId: {
+      workflowId: {
         required: true,
-        serializedName: "pushbotId",
+        serializedName: "workflowId",
         type: {
           name: "Uuid"
         }
@@ -1364,8 +738,19 @@ export const Instance: msRest.CompositeMapper = {
           name: "String"
         }
       },
+      owner: {
+        serializedName: "owner",
+        type: {
+          name: "String"
+        }
+      },
+      createdBy: {
+        serializedName: "createdBy",
+        type: {
+          name: "String"
+        }
+      },
       steps: {
-        readOnly: true,
         serializedName: "steps",
         type: {
           name: "Sequence",
@@ -1378,7 +763,6 @@ export const Instance: msRest.CompositeMapper = {
         }
       },
       fields: {
-        readOnly: true,
         serializedName: "fields",
         type: {
           name: "Sequence",
@@ -1408,21 +792,8 @@ export const Instance: msRest.CompositeMapper = {
           name: "String"
         }
       },
-      adminUsers: {
-        readOnly: true,
-        serializedName: "adminUsers",
-        type: {
-          name: "Sequence",
-          element: {
-            type: {
-              name: "String"
-            }
-          }
-        }
-      },
-      standardUsers: {
-        readOnly: true,
-        serializedName: "standardUsers",
+      visibleToUsers: {
+        serializedName: "visibleToUsers",
         type: {
           name: "Sequence",
           element: {
@@ -1443,7 +814,6 @@ export const InstancesPage: msRest.CompositeMapper = {
     className: "InstancesPage",
     modelProperties: {
       instances: {
-        readOnly: true,
         serializedName: "instances",
         type: {
           name: "Sequence",
@@ -1455,6 +825,13 @@ export const InstancesPage: msRest.CompositeMapper = {
           }
         }
       },
+      nextPageOptions: {
+        serializedName: "nextPageOptions",
+        type: {
+          name: "Composite",
+          className: "PagingOptions"
+        }
+      },
       nextPageToken: {
         serializedName: "nextPageToken",
         type: {
@@ -1462,7 +839,6 @@ export const InstancesPage: msRest.CompositeMapper = {
         }
       },
       count: {
-        readOnly: true,
         serializedName: "count",
         type: {
           name: "Number"
@@ -1472,11 +848,11 @@ export const InstancesPage: msRest.CompositeMapper = {
   }
 };
 
-export const InstanceInputField: msRest.CompositeMapper = {
-  serializedName: "InstanceInputField",
+export const FieldUpdateRequest: msRest.CompositeMapper = {
+  serializedName: "FieldUpdateRequest",
   type: {
     name: "Composite",
-    className: "InstanceInputField",
+    className: "FieldUpdateRequest",
     modelProperties: {
       name: {
         serializedName: "name",
@@ -1506,8 +882,8 @@ export const StartInstanceRequest: msRest.CompositeMapper = {
     name: "Composite",
     className: "StartInstanceRequest",
     modelProperties: {
-      pushbotId: {
-        serializedName: "pushbotId",
+      workflowId: {
+        serializedName: "workflowId",
         type: {
           name: "Uuid"
         }
@@ -1525,14 +901,13 @@ export const StartInstanceRequest: msRest.CompositeMapper = {
         }
       },
       inputFields: {
-        readOnly: true,
         serializedName: "inputFields",
         type: {
           name: "Sequence",
           element: {
             type: {
               name: "Composite",
-              className: "InstanceInputField"
+              className: "FieldUpdateRequest"
             }
           }
         }
@@ -1548,7 +923,6 @@ export const InstanceStepsPage: msRest.CompositeMapper = {
     className: "InstanceStepsPage",
     modelProperties: {
       steps: {
-        readOnly: true,
         serializedName: "steps",
         type: {
           name: "Sequence",
@@ -1560,6 +934,13 @@ export const InstanceStepsPage: msRest.CompositeMapper = {
           }
         }
       },
+      nextPageOptions: {
+        serializedName: "nextPageOptions",
+        type: {
+          name: "Composite",
+          className: "PagingOptions"
+        }
+      },
       nextPageToken: {
         serializedName: "nextPageToken",
         type: {
@@ -1567,7 +948,6 @@ export const InstanceStepsPage: msRest.CompositeMapper = {
         }
       },
       count: {
-        readOnly: true,
         serializedName: "count",
         type: {
           name: "Number"
@@ -1590,14 +970,13 @@ export const CompleteStepRequest: msRest.CompositeMapper = {
         }
       },
       stepOutputFields: {
-        readOnly: true,
         serializedName: "stepOutputFields",
         type: {
           name: "Sequence",
           element: {
             type: {
               name: "Composite",
-              className: "InstanceInputField"
+              className: "FieldUpdateRequest"
             }
           }
         }
@@ -1606,12 +985,18 @@ export const CompleteStepRequest: msRest.CompositeMapper = {
   }
 };
 
-export const ReassignTaskRequest: msRest.CompositeMapper = {
-  serializedName: "ReassignTaskRequest",
+export const ReassignStepRequest: msRest.CompositeMapper = {
+  serializedName: "ReassignStepRequest",
   type: {
     name: "Composite",
-    className: "ReassignTaskRequest",
+    className: "ReassignStepRequest",
     modelProperties: {
+      id: {
+        serializedName: "id",
+        type: {
+          name: "Uuid"
+        }
+      },
       assignTo: {
         serializedName: "assignTo",
         type: {
@@ -1622,11 +1007,137 @@ export const ReassignTaskRequest: msRest.CompositeMapper = {
   }
 };
 
-export const Pushbot: msRest.CompositeMapper = {
-  serializedName: "Pushbot",
+export const CredentialsPage: msRest.CompositeMapper = {
+  serializedName: "CredentialsPage",
   type: {
     name: "Composite",
-    className: "Pushbot",
+    className: "CredentialsPage",
+    modelProperties: {
+      credentials: {
+        serializedName: "credentials",
+        type: {
+          name: "Sequence",
+          element: {
+            type: {
+              name: "Composite",
+              className: "Credentials"
+            }
+          }
+        }
+      },
+      nextPageOptions: {
+        serializedName: "nextPageOptions",
+        type: {
+          name: "Composite",
+          className: "PagingOptions"
+        }
+      },
+      nextPageToken: {
+        serializedName: "nextPageToken",
+        type: {
+          name: "String"
+        }
+      },
+      count: {
+        serializedName: "count",
+        type: {
+          name: "Number"
+        }
+      }
+    }
+  }
+};
+
+export const User: msRest.CompositeMapper = {
+  serializedName: "User",
+  type: {
+    name: "Composite",
+    className: "User",
+    modelProperties: {
+      id: {
+        required: true,
+        serializedName: "id",
+        type: {
+          name: "Uuid"
+        }
+      },
+      username: {
+        serializedName: "username",
+        type: {
+          name: "String"
+        }
+      },
+      email: {
+        required: true,
+        serializedName: "email",
+        type: {
+          name: "String"
+        }
+      },
+      fullName: {
+        required: true,
+        serializedName: "fullName",
+        type: {
+          name: "String"
+        }
+      },
+      teamName: {
+        required: true,
+        serializedName: "teamName",
+        type: {
+          name: "String"
+        }
+      }
+    }
+  }
+};
+
+export const UsersPage: msRest.CompositeMapper = {
+  serializedName: "UsersPage",
+  type: {
+    name: "Composite",
+    className: "UsersPage",
+    modelProperties: {
+      users: {
+        serializedName: "users",
+        type: {
+          name: "Sequence",
+          element: {
+            type: {
+              name: "Composite",
+              className: "User"
+            }
+          }
+        }
+      },
+      nextPageOptions: {
+        serializedName: "nextPageOptions",
+        type: {
+          name: "Composite",
+          className: "PagingOptions"
+        }
+      },
+      nextPageToken: {
+        serializedName: "nextPageToken",
+        type: {
+          name: "String"
+        }
+      },
+      count: {
+        serializedName: "count",
+        type: {
+          name: "Number"
+        }
+      }
+    }
+  }
+};
+
+export const Workflow: msRest.CompositeMapper = {
+  serializedName: "Workflow",
+  type: {
+    name: "Composite",
+    className: "Workflow",
     modelProperties: {
       id: {
         required: true,
@@ -1661,8 +1172,19 @@ export const Pushbot: msRest.CompositeMapper = {
           name: "String"
         }
       },
+      owner: {
+        serializedName: "owner",
+        type: {
+          name: "String"
+        }
+      },
+      createdBy: {
+        serializedName: "createdBy",
+        type: {
+          name: "String"
+        }
+      },
       inputFields: {
-        readOnly: true,
         serializedName: "inputFields",
         type: {
           name: "Sequence",
@@ -1699,7 +1221,6 @@ export const Pushbot: msRest.CompositeMapper = {
         }
       },
       adminUsers: {
-        readOnly: true,
         serializedName: "adminUsers",
         type: {
           name: "Sequence",
@@ -1711,20 +1232,7 @@ export const Pushbot: msRest.CompositeMapper = {
         }
       },
       standardUsers: {
-        readOnly: true,
         serializedName: "standardUsers",
-        type: {
-          name: "Sequence",
-          element: {
-            type: {
-              name: "String"
-            }
-          }
-        }
-      },
-      readOnlyUsers: {
-        readOnly: true,
-        serializedName: "readOnlyUsers",
         type: {
           name: "Sequence",
           element: {
@@ -1780,23 +1288,29 @@ export const Pushbot: msRest.CompositeMapper = {
   }
 };
 
-export const PushbotsPage: msRest.CompositeMapper = {
-  serializedName: "PushbotsPage",
+export const WorkflowsPage: msRest.CompositeMapper = {
+  serializedName: "WorkflowsPage",
   type: {
     name: "Composite",
-    className: "PushbotsPage",
+    className: "WorkflowsPage",
     modelProperties: {
-      pushbots: {
-        readOnly: true,
-        serializedName: "pushbots",
+      workflows: {
+        serializedName: "workflows",
         type: {
           name: "Sequence",
           element: {
             type: {
               name: "Composite",
-              className: "Pushbot"
+              className: "Workflow"
             }
           }
+        }
+      },
+      nextPageOptions: {
+        serializedName: "nextPageOptions",
+        type: {
+          name: "Composite",
+          className: "PagingOptions"
         }
       },
       nextPageToken: {
@@ -1806,10 +1320,121 @@ export const PushbotsPage: msRest.CompositeMapper = {
         }
       },
       count: {
-        readOnly: true,
         serializedName: "count",
         type: {
           name: "Number"
+        }
+      }
+    }
+  }
+};
+
+export const WorkflowImportRequest: msRest.CompositeMapper = {
+  serializedName: "WorkflowImportRequest",
+  type: {
+    name: "Composite",
+    className: "WorkflowImportRequest",
+    modelProperties: {
+      fileId: {
+        serializedName: "fileId",
+        type: {
+          name: "Uuid"
+        }
+      },
+      password: {
+        serializedName: "password",
+        type: {
+          name: "String"
+        }
+      }
+    }
+  }
+};
+
+export const WorkflowImport: msRest.CompositeMapper = {
+  serializedName: "WorkflowImport",
+  type: {
+    name: "Composite",
+    className: "WorkflowImport",
+    modelProperties: {
+      id: {
+        serializedName: "id",
+        type: {
+          name: "Uuid"
+        }
+      },
+      name: {
+        serializedName: "name",
+        type: {
+          name: "String"
+        }
+      },
+      workflowId: {
+        serializedName: "workflowId",
+        type: {
+          name: "Uuid"
+        }
+      },
+      errorMessage: {
+        serializedName: "errorMessage",
+        type: {
+          name: "String"
+        }
+      }
+    }
+  }
+};
+
+export const WorkflowExportRequest: msRest.CompositeMapper = {
+  serializedName: "WorkflowExportRequest",
+  type: {
+    name: "Composite",
+    className: "WorkflowExportRequest",
+    modelProperties: {
+      workflowId: {
+        serializedName: "workflowId",
+        type: {
+          name: "Uuid"
+        }
+      },
+      password: {
+        serializedName: "password",
+        type: {
+          name: "String"
+        }
+      }
+    }
+  }
+};
+
+export const WorkflowExport: msRest.CompositeMapper = {
+  serializedName: "WorkflowExport",
+  type: {
+    name: "Composite",
+    className: "WorkflowExport",
+    modelProperties: {
+      id: {
+        serializedName: "id",
+        type: {
+          name: "Uuid"
+        }
+      },
+      name: {
+        serializedName: "name",
+        type: {
+          name: "String"
+        }
+      },
+      fileId: {
+        serializedName: "fileId",
+        type: {
+          name: "Uuid"
+        }
+      },
+      errorMessage: {
+        serializedName: "errorMessage",
+        type: {
+          name: "String"
         }
       }
     }

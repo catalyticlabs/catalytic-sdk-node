@@ -1,8 +1,11 @@
 {
     "compilerOptions": {
-        "outDir": "./built"
+        "declaration": true,
+        "esModuleInterop": true,
+        "outDir": "./built",
+        "resolveJsonModule": true
     },
     "module": "commonjs",
     "lib": ["es2018"],
-    "include": ["src/**/*"]
+    "include": ["./src/**/*", "./index.ts"]
 }

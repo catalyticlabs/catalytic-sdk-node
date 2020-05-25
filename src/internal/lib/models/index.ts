@@ -10,6 +10,26 @@ import * as msRest from "@azure/ms-rest-js";
 
 /**
  * @interface
+ * An interface representing CredentialsCreationRequest.
+ * Represents a request to generate new Credentials for authentication into a
+ * Catalytic team
+ *
+ */
+export interface CredentialsCreationRequest {
+  /**
+   * @member {string} domain Catalytic team domain to authenticate in to (ex:
+   * "myteam.pushbot.com")
+   */
+  domain: string;
+  /**
+   * @member {string} [name] Optional Name to assign to Credentials; visible in
+   * Catalytic UI
+   */
+  name?: string;
+}
+
+/**
+ * @interface
  * An interface representing ProblemDetails.
  */
 export interface ProblemDetails {
@@ -34,461 +54,121 @@ export interface ProblemDetails {
    */
   instance?: string;
   /**
-   * @member {{ [propertyName: string]: any }} [extensions] **NOTE: This
-   * property will not be serialized. It can only be populated by the server.**
+   * @member {{ [propertyName: string]: any }} [extensions]
    */
-  readonly extensions?: { [propertyName: string]: any };
+  extensions?: { [propertyName: string]: any };
 }
 
 /**
  * @interface
- * An interface representing ActionInputDefinition.
+ * An interface representing Credentials.
+ * A set of Credentials used for authentication via the SDK
+ *
  */
-export interface ActionInputDefinition {
+export interface Credentials {
   /**
-   * @member {boolean} [isRequired]
+   * @member {string} id The public Id of the Credentials
    */
-  isRequired?: boolean;
+  id: string;
   /**
-   * @member {string} [defaultValueSerialized]
-   */
-  defaultValueSerialized?: string;
-  /**
-   * @member {string} [name]
-   */
-  name?: string;
-  /**
-   * @member {string} [description]
-   */
-  description?: string;
-  /**
-   * @member {Type} [type] Possible values include: 'undefined', 'text',
-   * 'integer', 'decimal', 'date', 'dateTime', 'boolean', 'singleChoice',
-   * 'multipleChoice', 'json', 'file', 'table', 'pushbot', 'instance', 'user'
-   */
-  type?: Type;
-}
-
-/**
- * @interface
- * An interface representing ActionOutputDefinition.
- */
-export interface ActionOutputDefinition {
-  /**
-   * @member {string} [name]
-   */
-  name?: string;
-  /**
-   * @member {string} [description]
-   */
-  description?: string;
-  /**
-   * @member {Type1} [type] Possible values include: 'undefined', 'text',
-   * 'integer', 'decimal', 'date', 'dateTime', 'boolean', 'singleChoice',
-   * 'multipleChoice', 'json', 'file', 'table', 'pushbot', 'instance', 'user'
-   */
-  type?: Type1;
-}
-
-/**
- * @interface
- * An interface representing Action.
- */
-export interface Action {
-  /**
-   * @member {string} [id]
-   */
-  id?: string;
-  /**
-   * @member {string} [teamName]
-   */
-  teamName?: string;
-  /**
-   * @member {string} [name]
-   */
-  name?: string;
-  /**
-   * @member {string} [description]
-   */
-  description?: string;
-  /**
-   * @member {string[]} [tags] **NOTE: This property will not be serialized. It
-   * can only be populated by the server.**
-   */
-  readonly tags?: string[];
-  /**
-   * @member {string[]} [requiredWorkerTags] **NOTE: This property will not be
-   * serialized. It can only be populated by the server.**
-   */
-  readonly requiredWorkerTags?: string[];
-  /**
-   * @member {ActionInputDefinition[]} [inputs] **NOTE: This property will not
-   * be serialized. It can only be populated by the server.**
-   */
-  readonly inputs?: ActionInputDefinition[];
-  /**
-   * @member {ActionOutputDefinition[]} [outputs] **NOTE: This property will
-   * not be serialized. It can only be populated by the server.**
-   */
-  readonly outputs?: ActionOutputDefinition[];
-  /**
-   * @member {boolean} [isPublished]
-   */
-  isPublished?: boolean;
-}
-
-/**
- * @interface
- * An interface representing ActionsPage.
- */
-export interface ActionsPage {
-  /**
-   * @member {Action[]} [actions] **NOTE: This property will not be serialized.
-   * It can only be populated by the server.**
-   */
-  readonly actions?: Action[];
-  /**
-   * @member {string} [nextPageToken]
-   */
-  nextPageToken?: string;
-  /**
-   * @member {number} [count] **NOTE: This property will not be serialized. It
-   * can only be populated by the server.**
-   */
-  readonly count?: number;
-}
-
-/**
- * @interface
- * An interface representing RegisterActionRequest.
- */
-export interface RegisterActionRequest {
-  /**
-   * @member {string} [name]
-   */
-  name?: string;
-  /**
-   * @member {string} [description]
-   */
-  description?: string;
-  /**
-   * @member {string[]} [tags] **NOTE: This property will not be serialized. It
-   * can only be populated by the server.**
-   */
-  readonly tags?: string[];
-  /**
-   * @member {string[]} [requiredWorkerTags] **NOTE: This property will not be
-   * serialized. It can only be populated by the server.**
-   */
-  readonly requiredWorkerTags?: string[];
-  /**
-   * @member {ActionInputDefinition[]} [inputs] **NOTE: This property will not
-   * be serialized. It can only be populated by the server.**
-   */
-  readonly inputs?: ActionInputDefinition[];
-  /**
-   * @member {ActionOutputDefinition[]} [outputs] **NOTE: This property will
-   * not be serialized. It can only be populated by the server.**
-   */
-  readonly outputs?: ActionOutputDefinition[];
-  /**
-   * @member {boolean} [isPublished]
-   */
-  isPublished?: boolean;
-}
-
-/**
- * @interface
- * An interface representing UpdateActionRequest.
- */
-export interface UpdateActionRequest {
-  /**
-   * @member {string} [name]
-   */
-  name?: string;
-  /**
-   * @member {string} [description]
-   */
-  description?: string;
-  /**
-   * @member {string[]} [tags]
-   */
-  tags?: string[];
-  /**
-   * @member {string[]} [requiredWorkerTags]
-   */
-  requiredWorkerTags?: string[];
-  /**
-   * @member {boolean} [isPublished]
-   */
-  isPublished?: boolean;
-}
-
-/**
- * @interface
- * An interface representing ActionWorker.
- */
-export interface ActionWorker {
-  /**
-   * @member {string} [id]
-   */
-  id?: string;
-  /**
-   * @member {string} [teamName]
-   */
-  teamName?: string;
-  /**
-   * @member {string} [name]
-   */
-  name?: string;
-  /**
-   * @member {string} [description]
-   */
-  description?: string;
-  /**
-   * @member {string[]} [tags] **NOTE: This property will not be serialized. It
-   * can only be populated by the server.**
-   */
-  readonly tags?: string[];
-  /**
-   * @member {string} [hostname]
-   */
-  hostname?: string;
-  /**
-   * @member {string} [ipAddress]
-   */
-  ipAddress?: string;
-  /**
-   * @member {string[]} [implementedActionIds] **NOTE: This property will not
-   * be serialized. It can only be populated by the server.**
-   */
-  readonly implementedActionIds?: string[];
-  /**
-   * @member {Date} [lastSeenTime]
-   */
-  lastSeenTime?: Date;
-}
-
-/**
- * @interface
- * An interface representing ActionWorkersPage.
- */
-export interface ActionWorkersPage {
-  /**
-   * @member {ActionWorker[]} [actionWorkers] **NOTE: This property will not be
-   * serialized. It can only be populated by the server.**
-   */
-  readonly actionWorkers?: ActionWorker[];
-  /**
-   * @member {string} [nextPageToken]
-   */
-  nextPageToken?: string;
-  /**
-   * @member {number} [count] **NOTE: This property will not be serialized. It
-   * can only be populated by the server.**
-   */
-  readonly count?: number;
-}
-
-/**
- * @interface
- * An interface representing CreateActionWorkerRequest.
- */
-export interface CreateActionWorkerRequest {
-  /**
-   * @member {string} [name]
-   */
-  name?: string;
-  /**
-   * @member {string} [description]
-   */
-  description?: string;
-  /**
-   * @member {string[]} [tags]
-   */
-  tags?: string[];
-  /**
-   * @member {string} [hostname]
-   */
-  hostname?: string;
-  /**
-   * @member {string} [ipAddress]
-   */
-  ipAddress?: string;
-  /**
-   * @member {string[]} [implementedActionIds]
-   */
-  implementedActionIds?: string[];
-}
-
-/**
- * @interface
- * An interface representing ActionWorkerWithCredentials.
- */
-export interface ActionWorkerWithCredentials {
-  /**
-   * @member {string} [secretKey]
-   */
-  secretKey?: string;
-  /**
-   * @member {string} [id]
-   */
-  id?: string;
-  /**
-   * @member {string} [teamName]
-   */
-  teamName?: string;
-  /**
-   * @member {string} [name]
-   */
-  name?: string;
-  /**
-   * @member {string} [description]
-   */
-  description?: string;
-  /**
-   * @member {string[]} [tags] **NOTE: This property will not be serialized. It
-   * can only be populated by the server.**
-   */
-  readonly tags?: string[];
-  /**
-   * @member {string} [hostname]
-   */
-  hostname?: string;
-  /**
-   * @member {string} [ipAddress]
-   */
-  ipAddress?: string;
-  /**
-   * @member {string[]} [implementedActionIds] **NOTE: This property will not
-   * be serialized. It can only be populated by the server.**
-   */
-  readonly implementedActionIds?: string[];
-  /**
-   * @member {Date} [lastSeenTime]
-   */
-  lastSeenTime?: Date;
-}
-
-/**
- * @interface
- * An interface representing UpdateActionWorkerRequest.
- */
-export interface UpdateActionWorkerRequest {
-  /**
-   * @member {string} [id]
-   */
-  id?: string;
-  /**
-   * @member {string} [name]
-   */
-  name?: string;
-  /**
-   * @member {string} [description]
-   */
-  description?: string;
-  /**
-   * @member {string[]} [tags]
-   */
-  tags?: string[];
-  /**
-   * @member {string} [hostname]
-   */
-  hostname?: string;
-  /**
-   * @member {string} [ipAddress]
-   */
-  ipAddress?: string;
-  /**
-   * @member {string[]} [implementedActionIds]
-   */
-  implementedActionIds?: string[];
-}
-
-/**
- * @interface
- * An interface representing CreateDeveloperKeyRequest.
- */
-export interface CreateDeveloperKeyRequest {
-  /**
-   * @member {string} domain
+   * @member {string} domain The Domain of the Catalytic team with which these
+   * Credentials are associated
    */
   domain: string;
-}
-
-/**
- * @interface
- * An interface representing DeveloperKey.
- */
-export interface DeveloperKey {
   /**
-   * @member {string} accessIdentifier
+   * @member {string} [name] The name associated with the Credentials
    */
-  accessIdentifier: string;
+  name?: string;
   /**
-   * @member {string} [secret]
+   * @member {Type} [type] Possible values include: 'user', 'actionWorker'
+   */
+  type?: Type;
+  /**
+   * @member {string} [token] The serialized Credentials Token
+   */
+  token?: string;
+  /**
+   * @member {string} [secret] The confidential Secret of the Credentials
    */
   secret?: string;
   /**
-   * @member {Status} status Possible values include: 'requested', 'approved',
-   * 'active', 'revoked'
+   * @member {string} [environment] The environment of the Catalytic team
+   * associated with the Credentials
    */
-  status: Status;
+  environment?: string;
   /**
-   * @member {string} [createdById]
+   * @member {string} [owner] The email address of the user who these
+   * Credentials belong to
    */
-  createdById?: string;
-  /**
-   * @member {string} domain
-   */
-  domain: string;
-  /**
-   * @member {string} [name]
-   */
-  name?: string;
-  /**
-   * @member {string} [referenceName] **NOTE: This property will not be
-   * serialized. It can only be populated by the server.**
-   */
-  readonly referenceName?: string;
-  /**
-   * @member {string} [id] **NOTE: This property will not be serialized. It can
-   * only be populated by the server.**
-   */
-  readonly id?: string;
+  owner?: string;
 }
 
 /**
  * @interface
- * An interface representing DeveloperKeyActivationRequest.
+ * An interface representing CredentialsCreationWithEmailAndPasswordRequest.
+ * Represents a request to create and approve new Credentials for
+ * authentication into a Catalytic team
+ * with passed username and password
+ *
  */
-export interface DeveloperKeyActivationRequest {
+export interface CredentialsCreationWithEmailAndPasswordRequest {
   /**
-   * @member {string} domain
+   * @member {string} email Optional email address of the Catalytic user for
+   * whom the Credentials should be created
+   */
+  email: string;
+  /**
+   * @member {string} password Optional password of the Catalytic user for whom
+   * the Credentials should be created
+   */
+  password: string;
+  /**
+   * @member {string} domain Catalytic team domain to authenticate in to (ex:
+   * "myteam.pushbot.com")
    */
   domain: string;
   /**
-   * @member {string} accessIdentifier
+   * @member {string} [name] Optional Name to assign to Credentials; visible in
+   * Catalytic UI
    */
-  accessIdentifier: string;
+  name?: string;
+}
+
+/**
+ * @interface
+ * An interface representing WaitForCredentialsApprovalRequest.
+ * A request to activate Credentials
+ *
+ */
+export interface WaitForCredentialsApprovalRequest {
   /**
-   * @member {number} [requestTimeoutMS]
+   * @member {string} token Credentials Token
    */
-  requestTimeoutMS?: number;
+  token: string;
+  /**
+   * @member {number} [waitTimeMillis] Optional timeout to wait for Credentials
+   * to be approved via UI (milliseconds)
+   * Defaults to 300000ms (5 minutes)
+   */
+  waitTimeMillis?: number;
 }
 
 /**
  * @interface
  * An interface representing FieldRestrictions.
+ * Contains validation rules for field values
+ *
  */
 export interface FieldRestrictions {
   /**
-   * @member {string[]} [choices] **NOTE: This property will not be serialized.
-   * It can only be populated by the server.**
+   * @member {string[]} [choices] A set of valid choices for this field. If
+   * set, FieldType must be
+   * SingleChoice or MultipleChoice
    */
-  readonly choices?: string[];
+  choices?: string[];
   /**
-   * @member {boolean} [valueRequired]
+   * @member {boolean} [valueRequired] Indicates whether null or empty values
+   * will be rejected
    */
   valueRequired?: boolean;
 }
@@ -503,12 +183,12 @@ export interface DataTableColumn {
    */
   name?: string;
   /**
-   * @member {Type2} [type] Possible values include: 'undefined', 'text',
+   * @member {Type1} [type] Possible values include: 'undefined', 'text',
    * 'integer', 'decimal', 'date', 'dateTime', 'json', 'bool', 'singleChoice',
-   * 'multipleChoice', 'instructions', 'file', 'table', 'pushbot', 'instance',
+   * 'multipleChoice', 'instructions', 'file', 'table', 'workflow', 'instance',
    * 'user'
    */
-  type?: Type2;
+  type?: Type1;
   /**
    * @member {string} [referenceName]
    */
@@ -525,257 +205,222 @@ export interface DataTableColumn {
  */
 export interface DataTable {
   /**
-   * @member {string} id
+   * @member {string} id The unique ID of the Data Table
    */
   id: string;
   /**
-   * @member {string} [dataTableId] **NOTE: This property will not be
-   * serialized. It can only be populated by the server.**
+   * @member {string} [dataTableId] Alias for `Id`
    */
-  readonly dataTableId?: string;
+  dataTableId?: string;
   /**
-   * @member {string} [referenceName] **NOTE: This property will not be
-   * serialized. It can only be populated by the server.**
+   * @member {string} [referenceName] Gets a unique reference name for this
+   * Data Table
    */
-  readonly referenceName?: string;
+  referenceName?: string;
   /**
-   * @member {string} name
+   * @member {string} name The descriptive name of the Data Table
    */
   name: string;
   /**
-   * @member {string} teamName
+   * @member {string} teamName The name of the team in which the Data Table is
+   * defined
    */
   teamName: string;
   /**
-   * @member {string} [description]
+   * @member {string} [description] A description of what kind of data is
+   * stored in the Table
    */
   description?: string;
   /**
-   * @member {DataTableColumn[]} [columns] **NOTE: This property will not be
-   * serialized. It can only be populated by the server.**
+   * @member {DataTableColumn[]} [columns] The ordered names of the columns in
+   * this Data Table
    */
-  readonly columns?: DataTableColumn[];
+  columns?: DataTableColumn[];
   /**
-   * @member {boolean} [isArchived]
+   * @member {boolean} [isArchived] Whether or not this table is archived and
+   * excluded from default searches
    */
   isArchived?: boolean;
   /**
-   * @member {Type3} [type] Possible values include: 'imported', 'master',
+   * @member {Type2} [type] Possible values include: 'imported', 'master',
    * 'application', 'instance', 'batch'
    */
-  type?: Type3;
+  type?: Type2;
   /**
    * @member {Visibility} [visibility] Possible values include: 'open',
    * 'restricted'
    */
   visibility?: Visibility;
   /**
-   * @member {string[]} [adminUsers] **NOTE: This property will not be
-   * serialized. It can only be populated by the server.**
+   * @member {string[]} [visibleToUsers] The users who can find and modify this
+   * Data Table
    */
-  readonly adminUsers?: string[];
+  visibleToUsers?: string[];
   /**
-   * @member {string[]} [standardUsers] **NOTE: This property will not be
-   * serialized. It can only be populated by the server.**
-   */
-  readonly standardUsers?: string[];
-  /**
-   * @member {string[]} [readOnlyUsers] **NOTE: This property will not be
-   * serialized. It can only be populated by the server.**
-   */
-  readonly readOnlyUsers?: string[];
-  /**
-   * @member {number} [rowLimit]
+   * @member {number} [rowLimit] The maximum number of rows in this Data Table
    */
   rowLimit?: number;
   /**
-   * @member {number} [columnLimit]
+   * @member {number} [columnLimit] The maximum number of columns in this Data
+   * Table
    */
   columnLimit?: number;
   /**
-   * @member {number} [cellLimit]
+   * @member {number} [cellLimit] The maximum number of cells in this Data
+   * Table
    */
   cellLimit?: number;
 }
 
 /**
  * @interface
+ * An interface representing PagingOptions.
+ * Properties required for executing a search request
+ *
+ */
+export interface PagingOptions {
+  /**
+   * @member {number} [size] The page size of search results
+   */
+  size?: number;
+  /**
+   * @member {string} [pageToken] A token used to retrieve the next page of
+   * results
+   */
+  pageToken?: string;
+  /**
+   * @member {boolean} [getAllResults] Indicates whether all results should be
+   * retrieved
+   */
+  getAllResults?: boolean;
+}
+
+/**
+ * @interface
  * An interface representing DataTablesPage.
+ * A page of DataTables returned from a FindAync request
+ *
  */
 export interface DataTablesPage {
   /**
-   * @member {DataTable[]} [dataTables] **NOTE: This property will not be
-   * serialized. It can only be populated by the server.**
+   * @member {DataTable[]} [dataTables] The list of DataTables
    */
-  readonly dataTables?: DataTable[];
+  dataTables?: DataTable[];
+  /**
+   * @member {PagingOptions} [nextPageOptions]
+   */
+  nextPageOptions?: PagingOptions;
   /**
    * @member {string} [nextPageToken]
    */
   nextPageToken?: string;
   /**
-   * @member {number} [count] **NOTE: This property will not be serialized. It
-   * can only be populated by the server.**
+   * @member {number} [count]
    */
-  readonly count?: number;
+  count?: number;
 }
 
 /**
  * @interface
- * An interface representing DeveloperKeysPage.
+ * An interface representing FileMetadata.
  */
-export interface DeveloperKeysPage {
+export interface FileMetadata {
   /**
-   * @member {DeveloperKey[]} [developerKeys] **NOTE: This property will not be
-   * serialized. It can only be populated by the server.**
-   */
-  readonly developerKeys?: DeveloperKey[];
-  /**
-   * @member {string} [nextPageToken]
-   */
-  nextPageToken?: string;
-  /**
-   * @member {number} [count] **NOTE: This property will not be serialized. It
-   * can only be populated by the server.**
-   */
-  readonly count?: number;
-}
-
-/**
- * @interface
- * An interface representing File.
- */
-export interface File {
-  /**
-   * @member {string} [id]
+   * @member {string} [id] The unique ID of the File in Catalytic
    */
   id?: string;
   /**
-   * @member {string} [name]
+   * @member {string} [name] The name of the File
    */
   name?: string;
   /**
-   * @member {string} [teamName]
+   * @member {string} [teamName] The name of the Catalytic team with which the
+   * File is associated
    */
   teamName?: string;
   /**
-   * @member {string} [contentType]
+   * @member {string} [contentType] The content-type of the File
    */
   contentType?: string;
   /**
-   * @member {number} [sizeInBytes]
+   * @member {number} [sizeInBytes] The size of the File, in bytes
    */
   sizeInBytes?: number;
   /**
-   * @member {string} [displaySize]
+   * @member {string} [displaySize] The human-readable size of the File
    */
   displaySize?: string;
   /**
-   * @member {boolean} [isPublic]
+   * @member {boolean} [isPublic] Boolean indicating whether the File can be
+   * downloaded by unauthenticated users
    */
   isPublic?: boolean;
   /**
-   * @member {string} [md5Hash]
+   * @member {string} [md5Hash] The MD5 hash of the File
    */
   md5Hash?: string;
   /**
-   * @member {string} [referenceName] **NOTE: This property will not be
-   * serialized. It can only be populated by the server.**
+   * @member {string} [referenceName] The stringified ID of the File, used for
+   * reference in a !:FilesPage
    */
-  readonly referenceName?: string;
+  referenceName?: string;
 }
 
 /**
  * @interface
- * An interface representing FilesPage.
+ * An interface representing FileMetadataPage.
  */
-export interface FilesPage {
+export interface FileMetadataPage {
   /**
-   * @member {File[]} [files] **NOTE: This property will not be serialized. It
-   * can only be populated by the server.**
+   * @member {FileMetadata[]} [files] A Collection of items with Dictionaries
+   * keyed by both ID and Name
    */
-  readonly files?: File[];
+  files?: FileMetadata[];
+  /**
+   * @member {PagingOptions} [nextPageOptions]
+   */
+  nextPageOptions?: PagingOptions;
   /**
    * @member {string} [nextPageToken]
    */
   nextPageToken?: string;
   /**
-   * @member {number} [count] **NOTE: This property will not be serialized. It
-   * can only be populated by the server.**
+   * @member {number} [count]
    */
-  readonly count?: number;
-}
-
-/**
- * @interface
- * An interface representing InstanceStep.
- */
-export interface InstanceStep {
-  /**
-   * @member {string} id
-   */
-  id: string;
-  /**
-   * @member {string} instanceId
-   */
-  instanceId: string;
-  /**
-   * @member {string} pushbotId
-   */
-  pushbotId: string;
-  /**
-   * @member {string} name
-   */
-  name: string;
-  /**
-   * @member {string} referenceName
-   */
-  referenceName: string;
-  /**
-   * @member {string} teamName
-   */
-  teamName: string;
-  /**
-   * @member {number} [position]
-   */
-  position?: number;
-  /**
-   * @member {string} [description]
-   */
-  description?: string;
-  /**
-   * @member {Status1} [status] Possible values include: 'pending', 'active',
-   * 'completed', 'cancelled', 'snoozed', 'skipped', 'error'
-   */
-  status?: Status1;
-  /**
-   * @member {string} [assignedTo]
-   */
-  assignedTo?: string;
+  count?: number;
 }
 
 /**
  * @interface
  * An interface representing Field.
+ * Represents a named and typed variable within a Workflow or Instance
+ *
  */
 export interface Field {
   /**
-   * @member {string} [id]
+   * @member {string} [id] The unique ID of the field
    */
   id?: string;
   /**
-   * @member {string} [name]
+   * @member {string} [name] The descriptive name of the Field
    */
   name?: string;
   /**
-   * @member {string} [referenceName]
+   * @member {string} [referenceName] A unique name (within the scope of the
+   * Workflow or Instance) that
+   * can be used to reference the value of this field in
+   * a template or operation.
    */
   referenceName?: string;
   /**
-   * @member {string} [description]
+   * @member {string} [description] A description of this field. This can be
+   * used as instructions
+   * for users filling out this field in a form
    */
   description?: string;
   /**
-   * @member {number} [position]
+   * @member {number} [position] The visual position of this field relative
+   * others in the same scope
    */
   position?: number;
   /**
@@ -786,63 +431,136 @@ export interface Field {
    * @member {FieldType} [fieldType] Possible values include: 'undefined',
    * 'text', 'integer', 'decimal', 'date', 'dateTime', 'json', 'bool',
    * 'singleChoice', 'multipleChoice', 'instructions', 'file', 'table',
-   * 'pushbot', 'instance', 'user'
+   * 'workflow', 'instance', 'user'
    */
   fieldType?: FieldType;
   /**
-   * @member {string} [value]
+   * @member {string} [value] The value of this field, serialized as a string
    */
   value?: string;
   /**
-   * @member {string} [defaultValue]
+   * @member {string} [defaultValue] The optional default value of this field,
+   * serialized as a string. The
+   * serialization format depends on the type of field.
    */
   defaultValue?: string;
 }
 
 /**
  * @interface
- * An interface representing Instance.
+ * An interface representing InstanceStep.
+ * Represents a single Step of an Instance
+ *
  */
-export interface Instance {
+export interface InstanceStep {
   /**
-   * @member {string} id
+   * @member {string} id Unique ID of this Task
    */
   id: string;
   /**
-   * @member {string} pushbotId
+   * @member {string} instanceId Unique ID of this Instance to which this Step
+   * belongs
    */
-  pushbotId: string;
+  instanceId: string;
   /**
-   * @member {string} [name]
+   * @member {string} workflowId Unique ID of the Workflow to which this Step
+   * belongs
    */
-  name?: string;
+  workflowId: string;
   /**
-   * @member {string} teamName
+   * @member {string} name Display name of this Task
+   */
+  name: string;
+  /**
+   * @member {string} teamName The name of the Catalytic team in which this
+   * Task exists
    */
   teamName: string;
   /**
-   * @member {string} [description]
+   * @member {number} [position] The position of this Task amongst the other
+   * Tasks in the Instance
+   */
+  position?: number;
+  /**
+   * @member {string} [description] A description or instructions of the Task
    */
   description?: string;
   /**
-   * @member {string} [category]
+   * @member {Status} [status] Possible values include: 'pending', 'active',
+   * 'completed', 'cancelled', 'snoozed', 'skipped', 'error'
+   */
+  status?: Status;
+  /**
+   * @member {string} [assignedTo] The email of the user (if any) that this
+   * InstanceStep is assigned to
+   */
+  assignedTo?: string;
+  /**
+   * @member {Field[]} [outputFields] A collection of the required and optional
+   * output fields
+   * that can be set by this InstanceStep when completing it.
+   */
+  outputFields?: Field[];
+}
+
+/**
+ * @interface
+ * An interface representing Instance.
+ * Represents an Instance of a Workflow
+ *
+ */
+export interface Instance {
+  /**
+   * @member {string} id The unique ID of the Instance
+   */
+  id: string;
+  /**
+   * @member {string} workflowId The unique ID of the Workflow this Instance
+   * was started from
+   */
+  workflowId: string;
+  /**
+   * @member {string} [name] The descriptive name of the Instance
+   */
+  name?: string;
+  /**
+   * @member {string} teamName The name of the Catalytic team in which this
+   * Instance was started
+   */
+  teamName: string;
+  /**
+   * @member {string} [description] A description of the Instance
+   */
+  description?: string;
+  /**
+   * @member {string} [category] A descriptive grouping for the Instance
    */
   category?: string;
   /**
-   * @member {InstanceStep[]} [steps] **NOTE: This property will not be
-   * serialized. It can only be populated by the server.**
+   * @member {string} [owner] The email address of the user who owns this
+   * Instance
    */
-  readonly steps?: InstanceStep[];
+  owner?: string;
   /**
-   * @member {Field[]} [fields] **NOTE: This property will not be serialized.
-   * It can only be populated by the server.**
+   * @member {string} [createdBy] The email address of the user who created
+   * this Instance
    */
-  readonly fields?: Field[];
+  createdBy?: string;
   /**
-   * @member {Status2} [status] Possible values include: 'running',
+   * @member {InstanceStep[]} [steps] A collection of the Tasks belonging to
+   * this Instance
+   */
+  steps?: InstanceStep[];
+  /**
+   * @member {Field[]} [fields] A collection of the Fields belonging to this
+   * Instance
+   */
+  fields?: Field[];
+  /**
+   * @member {Status1} [status] Possible values include: 'running',
    * 'completed', 'cancelled'
    */
-  status?: Status2;
+  status?: Status1;
   /**
    * @member {FieldVisibility} [fieldVisibility] Possible values include:
    * 'public', 'internal', 'confidential', 'highlyConfidential'
@@ -854,53 +572,54 @@ export interface Instance {
    */
   visibility?: Visibility1;
   /**
-   * @member {string[]} [adminUsers] **NOTE: This property will not be
-   * serialized. It can only be populated by the server.**
+   * @member {string[]} [visibleToUsers] The users who can find and interact
+   * with this Instance
    */
-  readonly adminUsers?: string[];
-  /**
-   * @member {string[]} [standardUsers] **NOTE: This property will not be
-   * serialized. It can only be populated by the server.**
-   */
-  readonly standardUsers?: string[];
+  visibleToUsers?: string[];
 }
 
 /**
  * @interface
  * An interface representing InstancesPage.
+ * A page of Instances returned from a FindAync request
+ *
  */
 export interface InstancesPage {
   /**
-   * @member {Instance[]} [instances] **NOTE: This property will not be
-   * serialized. It can only be populated by the server.**
+   * @member {Instance[]} [instances] The list of Instances
    */
-  readonly instances?: Instance[];
+  instances?: Instance[];
+  /**
+   * @member {PagingOptions} [nextPageOptions]
+   */
+  nextPageOptions?: PagingOptions;
   /**
    * @member {string} [nextPageToken]
    */
   nextPageToken?: string;
   /**
-   * @member {number} [count] **NOTE: This property will not be serialized. It
-   * can only be populated by the server.**
+   * @member {number} [count]
    */
-  readonly count?: number;
+  count?: number;
 }
 
 /**
  * @interface
- * An interface representing InstanceInputField.
+ * An interface representing FieldUpdateRequest.
+ * Request to update the value of a field
+ *
  */
-export interface InstanceInputField {
+export interface FieldUpdateRequest {
   /**
-   * @member {string} [name]
+   * @member {string} [name] The name of the field
    */
   name?: string;
   /**
-   * @member {string} [referenceName]
+   * @member {string} [referenceName] The reference name of the field
    */
   referenceName?: string;
   /**
-   * @member {string} [value]
+   * @member {string} [value] The string-serialized value of the field
    */
   value?: string;
 }
@@ -911,43 +630,48 @@ export interface InstanceInputField {
  */
 export interface StartInstanceRequest {
   /**
-   * @member {string} [pushbotId]
+   * @member {string} [workflowId] ID of the Workflow to start
    */
-  pushbotId?: string;
+  workflowId?: string;
   /**
-   * @member {string} [name]
+   * @member {string} [name] Optional name for the instance
    */
   name?: string;
   /**
-   * @member {string} [description]
+   * @member {string} [description] Optional description for the instance
    */
   description?: string;
   /**
-   * @member {InstanceInputField[]} [inputFields] **NOTE: This property will
-   * not be serialized. It can only be populated by the server.**
+   * @member {FieldUpdateRequest[]} [inputFields] A collection of the required
+   * and optional input fields
+   * that can be passed to this Workflow when starting it.
    */
-  readonly inputFields?: InstanceInputField[];
+  inputFields?: FieldUpdateRequest[];
 }
 
 /**
  * @interface
  * An interface representing InstanceStepsPage.
+ * A page of Instance Steps returned from a FindAync request
+ *
  */
 export interface InstanceStepsPage {
   /**
-   * @member {InstanceStep[]} [steps] **NOTE: This property will not be
-   * serialized. It can only be populated by the server.**
+   * @member {InstanceStep[]} [steps] The list of Steps
    */
-  readonly steps?: InstanceStep[];
+  steps?: InstanceStep[];
+  /**
+   * @member {PagingOptions} [nextPageOptions]
+   */
+  nextPageOptions?: PagingOptions;
   /**
    * @member {string} [nextPageToken]
    */
   nextPageToken?: string;
   /**
-   * @member {number} [count] **NOTE: This property will not be serialized. It
-   * can only be populated by the server.**
+   * @member {number} [count]
    */
-  readonly count?: number;
+  count?: number;
 }
 
 /**
@@ -956,63 +680,166 @@ export interface InstanceStepsPage {
  */
 export interface CompleteStepRequest {
   /**
-   * @member {string} [id]
+   * @member {string} [id] ID of the step to complete
    */
   id?: string;
   /**
-   * @member {InstanceInputField[]} [stepOutputFields] **NOTE: This property
-   * will not be serialized. It can only be populated by the server.**
+   * @member {FieldUpdateRequest[]} [stepOutputFields] A collection of the
+   * required and optional input fields
+   * that can be passed to this Workflow when starting it.
    */
-  readonly stepOutputFields?: InstanceInputField[];
+  stepOutputFields?: FieldUpdateRequest[];
 }
 
 /**
  * @interface
- * An interface representing ReassignTaskRequest.
+ * An interface representing ReassignStepRequest.
  */
-export interface ReassignTaskRequest {
+export interface ReassignStepRequest {
   /**
-   * @member {string} [assignTo]
+   * @member {string} [id] ID of the step to reassign
+   */
+  id?: string;
+  /**
+   * @member {string} [assignTo] The email address of the user to reassign the
+   * task to
    */
   assignTo?: string;
 }
 
 /**
  * @interface
- * An interface representing Pushbot.
+ * An interface representing CredentialsPage.
+ * Represents a page of Credentials
+ *
  */
-export interface Pushbot {
+export interface CredentialsPage {
   /**
-   * @member {string} id
+   * @member {Credentials[]} [credentials] The Collection of Credentials in the
+   * page
+   */
+  credentials?: Credentials[];
+  /**
+   * @member {PagingOptions} [nextPageOptions]
+   */
+  nextPageOptions?: PagingOptions;
+  /**
+   * @member {string} [nextPageToken]
+   */
+  nextPageToken?: string;
+  /**
+   * @member {number} [count]
+   */
+  count?: number;
+}
+
+/**
+ * @interface
+ * An interface representing User.
+ * Represents a user on a Catalytic team
+ *
+ */
+export interface User {
+  /**
+   * @member {string} id Unique ID for the user
    */
   id: string;
   /**
-   * @member {string} name
+   * @member {string} [username] Unique username of user
+   */
+  username?: string;
+  /**
+   * @member {string} email The email address associated with this user
+   */
+  email: string;
+  /**
+   * @member {string} fullName The user's full name
+   */
+  fullName: string;
+  /**
+   * @member {string} teamName The name of this User's Catalytic team
+   */
+  teamName: string;
+}
+
+/**
+ * @interface
+ * An interface representing UsersPage.
+ * A page of Users returned from a FindAsync request
+ *
+ */
+export interface UsersPage {
+  /**
+   * @member {User[]} [users] The List of Users
+   */
+  users?: User[];
+  /**
+   * @member {PagingOptions} [nextPageOptions]
+   */
+  nextPageOptions?: PagingOptions;
+  /**
+   * @member {string} [nextPageToken]
+   */
+  nextPageToken?: string;
+  /**
+   * @member {number} [count]
+   */
+  count?: number;
+}
+
+/**
+ * @interface
+ * An interface representing Workflow.
+ * A Workflow is an automation on the Catalytic platform. It is a template
+ * of the process you want to run each time your Workflow is started.
+ *
+ */
+export interface Workflow {
+  /**
+   * @member {string} id The unique ID of the Workflow
+   */
+  id: string;
+  /**
+   * @member {string} name The descriptive name of the Workflow
    */
   name: string;
   /**
-   * @member {string} teamName
+   * @member {string} teamName The name of the team in which the Workflow is
+   * defined
    */
   teamName: string;
   /**
-   * @member {string} [description]
+   * @member {string} [description] A description of what the Workflow does
    */
   description?: string;
   /**
-   * @member {string} [category]
+   * @member {string} [category] A descriptive grouping for your Workflow
    */
   category?: string;
   /**
-   * @member {Field[]} [inputFields] **NOTE: This property will not be
-   * serialized. It can only be populated by the server.**
+   * @member {string} [owner] The email address of the user who owns this
+   * Workflow
    */
-  readonly inputFields?: Field[];
+  owner?: string;
   /**
-   * @member {boolean} [isPublished]
+   * @member {string} [createdBy] The email address of the user who created
+   * this Workflow
+   */
+  createdBy?: string;
+  /**
+   * @member {Field[]} [inputFields] A collection of the required and optional
+   * input fields
+   * that can be passed to this Workflow when starting it.
+   */
+  inputFields?: Field[];
+  /**
+   * @member {boolean} [isPublished] Indicates whether the Workflow is
+   * published; if false, Workflow is in draft mode
    */
   isPublished?: boolean;
   /**
-   * @member {boolean} [isArchived]
+   * @member {boolean} [isArchived] Indicates whether is Archived and no longer
+   * available for users to find, start or edit.
    */
   isArchived?: boolean;
   /**
@@ -1026,69 +853,166 @@ export interface Pushbot {
    */
   instanceVisibility?: InstanceVisibility;
   /**
-   * @member {string[]} [adminUsers] **NOTE: This property will not be
-   * serialized. It can only be populated by the server.**
+   * @member {string[]} [adminUsers] The users who may view, start, and edit
+   * this Workflow in addition to Catalytic.Sdk.Entities.Workflow.Owner
    */
-  readonly adminUsers?: string[];
+  adminUsers?: string[];
   /**
-   * @member {string[]} [standardUsers] **NOTE: This property will not be
-   * serialized. It can only be populated by the server.**
+   * @member {string[]} [standardUsers] The users who can view and start this
+   * Workflow
    */
-  readonly standardUsers?: string[];
+  standardUsers?: string[];
   /**
-   * @member {string[]} [readOnlyUsers] **NOTE: This property will not be
-   * serialized. It can only be populated by the server.**
-   */
-  readonly readOnlyUsers?: string[];
-  /**
-   * @member {number} [taskCountLimit]
+   * @member {number} [taskCountLimit] The maximum number of steps that can
+   * appear in an Instance of this Workflow
    */
   taskCountLimit?: number;
   /**
-   * @member {number} [fieldCountLimit]
+   * @member {number} [fieldCountLimit] The maximum number of fields that can
+   * appear in an Instance of this Workflow
    */
   fieldCountLimit?: number;
   /**
-   * @member {number} [fieldSizeLimit]
+   * @member {number} [fieldSizeLimit] The maximum size of data stored in any
+   * field in an Instance of this Workflow
    */
   fieldSizeLimit?: number;
   /**
-   * @member {number} [fieldTotalSizeLimit]
+   * @member {number} [fieldTotalSizeLimit] The maximum total size of data
+   * stored in all fields in an Instance of this Workflow
    */
   fieldTotalSizeLimit?: number;
   /**
-   * @member {number} [dataTableRowLimit]
+   * @member {number} [dataTableRowLimit] The maximum number of rows of any
+   * data table created in an Instance of this Workflow
    */
   dataTableRowLimit?: number;
   /**
-   * @member {number} [dataTableColumnLimit]
+   * @member {number} [dataTableColumnLimit] The maximum number of columns of
+   * any data table created in an Instance of this Workflow
    */
   dataTableColumnLimit?: number;
   /**
-   * @member {number} [dataTableCellLimit]
+   * @member {number} [dataTableCellLimit] The maximum number of cells of any
+   * data table created in an Instance of this Workflow
    */
   dataTableCellLimit?: number;
 }
 
 /**
  * @interface
- * An interface representing PushbotsPage.
+ * An interface representing WorkflowsPage.
+ * A page of Workflows returned from a FindAsync request
+ *
  */
-export interface PushbotsPage {
+export interface WorkflowsPage {
   /**
-   * @member {Pushbot[]} [pushbots] **NOTE: This property will not be
-   * serialized. It can only be populated by the server.**
+   * @member {Workflow[]} [workflows] The List of Workflows
    */
-  readonly pushbots?: Pushbot[];
+  workflows?: Workflow[];
+  /**
+   * @member {PagingOptions} [nextPageOptions]
+   */
+  nextPageOptions?: PagingOptions;
   /**
    * @member {string} [nextPageToken]
    */
   nextPageToken?: string;
   /**
-   * @member {number} [count] **NOTE: This property will not be serialized. It
-   * can only be populated by the server.**
+   * @member {number} [count]
    */
-  readonly count?: number;
+  count?: number;
+}
+
+/**
+ * @interface
+ * An interface representing WorkflowImportRequest.
+ * A request to import a Workflow from a .catalytic Workflow Export file
+ *
+ */
+export interface WorkflowImportRequest {
+  /**
+   * @member {string} [fileId] The FileID of the uploaded .catalytic Workflow
+   * Export file
+   */
+  fileId?: string;
+  /**
+   * @member {string} [password] The optional password used to secure the
+   * .catalytic Workflow Export file
+   */
+  password?: string;
+}
+
+/**
+ * @interface
+ * An interface representing WorkflowImport.
+ * Represents a Workflow Import
+ *
+ */
+export interface WorkflowImport {
+  /**
+   * @member {string} [id] The Id of the Workflow Import
+   */
+  id?: string;
+  /**
+   * @member {string} [name]
+   */
+  name?: string;
+  /**
+   * @member {string} [workflowId] The Id of the Workflow created by a
+   * successful Import
+   */
+  workflowId?: string;
+  /**
+   * @member {string} [errorMessage] The error message produced by a failed
+   * Import
+   */
+  errorMessage?: string;
+}
+
+/**
+ * @interface
+ * An interface representing WorkflowExportRequest.
+ * A request to create a .catalytic Workflow Export file
+ *
+ */
+export interface WorkflowExportRequest {
+  /**
+   * @member {string} [workflowId] The ID of the Workflow to export
+   */
+  workflowId?: string;
+  /**
+   * @member {string} [password] The optional password to use to secure the
+   * .catalytic Workflow Export file
+   */
+  password?: string;
+}
+
+/**
+ * @interface
+ * An interface representing WorkflowExport.
+ * Represents a Workflow Export
+ *
+ */
+export interface WorkflowExport {
+  /**
+   * @member {string} [id] The Id of the Workflow Export
+   */
+  id?: string;
+  /**
+   * @member {string} [name]
+   */
+  name?: string;
+  /**
+   * @member {string} [fileId] The Id of the File created by a successful
+   * Export
+   */
+  fileId?: string;
+  /**
+   * @member {string} [errorMessage] The error message produced by a failed
+   * Export
+   */
+  errorMessage?: string;
 }
 
 /**
@@ -1105,177 +1029,47 @@ export interface CatalyticSDKAPIOptions extends ServiceClientOptions {
 
 /**
  * @interface
- * An interface representing CatalyticSDKAPIFindActionsOptionalParams.
+ * An interface representing CatalyticSDKAPICreateCredentialsOptionalParams.
  * Optional Parameters.
  *
  * @extends RequestOptionsBase
  */
-export interface CatalyticSDKAPIFindActionsOptionalParams extends msRest.RequestOptionsBase {
+export interface CatalyticSDKAPICreateCredentialsOptionalParams extends msRest.RequestOptionsBase {
   /**
-   * @member {string} [query] Free text query terms to search all attributes
-   * for
+   * @member {CredentialsCreationRequest} [body] Params required to create new
+   * Credentials
    */
-  query?: string;
-  /**
-   * @member {string} [status] Run or task status to search for
-   */
-  status?: string;
-  /**
-   * @member {string} [processId] Process ID (aka Pushbot ID) to search for
-   */
-  processId?: string;
-  /**
-   * @member {string} [runId] RunID (aka Instance ID) to search for
-   */
-  runId?: string;
-  /**
-   * @member {string} [owner] Run or task owner to search for
-   */
-  owner?: string;
-  /**
-   * @member {string} [category] Category of process or run to search for
-   */
-  category?: string;
-  /**
-   * @member {string} [pageToken] The token representing the result page to get
-   */
-  pageToken?: string;
-  /**
-   * @member {number} [pageSize] The page size requested
-   */
-  pageSize?: number;
+  body?: CredentialsCreationRequest;
 }
 
 /**
  * @interface
- * An interface representing CatalyticSDKAPICreateActionOptionalParams.
+ * An interface representing CatalyticSDKAPICreateAndApproveCredentialsOptionalParams.
  * Optional Parameters.
  *
  * @extends RequestOptionsBase
  */
-export interface CatalyticSDKAPICreateActionOptionalParams extends msRest.RequestOptionsBase {
+export interface CatalyticSDKAPICreateAndApproveCredentialsOptionalParams extends msRest.RequestOptionsBase {
   /**
-   * @member {RegisterActionRequest} [body] The definition of the action to
-   * create
+   * @member {CredentialsCreationWithEmailAndPasswordRequest} [body] Params
+   * required to create and approve new Credentials
    */
-  body?: RegisterActionRequest;
+  body?: CredentialsCreationWithEmailAndPasswordRequest;
 }
 
 /**
  * @interface
- * An interface representing CatalyticSDKAPIUpdateActionOptionalParams.
+ * An interface representing CatalyticSDKAPIWaitForCredentialsApprovalOptionalParams.
  * Optional Parameters.
  *
  * @extends RequestOptionsBase
  */
-export interface CatalyticSDKAPIUpdateActionOptionalParams extends msRest.RequestOptionsBase {
+export interface CatalyticSDKAPIWaitForCredentialsApprovalOptionalParams extends msRest.RequestOptionsBase {
   /**
-   * @member {UpdateActionRequest} [body] The updates to apply to the action
+   * @member {WaitForCredentialsApprovalRequest} [body] Params required to poll
+   * approved Credentials
    */
-  body?: UpdateActionRequest;
-}
-
-/**
- * @interface
- * An interface representing CatalyticSDKAPIFindActionWorkersOptionalParams.
- * Optional Parameters.
- *
- * @extends RequestOptionsBase
- */
-export interface CatalyticSDKAPIFindActionWorkersOptionalParams extends msRest.RequestOptionsBase {
-  /**
-   * @member {string} [query] Free text query terms to search all attributes
-   * for
-   */
-  query?: string;
-  /**
-   * @member {string} [status] Run or task status to search for
-   */
-  status?: string;
-  /**
-   * @member {string} [processId] Process ID (aka Pushbot ID) to search for
-   */
-  processId?: string;
-  /**
-   * @member {string} [runId] RunID (aka Instance ID) to search for
-   */
-  runId?: string;
-  /**
-   * @member {string} [owner] Run or task owner to search for
-   */
-  owner?: string;
-  /**
-   * @member {string} [category] Category of process or run to search for
-   */
-  category?: string;
-  /**
-   * @member {string} [pageToken] The token representing the result page to get
-   */
-  pageToken?: string;
-  /**
-   * @member {number} [pageSize] The page size requested
-   */
-  pageSize?: number;
-}
-
-/**
- * @interface
- * An interface representing CatalyticSDKAPICreateActionWorkerOptionalParams.
- * Optional Parameters.
- *
- * @extends RequestOptionsBase
- */
-export interface CatalyticSDKAPICreateActionWorkerOptionalParams extends msRest.RequestOptionsBase {
-  /**
-   * @member {CreateActionWorkerRequest} [body] The definition of the action
-   * worker to create
-   */
-  body?: CreateActionWorkerRequest;
-}
-
-/**
- * @interface
- * An interface representing CatalyticSDKAPIUpdateActionWorkerOptionalParams.
- * Optional Parameters.
- *
- * @extends RequestOptionsBase
- */
-export interface CatalyticSDKAPIUpdateActionWorkerOptionalParams extends msRest.RequestOptionsBase {
-  /**
-   * @member {UpdateActionWorkerRequest} [body] The updates to apply to the
-   * action worker
-   */
-  body?: UpdateActionWorkerRequest;
-}
-
-/**
- * @interface
- * An interface representing CatalyticSDKAPICreateDeveloperKeyOptionalParams.
- * Optional Parameters.
- *
- * @extends RequestOptionsBase
- */
-export interface CatalyticSDKAPICreateDeveloperKeyOptionalParams extends msRest.RequestOptionsBase {
-  /**
-   * @member {CreateDeveloperKeyRequest} [body] Params required to request a
-   * new Developer Key
-   */
-  body?: CreateDeveloperKeyRequest;
-}
-
-/**
- * @interface
- * An interface representing CatalyticSDKAPIWaitForDeveloperKeyActivationOptionalParams.
- * Optional Parameters.
- *
- * @extends RequestOptionsBase
- */
-export interface CatalyticSDKAPIWaitForDeveloperKeyActivationOptionalParams extends msRest.RequestOptionsBase {
-  /**
-   * @member {DeveloperKeyActivationRequest} [body] Params required to poll for
-   * and activate Developer Key
-   */
-  body?: DeveloperKeyActivationRequest;
+  body?: WaitForCredentialsApprovalRequest;
 }
 
 /**
@@ -1288,9 +1082,34 @@ export interface CatalyticSDKAPIWaitForDeveloperKeyActivationOptionalParams exte
 export interface CatalyticSDKAPIDownloadDataTableOptionalParams extends msRest.RequestOptionsBase {
   /**
    * @member {Format} [format] The format to export the data table in. csv
-   * (default) or excel. Possible values include: 'csv', 'excel'
+   * (default) or excel. Possible values include: 'csv', 'xlsx'
    */
   format?: Format;
+}
+
+/**
+ * @interface
+ * An interface representing CatalyticSDKAPIReplaceDataTableOptionalParams.
+ * Optional Parameters.
+ *
+ * @extends RequestOptionsBase
+ */
+export interface CatalyticSDKAPIReplaceDataTableOptionalParams extends msRest.RequestOptionsBase {
+  /**
+   * @member {string[]} [files]
+   */
+  files?: string[];
+  /**
+   * @member {number} [headerRow] The row number that contains the column
+   * headers. Defaults to 1. Default value: 1 .
+   */
+  headerRow?: number;
+  /**
+   * @member {number} [sheetNumber] The number of the sheet to import. Only
+   * applies to Excel files. The first sheet is imported by default. Default
+   * value: 1 .
+   */
+  sheetNumber?: number;
 }
 
 /**
@@ -1341,7 +1160,8 @@ export interface CatalyticSDKAPIFindDataTablesOptionalParams extends msRest.Requ
    */
   status?: string;
   /**
-   * @member {string} [processId] Process ID (aka Pushbot ID) to search for
+   * @member {string} [processId] Process ID (aka Pushbot ID or Workflow ID) to
+   * search for
    */
   processId?: string;
   /**
@@ -1357,23 +1177,9 @@ export interface CatalyticSDKAPIFindDataTablesOptionalParams extends msRest.Requ
    */
   category?: string;
   /**
-   * @member {string} [pageToken] The token representing the result page to get
+   * @member {string} [participatingUsers] Task assignee to search for
    */
-  pageToken?: string;
-  /**
-   * @member {number} [pageSize] The page size requested
-   */
-  pageSize?: number;
-}
-
-/**
- * @interface
- * An interface representing CatalyticSDKAPIFindDeveloperKeysOptionalParams.
- * Optional Parameters.
- *
- * @extends RequestOptionsBase
- */
-export interface CatalyticSDKAPIFindDeveloperKeysOptionalParams extends msRest.RequestOptionsBase {
+  participatingUsers?: string;
   /**
    * @member {string} [pageToken] The token representing the result page to get
    */
@@ -1400,49 +1206,6 @@ export interface CatalyticSDKAPIUploadFilesOptionalParams extends msRest.Request
 
 /**
  * @interface
- * An interface representing CatalyticSDKAPIFindFilesOptionalParams.
- * Optional Parameters.
- *
- * @extends RequestOptionsBase
- */
-export interface CatalyticSDKAPIFindFilesOptionalParams extends msRest.RequestOptionsBase {
-  /**
-   * @member {string} [query] Free text query terms to search all attributes
-   * for
-   */
-  query?: string;
-  /**
-   * @member {string} [status] Run or task status to search for
-   */
-  status?: string;
-  /**
-   * @member {string} [processId] Process ID (aka Pushbot ID) to search for
-   */
-  processId?: string;
-  /**
-   * @member {string} [runId] RunID (aka Instance ID) to search for
-   */
-  runId?: string;
-  /**
-   * @member {string} [owner] Run or task owner to search for
-   */
-  owner?: string;
-  /**
-   * @member {string} [category] Category of process or run to search for
-   */
-  category?: string;
-  /**
-   * @member {string} [pageToken] The token representing the result page to get
-   */
-  pageToken?: string;
-  /**
-   * @member {number} [pageSize] The page size requested
-   */
-  pageSize?: number;
-}
-
-/**
- * @interface
  * An interface representing CatalyticSDKAPIFindInstancesOptionalParams.
  * Optional Parameters.
  *
@@ -1459,7 +1222,8 @@ export interface CatalyticSDKAPIFindInstancesOptionalParams extends msRest.Reque
    */
   status?: string;
   /**
-   * @member {string} [processId] Process ID (aka Pushbot ID) to search for
+   * @member {string} [processId] Process ID (aka Pushbot ID or Workflow ID) to
+   * search for
    */
   processId?: string;
   /**
@@ -1474,6 +1238,10 @@ export interface CatalyticSDKAPIFindInstancesOptionalParams extends msRest.Reque
    * @member {string} [category] Category of process or run to search for
    */
   category?: string;
+  /**
+   * @member {string} [participatingUsers] Task assignee to search for
+   */
+  participatingUsers?: string;
   /**
    * @member {string} [pageToken] The token representing the result page to get
    */
@@ -1516,7 +1284,8 @@ export interface CatalyticSDKAPIFindInstanceStepsOptionalParams extends msRest.R
    */
   status?: string;
   /**
-   * @member {string} [processId] Process ID (aka Pushbot ID) to search for
+   * @member {string} [processId] Process ID (aka Pushbot ID or Workflow ID) to
+   * search for
    */
   processId?: string;
   /**
@@ -1531,6 +1300,10 @@ export interface CatalyticSDKAPIFindInstanceStepsOptionalParams extends msRest.R
    * @member {string} [category] Category of process or run to search for
    */
   category?: string;
+  /**
+   * @member {string} [participatingUsers] Task assignee to search for
+   */
+  participatingUsers?: string;
   /**
    * @member {string} [pageToken] The token representing the result page to get
    */
@@ -1565,20 +1338,20 @@ export interface CatalyticSDKAPICompleteStepOptionalParams extends msRest.Reques
  */
 export interface CatalyticSDKAPIReassignStepOptionalParams extends msRest.RequestOptionsBase {
   /**
-   * @member {ReassignTaskRequest} [body] Contains the email address of the
+   * @member {ReassignStepRequest} [body] Contains the email address of the
    * user to reassign the Instance Step to
    */
-  body?: ReassignTaskRequest;
+  body?: ReassignStepRequest;
 }
 
 /**
  * @interface
- * An interface representing CatalyticSDKAPIFindPushbotsOptionalParams.
+ * An interface representing CatalyticSDKAPIFindCredentialsOptionalParams.
  * Optional Parameters.
  *
  * @extends RequestOptionsBase
  */
-export interface CatalyticSDKAPIFindPushbotsOptionalParams extends msRest.RequestOptionsBase {
+export interface CatalyticSDKAPIFindCredentialsOptionalParams extends msRest.RequestOptionsBase {
   /**
    * @member {string} [query] Free text query terms to search all attributes
    * for
@@ -1589,7 +1362,8 @@ export interface CatalyticSDKAPIFindPushbotsOptionalParams extends msRest.Reques
    */
   status?: string;
   /**
-   * @member {string} [processId] Process ID (aka Pushbot ID) to search for
+   * @member {string} [processId] Process ID (aka Pushbot ID or Workflow ID) to
+   * search for
    */
   processId?: string;
   /**
@@ -1605,6 +1379,10 @@ export interface CatalyticSDKAPIFindPushbotsOptionalParams extends msRest.Reques
    */
   category?: string;
   /**
+   * @member {string} [participatingUsers] Task assignee to search for
+   */
+  participatingUsers?: string;
+  /**
    * @member {string} [pageToken] The token representing the result page to get
    */
   pageToken?: string;
@@ -1615,50 +1393,154 @@ export interface CatalyticSDKAPIFindPushbotsOptionalParams extends msRest.Reques
 }
 
 /**
+ * @interface
+ * An interface representing CatalyticSDKAPIFindUsersOptionalParams.
+ * Optional Parameters.
+ *
+ * @extends RequestOptionsBase
+ */
+export interface CatalyticSDKAPIFindUsersOptionalParams extends msRest.RequestOptionsBase {
+  /**
+   * @member {string} [query] Free text query terms to search all attributes
+   * for
+   */
+  query?: string;
+  /**
+   * @member {string} [status] Run or task status to search for
+   */
+  status?: string;
+  /**
+   * @member {string} [processId] Process ID (aka Pushbot ID or Workflow ID) to
+   * search for
+   */
+  processId?: string;
+  /**
+   * @member {string} [runId] RunID (aka Instance ID) to search for
+   */
+  runId?: string;
+  /**
+   * @member {string} [owner] Run or task owner to search for
+   */
+  owner?: string;
+  /**
+   * @member {string} [category] Category of process or run to search for
+   */
+  category?: string;
+  /**
+   * @member {string} [participatingUsers] Task assignee to search for
+   */
+  participatingUsers?: string;
+  /**
+   * @member {string} [pageToken] The token representing the result page to get
+   */
+  pageToken?: string;
+  /**
+   * @member {number} [pageSize] The page size requested
+   */
+  pageSize?: number;
+}
+
+/**
+ * @interface
+ * An interface representing CatalyticSDKAPIFindWorkflowsOptionalParams.
+ * Optional Parameters.
+ *
+ * @extends RequestOptionsBase
+ */
+export interface CatalyticSDKAPIFindWorkflowsOptionalParams extends msRest.RequestOptionsBase {
+  /**
+   * @member {string} [query] Free text query terms to search all attributes
+   * for
+   */
+  query?: string;
+  /**
+   * @member {string} [status] Run or task status to search for
+   */
+  status?: string;
+  /**
+   * @member {string} [processId] Process ID (aka Pushbot ID or Workflow ID) to
+   * search for
+   */
+  processId?: string;
+  /**
+   * @member {string} [runId] RunID (aka Instance ID) to search for
+   */
+  runId?: string;
+  /**
+   * @member {string} [owner] Run or task owner to search for
+   */
+  owner?: string;
+  /**
+   * @member {string} [category] Category of process or run to search for
+   */
+  category?: string;
+  /**
+   * @member {string} [participatingUsers] Task assignee to search for
+   */
+  participatingUsers?: string;
+  /**
+   * @member {string} [pageToken] The token representing the result page to get
+   */
+  pageToken?: string;
+  /**
+   * @member {number} [pageSize] The page size requested
+   */
+  pageSize?: number;
+}
+
+/**
+ * @interface
+ * An interface representing CatalyticSDKAPIImportWorkflowOptionalParams.
+ * Optional Parameters.
+ *
+ * @extends RequestOptionsBase
+ */
+export interface CatalyticSDKAPIImportWorkflowOptionalParams extends msRest.RequestOptionsBase {
+  /**
+   * @member {WorkflowImportRequest} [body] The Workflow Import request
+   */
+  body?: WorkflowImportRequest;
+}
+
+/**
+ * @interface
+ * An interface representing CatalyticSDKAPIExportWorkflowOptionalParams.
+ * Optional Parameters.
+ *
+ * @extends RequestOptionsBase
+ */
+export interface CatalyticSDKAPIExportWorkflowOptionalParams extends msRest.RequestOptionsBase {
+  /**
+   * @member {WorkflowExportRequest} [body] The Workflow Export request
+   */
+  body?: WorkflowExportRequest;
+}
+
+/**
  * Defines values for Type.
- * Possible values include: 'undefined', 'text', 'integer', 'decimal', 'date', 'dateTime',
- * 'boolean', 'singleChoice', 'multipleChoice', 'json', 'file', 'table', 'pushbot', 'instance',
- * 'user'
+ * Possible values include: 'user', 'actionWorker'
  * @readonly
  * @enum {string}
  */
-export type Type = 'undefined' | 'text' | 'integer' | 'decimal' | 'date' | 'dateTime' | 'boolean' | 'singleChoice' | 'multipleChoice' | 'json' | 'file' | 'table' | 'pushbot' | 'instance' | 'user';
+export type Type = 'user' | 'actionWorker';
 
 /**
  * Defines values for Type1.
- * Possible values include: 'undefined', 'text', 'integer', 'decimal', 'date', 'dateTime',
- * 'boolean', 'singleChoice', 'multipleChoice', 'json', 'file', 'table', 'pushbot', 'instance',
- * 'user'
- * @readonly
- * @enum {string}
- */
-export type Type1 = 'undefined' | 'text' | 'integer' | 'decimal' | 'date' | 'dateTime' | 'boolean' | 'singleChoice' | 'multipleChoice' | 'json' | 'file' | 'table' | 'pushbot' | 'instance' | 'user';
-
-/**
- * Defines values for Status.
- * Possible values include: 'requested', 'approved', 'active', 'revoked'
- * @readonly
- * @enum {string}
- */
-export type Status = 'requested' | 'approved' | 'active' | 'revoked';
-
-/**
- * Defines values for Type2.
  * Possible values include: 'undefined', 'text', 'integer', 'decimal', 'date', 'dateTime', 'json',
- * 'bool', 'singleChoice', 'multipleChoice', 'instructions', 'file', 'table', 'pushbot',
+ * 'bool', 'singleChoice', 'multipleChoice', 'instructions', 'file', 'table', 'workflow',
  * 'instance', 'user'
  * @readonly
  * @enum {string}
  */
-export type Type2 = 'undefined' | 'text' | 'integer' | 'decimal' | 'date' | 'dateTime' | 'json' | 'bool' | 'singleChoice' | 'multipleChoice' | 'instructions' | 'file' | 'table' | 'pushbot' | 'instance' | 'user';
+export type Type1 = 'undefined' | 'text' | 'integer' | 'decimal' | 'date' | 'dateTime' | 'json' | 'bool' | 'singleChoice' | 'multipleChoice' | 'instructions' | 'file' | 'table' | 'workflow' | 'instance' | 'user';
 
 /**
- * Defines values for Type3.
+ * Defines values for Type2.
  * Possible values include: 'imported', 'master', 'application', 'instance', 'batch'
  * @readonly
  * @enum {string}
  */
-export type Type3 = 'imported' | 'master' | 'application' | 'instance' | 'batch';
+export type Type2 = 'imported' | 'master' | 'application' | 'instance' | 'batch';
 
 /**
  * Defines values for Visibility.
@@ -1669,31 +1551,31 @@ export type Type3 = 'imported' | 'master' | 'application' | 'instance' | 'batch'
 export type Visibility = 'open' | 'restricted';
 
 /**
- * Defines values for Status1.
+ * Defines values for FieldType.
+ * Possible values include: 'undefined', 'text', 'integer', 'decimal', 'date', 'dateTime', 'json',
+ * 'bool', 'singleChoice', 'multipleChoice', 'instructions', 'file', 'table', 'workflow',
+ * 'instance', 'user'
+ * @readonly
+ * @enum {string}
+ */
+export type FieldType = 'undefined' | 'text' | 'integer' | 'decimal' | 'date' | 'dateTime' | 'json' | 'bool' | 'singleChoice' | 'multipleChoice' | 'instructions' | 'file' | 'table' | 'workflow' | 'instance' | 'user';
+
+/**
+ * Defines values for Status.
  * Possible values include: 'pending', 'active', 'completed', 'cancelled', 'snoozed', 'skipped',
  * 'error'
  * @readonly
  * @enum {string}
  */
-export type Status1 = 'pending' | 'active' | 'completed' | 'cancelled' | 'snoozed' | 'skipped' | 'error';
+export type Status = 'pending' | 'active' | 'completed' | 'cancelled' | 'snoozed' | 'skipped' | 'error';
 
 /**
- * Defines values for FieldType.
- * Possible values include: 'undefined', 'text', 'integer', 'decimal', 'date', 'dateTime', 'json',
- * 'bool', 'singleChoice', 'multipleChoice', 'instructions', 'file', 'table', 'pushbot',
- * 'instance', 'user'
- * @readonly
- * @enum {string}
- */
-export type FieldType = 'undefined' | 'text' | 'integer' | 'decimal' | 'date' | 'dateTime' | 'json' | 'bool' | 'singleChoice' | 'multipleChoice' | 'instructions' | 'file' | 'table' | 'pushbot' | 'instance' | 'user';
-
-/**
- * Defines values for Status2.
+ * Defines values for Status1.
  * Possible values include: 'running', 'completed', 'cancelled'
  * @readonly
  * @enum {string}
  */
-export type Status2 = 'running' | 'completed' | 'cancelled';
+export type Status1 = 'running' | 'completed' | 'cancelled';
 
 /**
  * Defines values for FieldVisibility.
@@ -1729,16 +1611,16 @@ export type InstanceVisibility = 'open' | 'restricted';
 
 /**
  * Defines values for Format.
- * Possible values include: 'csv', 'excel'
+ * Possible values include: 'csv', 'xlsx'
  * @readonly
  * @enum {string}
  */
-export type Format = 'csv' | 'excel';
+export type Format = 'csv' | 'xlsx';
 
 /**
- * Contains response data for the findActions operation.
+ * Contains response data for the createCredentials operation.
  */
-export type FindActionsResponse = {
+export type CreateCredentialsResponse = {
   /**
    * The parsed response body.
    */
@@ -1759,9 +1641,9 @@ export type FindActionsResponse = {
 };
 
 /**
- * Contains response data for the createAction operation.
+ * Contains response data for the createAndApproveCredentials operation.
  */
-export type CreateActionResponse = {
+export type CreateAndApproveCredentialsResponse = {
   /**
    * The parsed response body.
    */
@@ -1782,216 +1664,9 @@ export type CreateActionResponse = {
 };
 
 /**
- * Contains response data for the getAction operation.
+ * Contains response data for the waitForCredentialsApproval operation.
  */
-export type GetActionResponse = {
-  /**
-   * The parsed response body.
-   */
-  body: any;
-  /**
-   * The underlying HTTP response.
-   */
-  _response: msRest.HttpResponse & {
-      /**
-       * The response body as text (string format)
-       */
-      bodyAsText: string;
-      /**
-       * The response body as parsed JSON or XML
-       */
-      parsedBody: any;
-    };
-};
-
-/**
- * Contains response data for the deleteAction operation.
- */
-export type DeleteActionResponse = {
-  /**
-   * The parsed response body.
-   */
-  body: any;
-  /**
-   * The underlying HTTP response.
-   */
-  _response: msRest.HttpResponse & {
-      /**
-       * The response body as text (string format)
-       */
-      bodyAsText: string;
-      /**
-       * The response body as parsed JSON or XML
-       */
-      parsedBody: any;
-    };
-};
-
-/**
- * Contains response data for the updateAction operation.
- */
-export type UpdateActionResponse = {
-  /**
-   * The parsed response body.
-   */
-  body: any;
-  /**
-   * The underlying HTTP response.
-   */
-  _response: msRest.HttpResponse & {
-      /**
-       * The response body as text (string format)
-       */
-      bodyAsText: string;
-      /**
-       * The response body as parsed JSON or XML
-       */
-      parsedBody: any;
-    };
-};
-
-/**
- * Contains response data for the findActionWorkers operation.
- */
-export type FindActionWorkersResponse = {
-  /**
-   * The parsed response body.
-   */
-  body: any;
-  /**
-   * The underlying HTTP response.
-   */
-  _response: msRest.HttpResponse & {
-      /**
-       * The response body as text (string format)
-       */
-      bodyAsText: string;
-      /**
-       * The response body as parsed JSON or XML
-       */
-      parsedBody: any;
-    };
-};
-
-/**
- * Contains response data for the createActionWorker operation.
- */
-export type CreateActionWorkerResponse = {
-  /**
-   * The parsed response body.
-   */
-  body: any;
-  /**
-   * The underlying HTTP response.
-   */
-  _response: msRest.HttpResponse & {
-      /**
-       * The response body as text (string format)
-       */
-      bodyAsText: string;
-      /**
-       * The response body as parsed JSON or XML
-       */
-      parsedBody: any;
-    };
-};
-
-/**
- * Contains response data for the getActionWorker operation.
- */
-export type GetActionWorkerResponse = {
-  /**
-   * The parsed response body.
-   */
-  body: any;
-  /**
-   * The underlying HTTP response.
-   */
-  _response: msRest.HttpResponse & {
-      /**
-       * The response body as text (string format)
-       */
-      bodyAsText: string;
-      /**
-       * The response body as parsed JSON or XML
-       */
-      parsedBody: any;
-    };
-};
-
-/**
- * Contains response data for the deleteActionWorker operation.
- */
-export type DeleteActionWorkerResponse = {
-  /**
-   * The parsed response body.
-   */
-  body: any;
-  /**
-   * The underlying HTTP response.
-   */
-  _response: msRest.HttpResponse & {
-      /**
-       * The response body as text (string format)
-       */
-      bodyAsText: string;
-      /**
-       * The response body as parsed JSON or XML
-       */
-      parsedBody: any;
-    };
-};
-
-/**
- * Contains response data for the updateActionWorker operation.
- */
-export type UpdateActionWorkerResponse = {
-  /**
-   * The parsed response body.
-   */
-  body: any;
-  /**
-   * The underlying HTTP response.
-   */
-  _response: msRest.HttpResponse & {
-      /**
-       * The response body as text (string format)
-       */
-      bodyAsText: string;
-      /**
-       * The response body as parsed JSON or XML
-       */
-      parsedBody: any;
-    };
-};
-
-/**
- * Contains response data for the createDeveloperKey operation.
- */
-export type CreateDeveloperKeyResponse = {
-  /**
-   * The parsed response body.
-   */
-  body: any;
-  /**
-   * The underlying HTTP response.
-   */
-  _response: msRest.HttpResponse & {
-      /**
-       * The response body as text (string format)
-       */
-      bodyAsText: string;
-      /**
-       * The response body as parsed JSON or XML
-       */
-      parsedBody: any;
-    };
-};
-
-/**
- * Contains response data for the waitForDeveloperKeyActivation operation.
- */
-export type WaitForDeveloperKeyActivationResponse = {
+export type WaitForCredentialsApprovalResponse = {
   /**
    * The parsed response body.
    */
@@ -2058,6 +1733,29 @@ export type DownloadDataTableResponse = {
 };
 
 /**
+ * Contains response data for the replaceDataTable operation.
+ */
+export type ReplaceDataTableResponse = {
+  /**
+   * The parsed response body.
+   */
+  body: any;
+  /**
+   * The underlying HTTP response.
+   */
+  _response: msRest.HttpResponse & {
+      /**
+       * The response body as text (string format)
+       */
+      bodyAsText: string;
+      /**
+       * The response body as parsed JSON or XML
+       */
+      parsedBody: any;
+    };
+};
+
+/**
  * Contains response data for the uploadDataTable operation.
  */
 export type UploadDataTableResponse = {
@@ -2084,52 +1782,6 @@ export type UploadDataTableResponse = {
  * Contains response data for the findDataTables operation.
  */
 export type FindDataTablesResponse = {
-  /**
-   * The parsed response body.
-   */
-  body: any;
-  /**
-   * The underlying HTTP response.
-   */
-  _response: msRest.HttpResponse & {
-      /**
-       * The response body as text (string format)
-       */
-      bodyAsText: string;
-      /**
-       * The response body as parsed JSON or XML
-       */
-      parsedBody: any;
-    };
-};
-
-/**
- * Contains response data for the findDeveloperKeys operation.
- */
-export type FindDeveloperKeysResponse = {
-  /**
-   * The parsed response body.
-   */
-  body: any;
-  /**
-   * The underlying HTTP response.
-   */
-  _response: msRest.HttpResponse & {
-      /**
-       * The response body as text (string format)
-       */
-      bodyAsText: string;
-      /**
-       * The response body as parsed JSON or XML
-       */
-      parsedBody: any;
-    };
-};
-
-/**
- * Contains response data for the revokeDeveloperKey operation.
- */
-export type RevokeDeveloperKeyResponse = {
   /**
    * The parsed response body.
    */
@@ -2199,29 +1851,6 @@ export type DownloadFileResponse = {
  * Contains response data for the uploadFiles operation.
  */
 export type UploadFilesResponse = {
-  /**
-   * The parsed response body.
-   */
-  body: any;
-  /**
-   * The underlying HTTP response.
-   */
-  _response: msRest.HttpResponse & {
-      /**
-       * The response body as text (string format)
-       */
-      bodyAsText: string;
-      /**
-       * The response body as parsed JSON or XML
-       */
-      parsedBody: any;
-    };
-};
-
-/**
- * Contains response data for the findFiles operation.
- */
-export type FindFilesResponse = {
   /**
    * The parsed response body.
    */
@@ -2472,9 +2101,9 @@ export type ReassignStepResponse = {
 };
 
 /**
- * Contains response data for the findPushbots operation.
+ * Contains response data for the findCredentials operation.
  */
-export type FindPushbotsResponse = {
+export type FindCredentialsResponse = {
   /**
    * The parsed response body.
    */
@@ -2495,9 +2124,216 @@ export type FindPushbotsResponse = {
 };
 
 /**
- * Contains response data for the getPushbot operation.
+ * Contains response data for the getCredentials operation.
  */
-export type GetPushbotResponse = {
+export type GetCredentialsResponse = {
+  /**
+   * The parsed response body.
+   */
+  body: any;
+  /**
+   * The underlying HTTP response.
+   */
+  _response: msRest.HttpResponse & {
+      /**
+       * The response body as text (string format)
+       */
+      bodyAsText: string;
+      /**
+       * The response body as parsed JSON or XML
+       */
+      parsedBody: any;
+    };
+};
+
+/**
+ * Contains response data for the revokeCredentials operation.
+ */
+export type RevokeCredentialsResponse = {
+  /**
+   * The parsed response body.
+   */
+  body: any;
+  /**
+   * The underlying HTTP response.
+   */
+  _response: msRest.HttpResponse & {
+      /**
+       * The response body as text (string format)
+       */
+      bodyAsText: string;
+      /**
+       * The response body as parsed JSON or XML
+       */
+      parsedBody: any;
+    };
+};
+
+/**
+ * Contains response data for the getUser operation.
+ */
+export type GetUserResponse = {
+  /**
+   * The parsed response body.
+   */
+  body: any;
+  /**
+   * The underlying HTTP response.
+   */
+  _response: msRest.HttpResponse & {
+      /**
+       * The response body as text (string format)
+       */
+      bodyAsText: string;
+      /**
+       * The response body as parsed JSON or XML
+       */
+      parsedBody: any;
+    };
+};
+
+/**
+ * Contains response data for the findUsers operation.
+ */
+export type FindUsersResponse = {
+  /**
+   * The parsed response body.
+   */
+  body: any;
+  /**
+   * The underlying HTTP response.
+   */
+  _response: msRest.HttpResponse & {
+      /**
+       * The response body as text (string format)
+       */
+      bodyAsText: string;
+      /**
+       * The response body as parsed JSON or XML
+       */
+      parsedBody: any;
+    };
+};
+
+/**
+ * Contains response data for the findWorkflows operation.
+ */
+export type FindWorkflowsResponse = {
+  /**
+   * The parsed response body.
+   */
+  body: any;
+  /**
+   * The underlying HTTP response.
+   */
+  _response: msRest.HttpResponse & {
+      /**
+       * The response body as text (string format)
+       */
+      bodyAsText: string;
+      /**
+       * The response body as parsed JSON or XML
+       */
+      parsedBody: any;
+    };
+};
+
+/**
+ * Contains response data for the getWorkflow operation.
+ */
+export type GetWorkflowResponse = {
+  /**
+   * The parsed response body.
+   */
+  body: any;
+  /**
+   * The underlying HTTP response.
+   */
+  _response: msRest.HttpResponse & {
+      /**
+       * The response body as text (string format)
+       */
+      bodyAsText: string;
+      /**
+       * The response body as parsed JSON or XML
+       */
+      parsedBody: any;
+    };
+};
+
+/**
+ * Contains response data for the importWorkflow operation.
+ */
+export type ImportWorkflowResponse = {
+  /**
+   * The parsed response body.
+   */
+  body: any;
+  /**
+   * The underlying HTTP response.
+   */
+  _response: msRest.HttpResponse & {
+      /**
+       * The response body as text (string format)
+       */
+      bodyAsText: string;
+      /**
+       * The response body as parsed JSON or XML
+       */
+      parsedBody: any;
+    };
+};
+
+/**
+ * Contains response data for the getWorkflowImport operation.
+ */
+export type GetWorkflowImportResponse = {
+  /**
+   * The parsed response body.
+   */
+  body: any;
+  /**
+   * The underlying HTTP response.
+   */
+  _response: msRest.HttpResponse & {
+      /**
+       * The response body as text (string format)
+       */
+      bodyAsText: string;
+      /**
+       * The response body as parsed JSON or XML
+       */
+      parsedBody: any;
+    };
+};
+
+/**
+ * Contains response data for the exportWorkflow operation.
+ */
+export type ExportWorkflowResponse = {
+  /**
+   * The parsed response body.
+   */
+  body: any;
+  /**
+   * The underlying HTTP response.
+   */
+  _response: msRest.HttpResponse & {
+      /**
+       * The response body as text (string format)
+       */
+      bodyAsText: string;
+      /**
+       * The response body as parsed JSON or XML
+       */
+      parsedBody: any;
+    };
+};
+
+/**
+ * Contains response data for the getWorkflowExport operation.
+ */
+export type GetWorkflowExportResponse = {
   /**
    * The parsed response body.
    */
