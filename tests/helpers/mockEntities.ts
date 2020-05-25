@@ -17,13 +17,13 @@ import {
 
 export const mockCredentials = (): Credentials => {
     const domain = faker.company.companyName().toLowerCase() + '.pushbot.com';
-    const env = 'v1';
+    const environment = 'v1';
     const id = v4();
     const secret = v4();
 
-    const token = Buffer.from([id, secret, domain, env].join(':')).toString('base64');
+    const token = Buffer.from([id, secret, domain, environment].join(':')).toString('base64');
 
-    return new Credentials(token);
+    return { id, domain, environment, secret, token };
 };
 
 export const mockCredentialsPage = (): CredentialsPage => {
