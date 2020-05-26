@@ -27,7 +27,9 @@ describe('WorkflowClient', function() {
             const result = await client.workflowClient.get(mockWorkflow.id);
 
             expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockWorkflow)));
-            expect(headers.authorization).to.be.ok.and.to.include(`Bearer ${client.credentials.token}`);
+            expect(headers.authorization)
+                .to.be.an('array')
+                .that.includes(`Bearer ${client.credentials.token}`);
         });
 
         it('should return proper exception when Workflow not found', async function() {
@@ -53,7 +55,9 @@ describe('WorkflowClient', function() {
             expect(result).to.not.be.ok;
             expect(error).to.be.ok;
             expect(error.message).to.include('Not found or something');
-            expect(headers.authorization).to.be.ok.and.to.include(`Bearer ${client.credentials.token}`);
+            expect(headers.authorization)
+                .to.be.an('array')
+                .that.includes(`Bearer ${client.credentials.token}`);
         });
     });
 
@@ -72,7 +76,9 @@ describe('WorkflowClient', function() {
             const result = await client.workflowClient.find();
 
             expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockWorkflowsPage)));
-            expect(headers.authorization).to.be.ok.and.to.include(`Bearer ${client.credentials.token}`);
+            expect(headers.authorization)
+                .to.be.an('array')
+                .that.includes(`Bearer ${client.credentials.token}`);
         });
 
         it('should find workflows with filter options', async function() {
@@ -94,7 +100,9 @@ describe('WorkflowClient', function() {
             const result = await client.workflowClient.find(options);
 
             expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockWorkflowsPage)));
-            expect(headers.authorization).to.be.ok.and.to.include(`Bearer ${client.credentials.token}`);
+            expect(headers.authorization)
+                .to.be.an('array')
+                .that.includes(`Bearer ${client.credentials.token}`);
         });
     });
 });

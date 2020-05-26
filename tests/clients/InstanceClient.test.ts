@@ -28,7 +28,9 @@ describe('InstanceClient', function() {
             const result = await client.instanceClient.get(mockInstance.id);
 
             expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockInstance)));
-            expect(headers.authorization).to.be.ok.and.to.include(`Bearer ${client.credentials.token}`);
+            expect(headers.authorization)
+                .to.be.an('array')
+                .that.includes(`Bearer ${client.credentials.token}`);
         });
 
         it('should return proper exception when Instance not found', async function() {
@@ -54,7 +56,9 @@ describe('InstanceClient', function() {
             expect(result).to.not.be.ok;
             expect(error).to.be.ok;
             expect(error.message).to.include('Not found or something');
-            expect(headers.authorization).to.be.ok.and.to.include(`Bearer ${client.credentials.token}`);
+            expect(headers.authorization)
+                .to.be.an('array')
+                .that.includes(`Bearer ${client.credentials.token}`);
         });
     });
 
@@ -73,7 +77,9 @@ describe('InstanceClient', function() {
             const result = await client.instanceClient.find();
 
             expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockInstancesPage)));
-            expect(headers.authorization).to.be.ok.and.to.include(`Bearer ${client.credentials.token}`);
+            expect(headers.authorization)
+                .to.be.an('array')
+                .that.includes(`Bearer ${client.credentials.token}`);
         });
 
         it('should find instances with no options', async function() {
@@ -101,7 +107,9 @@ describe('InstanceClient', function() {
             const result = await client.instanceClient.find(options);
 
             expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockInstancesPage)));
-            expect(headers.authorization).to.be.ok.and.to.include(`Bearer ${client.credentials.token}`);
+            expect(headers.authorization)
+                .to.be.an('array')
+                .that.includes(`Bearer ${client.credentials.token}`);
         });
     });
 });

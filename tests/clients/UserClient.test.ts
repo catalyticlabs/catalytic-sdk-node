@@ -27,7 +27,9 @@ describe('UserClient', function() {
             const result = await client.userClient.get(mockUser.id);
 
             expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockUser)));
-            expect(headers.authorization).to.be.ok.and.to.include(`Bearer ${client.credentials.token}`);
+            expect(headers.authorization)
+                .to.be.an('array')
+                .that.includes(`Bearer ${client.credentials.token}`);
         });
 
         it('should return proper exception when User not found', async function() {
@@ -53,7 +55,9 @@ describe('UserClient', function() {
             expect(result).to.not.be.ok;
             expect(error).to.be.ok;
             expect(error.message).to.include('Not found or something');
-            expect(headers.authorization).to.be.ok.and.to.include(`Bearer ${client.credentials.token}`);
+            expect(headers.authorization)
+                .to.be.an('array')
+                .that.includes(`Bearer ${client.credentials.token}`);
         });
     });
 
@@ -72,7 +76,9 @@ describe('UserClient', function() {
             const result = await client.userClient.find();
 
             expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockUsersPage)));
-            expect(headers.authorization).to.be.ok.and.to.include(`Bearer ${client.credentials.token}`);
+            expect(headers.authorization)
+                .to.be.an('array')
+                .that.includes(`Bearer ${client.credentials.token}`);
         });
 
         it('should find users with no options', async function() {
@@ -94,7 +100,9 @@ describe('UserClient', function() {
             const result = await client.userClient.find(options);
 
             expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockUsersPage)));
-            expect(headers.authorization).to.be.ok.and.to.include(`Bearer ${client.credentials.token}`);
+            expect(headers.authorization)
+                .to.be.an('array')
+                .that.includes(`Bearer ${client.credentials.token}`);
         });
     });
 });

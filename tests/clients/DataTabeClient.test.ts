@@ -27,7 +27,9 @@ describe('DataTableClient', function() {
             const result = await client.dataTableClient.get(mockDataTable.id);
 
             expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockDataTable)));
-            expect(headers.authorization).to.be.ok.and.to.include(`Bearer ${client.credentials.token}`);
+            expect(headers.authorization)
+                .to.be.an('array')
+                .that.includes(`Bearer ${client.credentials.token}`);
         });
 
         it('should return proper exception when DataTable not found', async function() {
@@ -53,7 +55,9 @@ describe('DataTableClient', function() {
             expect(result).to.not.be.ok;
             expect(error).to.be.ok; //.and.to.be.DataTableOf(InternalError);
             expect(error.message).to.include('Not found or something');
-            expect(headers.authorization).to.be.ok.and.to.include(`Bearer ${client.credentials.token}`);
+            expect(headers.authorization)
+                .to.be.an('array')
+                .that.includes(`Bearer ${client.credentials.token}`);
         });
     });
     describe('Find DataTables', function() {
@@ -71,7 +75,9 @@ describe('DataTableClient', function() {
             const result = await client.dataTableClient.find();
 
             expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockDataTablesPage)));
-            expect(headers.authorization).to.be.ok.and.to.include(`Bearer ${client.credentials.token}`);
+            expect(headers.authorization)
+                .to.be.an('array')
+                .that.includes(`Bearer ${client.credentials.token}`);
         });
 
         it('should find tables with no options', async function() {
@@ -93,7 +99,9 @@ describe('DataTableClient', function() {
             const result = await client.dataTableClient.find(options);
 
             expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockDataTablesPage)));
-            expect(headers.authorization).to.be.ok.and.to.include(`Bearer ${client.credentials.token}`);
+            expect(headers.authorization)
+                .to.be.an('array')
+                .that.includes(`Bearer ${client.credentials.token}`);
         });
     });
 });
