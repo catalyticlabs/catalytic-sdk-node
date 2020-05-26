@@ -12,46 +12,97 @@ describe('WorkflowClient', function() {
         mockApi = nockApi();
     });
 
-    it('should get a Workflow by ID', async function() {
-        const mockWorkflow = mock.mockWorkflow();
-        let headers;
-        mockApi.get(`/api/workflows/${mockWorkflow.id}`).reply(function() {
-            headers = this.req.headers;
-            return [200, mockWorkflow];
+    describe('Get Workflow', function() {
+        it('should get a Workflow by ID', async function() {
+            const mockWorkflow = mock.mockWorkflow();
+            let headers;
+            mockApi.get(`/api/workflows/${mockWorkflow.id}`).reply(function() {
+                headers = this.req.headers;
+                return [200, mockWorkflow];
+            });
+
+            const client = new CatalyticClient();
+            client.credentials = mock.mockCredentials();
+
+            const result = await client.workflowClient.get(mockWorkflow.id);
+
+            expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockWorkflow)));
+            expect(headers.authorization)
+                .to.be.an('array')
+                .that.includes(`Bearer ${client.credentials.token}`);
         });
 
-        const client = new CatalyticClient();
-        client.credentials = mock.mockCredentials();
+        it('should return proper exception when Workflow not found', async function() {
+            const id = v4();
+            let headers;
+            mockApi.get(`/api/workflows/${id}`).reply(function() {
+                headers = this.req.headers;
+                return [404, { detail: 'Not found or something' }];
+            });
 
-        const result = await client.workflowClient.get(mockWorkflow.id);
+            const client = new CatalyticClient();
+            client.credentials = mock.mockCredentials();
 
-        expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockWorkflow)));
-        expect(headers.authorization).to.be.ok.and.to.include(`Bearer ${client.credentials.token}`);
+            let error;
+            let result;
+
+            try {
+                result = await client.workflowClient.get(id);
+            } catch (e) {
+                error = e;
+            }
+
+            expect(result).to.not.be.ok;
+            expect(error).to.be.ok;
+            expect(error.message).to.include('Not found or something');
+            expect(headers.authorization)
+                .to.be.an('array')
+                .that.includes(`Bearer ${client.credentials.token}`);
+        });
     });
 
-    it('should return proper exception when Workflow not found', async function() {
-        const id = v4();
-        let headers;
-        mockApi.get(`/api/workflows/${id}`).reply(function() {
-            headers = this.req.headers;
-            return [404, { detail: 'Not found or something' }];
+    describe('Find Workflows', function() {
+        it('should find workflows with no arguments', async function() {
+            const mockWorkflowsPage = mock.mockWorkflowsPage();
+            let headers;
+            mockApi.get(`/api/workflows`).reply(function() {
+                headers = this.req.headers;
+                return [200, mockWorkflowsPage];
+            });
+
+            const client = new CatalyticClient();
+            client.credentials = mock.mockCredentials();
+
+            const result = await client.workflowClient.find();
+
+            expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockWorkflowsPage)));
+            expect(headers.authorization)
+                .to.be.an('array')
+                .that.includes(`Bearer ${client.credentials.token}`);
         });
 
-        const client = new CatalyticClient();
-        client.credentials = mock.mockCredentials();
+        it('should find workflows with filter options', async function() {
+            const mockWorkflowsPage = mock.mockWorkflowsPage();
+            const options = { pageSize: 3, query: 'some workflow', owner: 'test@example.com' };
+            let headers;
+            mockApi
+                .get(`/api/workflows`)
+                // eslint-disable-next-line @typescript-eslint/camelcase
+                .query({ page_size: options.pageSize, query: options.query, owner: options.owner })
+                .reply(function() {
+                    headers = this.req.headers;
+                    return [200, mockWorkflowsPage];
+                });
 
-        let error;
-        let result;
+            const client = new CatalyticClient();
+            client.credentials = mock.mockCredentials();
 
-        try {
-            result = await client.workflowClient.get(id);
-        } catch (e) {
-            error = e;
-        }
+            const result = await client.workflowClient.find(options);
 
-        expect(result).to.not.be.ok;
-        expect(error).to.be.ok;
-        expect(error.message).to.include('Not found or something');
-        expect(headers.authorization).to.be.ok.and.to.include(`Bearer ${client.credentials.token}`);
+            expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockWorkflowsPage)));
+            expect(headers.authorization)
+                .to.be.an('array')
+                .that.includes(`Bearer ${client.credentials.token}`);
+        });
     });
 });

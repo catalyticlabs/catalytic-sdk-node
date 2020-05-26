@@ -2,14 +2,12 @@ export type DataTableType = 'imported' | 'master' | 'application' | 'instance' |
 
 export interface FieldRestrictions {
     /**
-     * @member {string[]} [choices] A set of valid choices for this field. If
-     * set, FieldType must be
+     * A set of valid choices for this field. If set, FieldType must be
      * SingleChoice or MultipleChoice
      */
     choices?: string[];
     /**
-     * @member {boolean} [valueRequired] Indicates whether null or empty values
-     * will be rejected
+     * Indicates whether null or empty values will be rejected
      */
     valueRequired?: boolean;
 }

@@ -26,7 +26,9 @@ describe('FileClient', function() {
         const result = await client.fileClient.get(mockFile.id);
 
         expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockFile)));
-        expect(headers.authorization).to.be.ok.and.to.include(`Bearer ${client.credentials.token}`);
+        expect(headers.authorization)
+            .to.be.an('array')
+            .that.includes(`Bearer ${client.credentials.token}`);
     });
 
     it('should return proper exception when File not found', async function() {
@@ -52,6 +54,8 @@ describe('FileClient', function() {
         expect(result).to.not.be.ok;
         expect(error).to.be.ok; //.and.to.be.FileOf(InternalError);
         expect(error.message).to.include('Not found or something');
-        expect(headers.authorization).to.be.ok.and.to.include(`Bearer ${client.credentials.token}`);
+        expect(headers.authorization)
+            .to.be.an('array')
+            .that.includes(`Bearer ${client.credentials.token}`);
     });
 });

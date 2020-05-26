@@ -12,47 +12,97 @@ describe('CredentialsClient', function() {
         mockApi = nockApi();
     });
 
-    it('should get a Credentials by ID', async function() {
-        const id = v4();
-        const mockCredentials = mock.mockCredentials();
-        let headers;
-        mockApi.get(`/api/credentials/${id}`).reply(function() {
-            headers = this.req.headers;
-            return [200, mockCredentials];
+    describe('Get Credentials', function() {
+        it('should get a Credentials by ID', async function() {
+            const mockCredentials = mock.mockCredentials();
+            let headers;
+            mockApi.get(`/api/credentials/${mockCredentials.id}`).reply(function() {
+                headers = this.req.headers;
+                return [200, mockCredentials];
+            });
+
+            const client = new CatalyticClient();
+            client.credentials = mock.mockCredentials();
+
+            const result = await client.credentialsClient.get(mockCredentials.id);
+
+            expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockCredentials)));
+            expect(headers.authorization)
+                .to.be.an('array')
+                .that.includes(`Bearer ${client.credentials.token}`);
         });
 
-        const client = new CatalyticClient();
-        client.credentials = mock.mockCredentials();
+        it('should return proper exception when Credentials not found', async function() {
+            const id = v4();
+            let headers;
+            mockApi.get(`/api/credentials/${id}`).reply(function() {
+                headers = this.req.headers;
+                return [404, { detail: 'Not found or something' }];
+            });
 
-        const result = await client.credentialsClient.get(id);
+            const client = new CatalyticClient();
+            client.credentials = mock.mockCredentials();
 
-        expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockCredentials)));
-        expect(headers.authorization).to.be.ok.and.to.include(`Bearer ${client.credentials.token}`);
+            let error;
+            let result;
+
+            try {
+                result = await client.credentialsClient.get(id);
+            } catch (e) {
+                error = e;
+            }
+
+            expect(result).to.not.be.ok;
+            expect(error).to.be.ok;
+            expect(error.message).to.include('Not found or something');
+            expect(headers.authorization)
+                .to.be.an('array')
+                .that.includes(`Bearer ${client.credentials.token}`);
+        });
     });
 
-    it('should return proper exception when Credentials not found', async function() {
-        const id = v4();
-        let headers;
-        mockApi.get(`/api/credentials/${id}`).reply(function() {
-            headers = this.req.headers;
-            return [404, { detail: 'Not found or something' }];
+    describe('Find Credentials', function() {
+        it('should find credentials with no arguments', async function() {
+            const mockCredentialsPage = mock.mockCredentialsPage();
+            let headers;
+            mockApi.get(`/api/credentials`).reply(function() {
+                headers = this.req.headers;
+                return [200, mockCredentialsPage];
+            });
+
+            const client = new CatalyticClient();
+            client.credentials = mock.mockCredentials();
+
+            const result = await client.credentialsClient.find();
+
+            expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockCredentialsPage)));
+            expect(headers.authorization)
+                .to.be.an('array')
+                .that.includes(`Bearer ${client.credentials.token}`);
         });
 
-        const client = new CatalyticClient();
-        client.credentials = mock.mockCredentials();
+        it('should find credentials with filter options', async function() {
+            const mockCredentialsPage = mock.mockCredentialsPage();
+            const options = { pageSize: 3, query: 'some credentials', owner: 'test@example.com' };
+            let headers;
+            mockApi
+                .get(`/api/credentials`)
+                // eslint-disable-next-line @typescript-eslint/camelcase
+                .query({ page_size: options.pageSize, query: options.query, owner: options.owner })
+                .reply(function() {
+                    headers = this.req.headers;
+                    return [200, mockCredentialsPage];
+                });
 
-        let error;
-        let result;
+            const client = new CatalyticClient();
+            client.credentials = mock.mockCredentials();
 
-        try {
-            result = await client.credentialsClient.get(id);
-        } catch (e) {
-            error = e;
-        }
+            const result = await client.credentialsClient.find(options);
 
-        expect(result).to.not.be.ok;
-        expect(error).to.be.ok;
-        expect(error.message).to.include('Not found or something');
-        expect(headers.authorization).to.be.ok.and.to.include(`Bearer ${client.credentials.token}`);
+            expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockCredentialsPage)));
+            expect(headers.authorization)
+                .to.be.an('array')
+                .that.includes(`Bearer ${client.credentials.token}`);
+        });
     });
 });

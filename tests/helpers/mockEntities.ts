@@ -1,17 +1,35 @@
 import faker from 'faker';
 import { v4 } from 'uuid';
 
-import { Credentials, DataTable, Instance, User, Workflow, FileMetadata } from '../../src/entities';
+import {
+    Credentials,
+    DataTable,
+    Instance,
+    User,
+    Workflow,
+    FileMetadata,
+    UsersPage,
+    WorkflowsPage,
+    InstancesPage,
+    CredentialsPage,
+    DataTablesPage
+} from '../../src/entities';
 
 export const mockCredentials = (): Credentials => {
     const domain = faker.company.companyName().toLowerCase() + '.pushbot.com';
-    const env = 'v1';
+    const environment = 'v1';
     const id = v4();
     const secret = v4();
 
-    const token = Buffer.from([id, secret, domain, env].join(':')).toString('base64');
+    const token = Buffer.from([id, secret, domain, environment].join(':')).toString('base64');
 
-    return new Credentials(token);
+    return { id, domain, environment, secret, token };
+};
+
+export const mockCredentialsPage = (): CredentialsPage => {
+    const credentials = [mockCredentials(), mockCredentials()];
+
+    return { credentials };
 };
 
 export const mockDataTable = (): DataTable => {
@@ -21,7 +39,12 @@ export const mockDataTable = (): DataTable => {
         teamName: faker.company.companyName().toLowerCase()
     };
 
-    return values as DataTable;
+    return values;
+};
+
+export const mockDataTablesPage = (): DataTablesPage => {
+    const dataTables = [mockDataTable(), mockDataTable()];
+    return { dataTables };
 };
 
 export const mockFileMetadata = (): FileMetadata => {
@@ -31,7 +54,7 @@ export const mockFileMetadata = (): FileMetadata => {
         teamName: faker.company.companyName().toLowerCase()
     };
 
-    return values as FileMetadata;
+    return values;
 };
 
 export const mockInstance = (): Instance => {
@@ -43,7 +66,13 @@ export const mockInstance = (): Instance => {
         teamName: faker.company.companyName().toLowerCase()
     };
 
-    return values as Instance;
+    return values;
+};
+
+export const mockInstancesPage = (): InstancesPage => {
+    const instances = [mockInstance(), mockInstance()];
+
+    return { instances };
 };
 
 export const mockUser = (): User => {
@@ -55,7 +84,13 @@ export const mockUser = (): User => {
         fullName: faker.name.firstName() + ' ' + faker.name.lastName()
     };
 
-    return values as User;
+    return values;
+};
+
+export const mockUsersPage = (): UsersPage => {
+    const users = [mockUser(), mockUser()];
+
+    return { users };
 };
 
 export const mockWorkflow = (): Workflow => {
@@ -66,7 +101,25 @@ export const mockWorkflow = (): Workflow => {
         teamName: faker.company.companyName().toLowerCase()
     };
 
-    return values as Workflow;
+    return values;
 };
 
-export default { mockCredentials, mockDataTable, mockFileMetadata, mockInstance, mockUser, mockWorkflow };
+export const mockWorkflowsPage = (): WorkflowsPage => {
+    const workflows = [mockWorkflow(), mockWorkflow()];
+
+    return { workflows };
+};
+
+export default {
+    mockCredentials,
+    mockCredentialsPage,
+    mockDataTable,
+    mockDataTablesPage,
+    mockFileMetadata,
+    mockInstance,
+    mockInstancesPage,
+    mockUser,
+    mockUsersPage,
+    mockWorkflow,
+    mockWorkflowsPage
+};
