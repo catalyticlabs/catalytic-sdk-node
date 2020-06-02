@@ -4,13 +4,14 @@
   "scripts": {
     "autorest": "autorest",
     "build": "tsc",
-    "lint": "eslint .",
+    "lint": "eslint ./src/**/*.ts ./tests/**/*.ts",
     "test": "npm run build && mocha -r ts-node/register tests/**/*.test.ts"
   },
   "dependencies": {
     "@azure/ms-rest-js": "^2.0.4"
   },
   "devDependencies": {
+    "@types/chai": "^4.2.11",
     "@types/faker": "^4.1.12",
     "@types/mocha": "^7.0.2",
     "@types/node": "^12.12.15",
@@ -38,7 +39,6 @@
   "author": "",
   "license": "ISC",
   "eslintIgnore": [
-    "bin/*",
     "built/*",
     "src/internal/*"
   ]

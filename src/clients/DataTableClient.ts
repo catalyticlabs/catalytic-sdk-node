@@ -27,7 +27,7 @@ export default class DataTableClient extends BaseClient {
      * @param callback The optional callback
      * @returns The DataTable with the provided ID
      */
-    get(id: string, callback?: ClientMethodCallback<DataTable>): Promise<DataTable> | void {
+    get(id: string, callback?: ClientMethodCallback<DataTable>): Promise<DataTable> {
         if (callback) {
             return callbackify(this._get).call(this, id, callback);
         }
@@ -78,7 +78,7 @@ export default class DataTableClient extends BaseClient {
     find(
         options?: FindDataTablesOptions | ClientMethodCallback<DataTablesPage>,
         callback?: ClientMethodCallback<DataTablesPage>
-    ): Promise<DataTablesPage> | void {
+    ): Promise<DataTablesPage> {
         if (typeof options === 'function') {
             callback = options;
             options = null;

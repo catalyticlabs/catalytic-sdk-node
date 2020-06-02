@@ -27,7 +27,7 @@ export default class CredentialsClient extends BaseClient {
      * @param callback The optional callback
      * @returns The Credentials with the provided ID
      */
-    get(id: string, callback?: ClientMethodCallback<Credentials>): Promise<Credentials> | void {
+    get(id: string, callback?: ClientMethodCallback<Credentials>): Promise<Credentials> {
         if (callback) {
             return callbackify(this._get).call(this, id, callback);
         }
@@ -78,7 +78,7 @@ export default class CredentialsClient extends BaseClient {
     find(
         options?: FindCredentialsOptions | ClientMethodCallback<CredentialsPage>,
         callback?: ClientMethodCallback<CredentialsPage>
-    ): Promise<CredentialsPage> | void {
+    ): Promise<CredentialsPage> {
         if (typeof options === 'function') {
             callback = options;
             options = null;

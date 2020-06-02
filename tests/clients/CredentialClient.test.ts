@@ -5,7 +5,6 @@ import { v4 } from 'uuid';
 import nockApi from '../nockApi';
 import CatalyticClient from '../../src/CatalyticClient';
 import mock from '../helpers/mockEntities';
-import { AssertionError } from 'assert';
 
 describe('CredentialsClient', function() {
     let mockApi;

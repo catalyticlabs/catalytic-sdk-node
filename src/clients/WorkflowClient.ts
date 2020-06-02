@@ -26,7 +26,7 @@ export default class WorkflowClient extends BaseClient {
      * @param callback The optional callback
      * @returns The Workflow with the provided ID
      */
-    get(id: string, callback?: ClientMethodCallback<Workflow>): Promise<Workflow> | void {
+    get(id: string, callback?: ClientMethodCallback<Workflow>): Promise<Workflow> {
         if (callback) {
             return callbackify(this._get).call(this, id, callback);
         }
@@ -76,7 +76,7 @@ export default class WorkflowClient extends BaseClient {
     find(
         options?: FindWorkflowOptions | ClientMethodCallback<WorkflowsPage>,
         callback?: ClientMethodCallback<WorkflowsPage>
-    ): Promise<WorkflowsPage> | void {
+    ): Promise<WorkflowsPage> {
         if (typeof options === 'function') {
             callback = options;
             options = null;

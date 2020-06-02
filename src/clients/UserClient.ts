@@ -27,7 +27,7 @@ export default class UserClient extends BaseClient {
      * @param callback The optional callback
      * @returns The User with the provided ID
      */
-    get(id: string, callback?: ClientMethodCallback<User>): Promise<User> | void {
+    get(id: string, callback?: ClientMethodCallback<User>): Promise<User> {
         if (callback) {
             return callbackify(this._get).call(this, id, callback);
         }
@@ -78,7 +78,7 @@ export default class UserClient extends BaseClient {
     find(
         options?: FindUserOptions | ClientMethodCallback<UsersPage>,
         callback?: ClientMethodCallback<UsersPage>
-    ): Promise<UsersPage> | void {
+    ): Promise<UsersPage> {
         if (typeof options === 'function') {
             callback = options;
             options = null;

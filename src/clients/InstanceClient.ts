@@ -27,7 +27,7 @@ export default class InstanceClient extends BaseClient {
      * @param callback The optional callback
      * @returns The Instance with the provided ID
      */
-    get(id: string, callback?: ClientMethodCallback<Instance>): Promise<Instance> | void {
+    get(id: string, callback?: ClientMethodCallback<Instance>): Promise<Instance> {
         if (callback) {
             return callbackify(this._get).call(this, id, callback);
         }
@@ -78,7 +78,7 @@ export default class InstanceClient extends BaseClient {
     find(
         options?: FindInstanceOptions | ClientMethodCallback<InstancesPage>,
         callback?: ClientMethodCallback<InstancesPage>
-    ): Promise<InstancesPage> | void {
+    ): Promise<InstancesPage> {
         if (typeof options === 'function') {
             callback = options;
             options = null;

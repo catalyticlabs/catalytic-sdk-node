@@ -1,4 +1,4 @@
-import assert, { doesNotReject } from 'assert';
+import assert from 'assert';
 import { expect } from 'chai';
 import { v4 } from 'uuid';
 

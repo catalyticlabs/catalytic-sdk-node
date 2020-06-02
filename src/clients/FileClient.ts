@@ -27,7 +27,7 @@ export default class FileClient extends BaseClient {
      * @param callback The optional callback
      * @returns The Metadata of the File with the provided ID
      */
-    get(id: string, callback?: ClientMethodCallback<FileMetadata>): Promise<FileMetadata> | void {
+    get(id: string, callback?: ClientMethodCallback<FileMetadata>): Promise<FileMetadata> {
         if (callback) {
             return callbackify(this._get).call(this, id, callback);
         }
