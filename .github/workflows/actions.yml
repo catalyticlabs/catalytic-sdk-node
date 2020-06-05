@@ -32,7 +32,8 @@ jobs:
         yarn install
 
     # Runs a set of commands using the runners shell
-    - name: Build & Test
+    - name: Build, Lint, & Test
       run: |
         yarn build
+        yarn lint
         yarn test

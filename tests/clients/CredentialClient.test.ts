@@ -1,108 +1,116 @@
-import { expect } from 'chai';
+import chai from 'chai';
+import sinonChai from 'sinon-chai';
+import sinon from 'sinon';
 import { v4 } from 'uuid';
 
-import nockApi from '../nockApi';
+chai.use(sinonChai);
+const expect = chai.expect;
+
 import CatalyticClient from '../../src/CatalyticClient';
 import mock from '../helpers/mockEntities';
+import { createResponse, executeTest } from '../helpers';
 
 describe('CredentialsClient', function() {
-    let mockApi;
+    let client: CatalyticClient;
+    let expectedCustomHeaders;
 
     before(function() {
-        mockApi = nockApi();
+        client = new CatalyticClient();
+        client.credentials = mock.mockCredentials();
+        expectedCustomHeaders = { Authorization: `Bearer ${client.credentials.token}` };
+    });
+
+    afterEach(function() {
+        sinon.restore();
     });
 
     describe('Get Credentials', function() {
-        it('should get a Credentials by ID', async function() {
+        it('should get Credentials by ID', async function() {
             const mockCredentials = mock.mockCredentials();
-            let headers;
-            mockApi.get(`/api/credentials/${mockCredentials.id}`).reply(function() {
-                headers = this.req.headers;
-                return [200, mockCredentials];
+            sinon
+                .stub(client.internalClient, 'getCredentials')
+                .callsFake(() => Promise.resolve(createResponse(mockCredentials)));
+
+            return executeTest(client.credentialsClient, 'get', [mockCredentials.id], (err, result) => {
+                expect(err).to.not.be.ok;
+
+                expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockCredentials)));
+                expect(client.internalClient.getCredentials).to.have.callCount(1);
+                expect(client.internalClient.getCredentials).to.have.been.calledWith(mockCredentials.id, {
+                    customHeaders: expectedCustomHeaders
+                });
             });
-
-            const client = new CatalyticClient();
-            client.credentials = mock.mockCredentials();
-
-            const result = await client.credentialsClient.get(mockCredentials.id);
-
-            expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockCredentials)));
-            expect(headers.authorization)
-                .to.be.an('array')
-                .that.includes(`Bearer ${client.credentials.token}`);
         });
 
         it('should return proper exception when Credentials not found', async function() {
             const id = v4();
-            let headers;
-            mockApi.get(`/api/credentials/${id}`).reply(function() {
-                headers = this.req.headers;
-                return [404, { detail: 'Not found or something' }];
+            sinon
+                .stub(client.internalClient, 'getCredentials')
+                .callsFake(() => Promise.resolve(createResponse({ detail: 'Intentional not found error' }, 404)));
+
+            return executeTest(client.credentialsClient, 'get', [id], (error, result) => {
+                expect(result).to.not.be.ok;
+                expect(error).to.be.ok;
+                expect(error.message).to.include('Intentional not found error');
+                expect(client.internalClient.getCredentials).to.have.callCount(1);
+                expect(client.internalClient.getCredentials).to.have.been.calledWith(id, {
+                    customHeaders: expectedCustomHeaders
+                });
             });
-
-            const client = new CatalyticClient();
-            client.credentials = mock.mockCredentials();
-
-            let error;
-            let result;
-
-            try {
-                result = await client.credentialsClient.get(id);
-            } catch (e) {
-                error = e;
-            }
-
-            expect(result).to.not.be.ok;
-            expect(error).to.be.ok;
-            expect(error.message).to.include('Not found or something');
-            expect(headers.authorization)
-                .to.be.an('array')
-                .that.includes(`Bearer ${client.credentials.token}`);
         });
     });
 
     describe('Find Credentials', function() {
-        it('should find credentials with no arguments', async function() {
+        it('should find Credentials with no filter options', async function() {
             const mockCredentialsPage = mock.mockCredentialsPage();
-            let headers;
-            mockApi.get(`/api/credentials`).reply(function() {
-                headers = this.req.headers;
-                return [200, mockCredentialsPage];
+            sinon
+                .stub(client.internalClient, 'findCredentials')
+                .callsFake(() => Promise.resolve(createResponse(mockCredentialsPage)));
+
+            return executeTest(client.credentialsClient, 'find', [], (err, result) => {
+                expect(err).to.not.be.ok;
+
+                expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockCredentialsPage)));
+                expect(client.internalClient.findCredentials).to.have.callCount(1);
+                expect(client.internalClient.findCredentials).to.have.been.calledWith({
+                    customHeaders: expectedCustomHeaders
+                });
             });
-
-            const client = new CatalyticClient();
-            client.credentials = mock.mockCredentials();
-
-            const result = await client.credentialsClient.find();
-
-            expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockCredentialsPage)));
-            expect(headers.authorization)
-                .to.be.an('array')
-                .that.includes(`Bearer ${client.credentials.token}`);
         });
 
-        it('should find credentials with filter options', async function() {
-            const mockCredentialsPage = mock.mockCredentialsPage();
+        it('should find Credentials with filter options', async function() {
             const options = { pageSize: 3, query: 'some credentials', owner: 'test@example.com' };
-            let headers;
-            mockApi
-                .get(`/api/credentials`)
-                // eslint-disable-next-line @typescript-eslint/camelcase
-                .query({ page_size: options.pageSize, query: options.query, owner: options.owner })
-                .reply(function() {
-                    headers = this.req.headers;
-                    return [200, mockCredentialsPage];
+            const mockCredentialsPage = mock.mockCredentialsPage();
+            sinon
+                .stub(client.internalClient, 'findCredentials')
+                .callsFake(() => Promise.resolve(createResponse(mockCredentialsPage)));
+
+            return executeTest(client.credentialsClient, 'find', [options], (err, result) => {
+                expect(err).to.not.be.ok;
+
+                expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockCredentialsPage)));
+                expect(client.internalClient.findCredentials).to.have.callCount(1);
+                expect(client.internalClient.findCredentials).to.have.been.calledWith({
+                    customHeaders: expectedCustomHeaders,
+                    ...options
                 });
+            });
+        });
 
-            const client = new CatalyticClient();
-            client.credentials = mock.mockCredentials();
+        it('should return exception when bad response code returned', async function() {
+            sinon
+                .stub(client.internalClient, 'findCredentials')
+                .callsFake(() => Promise.resolve(createResponse({ detail: 'Intentional bad request error' }, 400)));
 
-            const result = await client.credentialsClient.find(options);
-
-            expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockCredentialsPage)));
-            expect(headers.authorization)
-                .to.be.an('array')
-                .that.includes(`Bearer ${client.credentials.token}`);
+            return executeTest(client.credentialsClient, 'find', [], (error, result) => {
+                expect(result).to.not.be.ok;
+                expect(error).to.be.ok;
+                expect(error.message).to.include('Intentional bad request error');
+                expect(client.internalClient.findCredentials).to.have.callCount(1);
+                expect(client.internalClient.findCredentials).to.have.been.calledWith({
+                    customHeaders: expectedCustomHeaders
+                });
+            });
         });
     });
 });

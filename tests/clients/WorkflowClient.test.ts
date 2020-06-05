@@ -1,108 +1,116 @@
-import { expect } from 'chai';
+import chai from 'chai';
+import sinonChai from 'sinon-chai';
+import sinon from 'sinon';
 import { v4 } from 'uuid';
 
-import nockApi from '../nockApi';
+chai.use(sinonChai);
+const expect = chai.expect;
+
 import CatalyticClient from '../../src/CatalyticClient';
 import mock from '../helpers/mockEntities';
+import { createResponse, executeTest } from '../helpers';
 
 describe('WorkflowClient', function() {
-    let mockApi;
+    let client: CatalyticClient;
+    let expectedCustomHeaders;
 
     before(function() {
-        mockApi = nockApi();
+        client = new CatalyticClient();
+        client.credentials = mock.mockCredentials();
+        expectedCustomHeaders = { Authorization: `Bearer ${client.credentials.token}` };
+    });
+
+    afterEach(function() {
+        sinon.restore();
     });
 
     describe('Get Workflow', function() {
-        it('should get a Workflow by ID', async function() {
+        it('should get a Workflow by ID', function() {
             const mockWorkflow = mock.mockWorkflow();
-            let headers;
-            mockApi.get(`/api/workflows/${mockWorkflow.id}`).reply(function() {
-                headers = this.req.headers;
-                return [200, mockWorkflow];
+            sinon
+                .stub(client.internalClient, 'getWorkflow')
+                .callsFake(() => Promise.resolve(createResponse(mockWorkflow)));
+
+            return executeTest(client.workflowClient, 'get', [mockWorkflow.id], (err, result) => {
+                expect(err).to.not.be.ok;
+
+                expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockWorkflow)));
+                expect(client.internalClient.getWorkflow).to.have.callCount(1);
+                expect(client.internalClient.getWorkflow).to.have.been.calledWith(mockWorkflow.id, {
+                    customHeaders: expectedCustomHeaders
+                });
             });
-
-            const client = new CatalyticClient();
-            client.credentials = mock.mockCredentials();
-
-            const result = await client.workflowClient.get(mockWorkflow.id);
-
-            expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockWorkflow)));
-            expect(headers.authorization)
-                .to.be.an('array')
-                .that.includes(`Bearer ${client.credentials.token}`);
         });
 
-        it('should return proper exception when Workflow not found', async function() {
+        it('should return proper exception when Workflow not found', function() {
             const id = v4();
-            let headers;
-            mockApi.get(`/api/workflows/${id}`).reply(function() {
-                headers = this.req.headers;
-                return [404, { detail: 'Not found or something' }];
+            sinon
+                .stub(client.internalClient, 'getWorkflow')
+                .callsFake(() => Promise.resolve(createResponse({ detail: 'Intentional not found error' }, 404)));
+
+            return executeTest(client.workflowClient, 'get', [id], (error, result) => {
+                expect(result).to.not.be.ok;
+                expect(error).to.be.ok;
+                expect(error.message).to.include('Intentional not found error');
+                expect(client.internalClient.getWorkflow).to.have.callCount(1);
+                expect(client.internalClient.getWorkflow).to.have.been.calledWith(id, {
+                    customHeaders: expectedCustomHeaders
+                });
             });
-
-            const client = new CatalyticClient();
-            client.credentials = mock.mockCredentials();
-
-            let error;
-            let result;
-
-            try {
-                result = await client.workflowClient.get(id);
-            } catch (e) {
-                error = e;
-            }
-
-            expect(result).to.not.be.ok;
-            expect(error).to.be.ok;
-            expect(error.message).to.include('Not found or something');
-            expect(headers.authorization)
-                .to.be.an('array')
-                .that.includes(`Bearer ${client.credentials.token}`);
         });
     });
 
     describe('Find Workflows', function() {
-        it('should find workflows with no arguments', async function() {
+        it('should find Instances with no filter options', function() {
             const mockWorkflowsPage = mock.mockWorkflowsPage();
-            let headers;
-            mockApi.get(`/api/workflows`).reply(function() {
-                headers = this.req.headers;
-                return [200, mockWorkflowsPage];
+            sinon
+                .stub(client.internalClient, 'findWorkflows')
+                .callsFake(() => Promise.resolve(createResponse(mockWorkflowsPage)));
+
+            return executeTest(client.workflowClient, 'find', [], (err, result) => {
+                expect(err).to.not.be.ok;
+
+                expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockWorkflowsPage)));
+                expect(client.internalClient.findWorkflows).to.have.callCount(1);
+                expect(client.internalClient.findWorkflows).to.have.been.calledWith({
+                    customHeaders: expectedCustomHeaders
+                });
             });
-
-            const client = new CatalyticClient();
-            client.credentials = mock.mockCredentials();
-
-            const result = await client.workflowClient.find();
-
-            expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockWorkflowsPage)));
-            expect(headers.authorization)
-                .to.be.an('array')
-                .that.includes(`Bearer ${client.credentials.token}`);
         });
 
-        it('should find workflows with filter options', async function() {
+        it('should find Instances with filter options', function() {
             const mockWorkflowsPage = mock.mockWorkflowsPage();
             const options = { pageSize: 3, query: 'some workflow', owner: 'test@example.com' };
-            let headers;
-            mockApi
-                .get(`/api/workflows`)
-                // eslint-disable-next-line @typescript-eslint/camelcase
-                .query({ page_size: options.pageSize, query: options.query, owner: options.owner })
-                .reply(function() {
-                    headers = this.req.headers;
-                    return [200, mockWorkflowsPage];
+            sinon
+                .stub(client.internalClient, 'findWorkflows')
+                .callsFake(() => Promise.resolve(createResponse(mockWorkflowsPage)));
+
+            return executeTest(client.workflowClient, 'find', [options], (err, result) => {
+                expect(err).to.not.be.ok;
+
+                expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockWorkflowsPage)));
+                expect(client.internalClient.findWorkflows).to.have.callCount(1);
+                expect(client.internalClient.findWorkflows).to.have.been.calledWith({
+                    customHeaders: expectedCustomHeaders,
+                    ...options
                 });
+            });
+        });
 
-            const client = new CatalyticClient();
-            client.credentials = mock.mockCredentials();
+        it('should return exception when bad response code returned', function() {
+            sinon
+                .stub(client.internalClient, 'findWorkflows')
+                .callsFake(() => Promise.resolve(createResponse({ detail: 'Intentional bad request error' }, 400)));
 
-            const result = await client.workflowClient.find(options);
-
-            expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockWorkflowsPage)));
-            expect(headers.authorization)
-                .to.be.an('array')
-                .that.includes(`Bearer ${client.credentials.token}`);
+            return executeTest(client.workflowClient, 'find', [], (error, result) => {
+                expect(result).to.not.be.ok;
+                expect(error).to.be.ok;
+                expect(error.message).to.include('Intentional bad request error');
+                expect(client.internalClient.findWorkflows).to.have.callCount(1);
+                expect(client.internalClient.findWorkflows).to.have.been.calledWith({
+                    customHeaders: expectedCustomHeaders
+                });
+            });
         });
     });
 });

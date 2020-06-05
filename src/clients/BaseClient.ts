@@ -16,7 +16,9 @@ export type InternalAPIResponse = {
     };
 };
 
-export default class BaseClient {
+export default abstract class BaseClient {
+    static entity: string;
+
     public internalClient: CatalyticSDKAPI;
     public credentialsProvider: CredentialsProvider;
 
@@ -54,19 +56,19 @@ export default class BaseClient {
         this.throwError(detail, response._response.status);
     }
 
-    private throwError(message: string, status: number, entity?: string): void {
+    private throwError(message: string, status: number): void {
         switch (status) {
             case 401:
                 throw new UnauthorizedError(message);
             case 404:
-                throw new ResourceNotFoundError(message, entity);
+                throw new ResourceNotFoundError(message, this.constructor['entity']);
             default:
                 throw new InternalError(message);
         }
     }
 }
 
-export class FindOptions {
+export interface FindOptions {
     /**
      * Free text query terms to search for
      */
@@ -79,4 +81,13 @@ export class FindOptions {
      * The page size requested
      */
     pageSize?: number;
+}
+
+export interface ClientMethodCallback<TResult> {
+    /**
+     * A method that will be invoked as a callback to a service function.
+     * @param {Error | null} err The error occurred, if any; otherwise null.
+     * @param {TResult} [result] The result if an error did not occur.
+     */
+    (err: Error | null, result?: TResult): void;
 }
