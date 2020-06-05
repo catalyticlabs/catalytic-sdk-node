@@ -1,253 +1,116 @@
-import assert from 'assert';
-import { expect } from 'chai';
+import chai from 'chai';
+import sinonChai from 'sinon-chai';
+import sinon from 'sinon';
 import { v4 } from 'uuid';
 
-import nockApi from '../nockApi';
+chai.use(sinonChai);
+const expect = chai.expect;
+
 import CatalyticClient from '../../src/CatalyticClient';
 import mock from '../helpers/mockEntities';
+import { createResponse, executeTest } from '../helpers';
 
 describe('DataTableClient', function() {
-    let mockApi;
+    let client: CatalyticClient;
+    let expectedCustomHeaders;
 
     before(function() {
-        mockApi = nockApi();
+        client = new CatalyticClient();
+        client.credentials = mock.mockCredentials();
+        expectedCustomHeaders = { Authorization: `Bearer ${client.credentials.token}` };
+    });
+
+    afterEach(function() {
+        sinon.restore();
     });
 
     describe('Get DataTable', function() {
         it('should get a DataTable by ID', async function() {
             const mockDataTable = mock.mockDataTable();
-            let headers;
-            mockApi.get(`/api/tables/${mockDataTable.id}`).reply(function() {
-                headers = this.req.headers;
-                return [200, mockDataTable];
-            });
+            sinon
+                .stub(client.internalClient, 'getDataTable')
+                .callsFake(() => Promise.resolve(createResponse(mockDataTable)));
 
-            const client = new CatalyticClient();
-            client.credentials = mock.mockCredentials();
-
-            const result = await client.dataTableClient.get(mockDataTable.id);
-
-            expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockDataTable)));
-            expect(headers.authorization)
-                .to.be.an('array')
-                .that.includes(`Bearer ${client.credentials.token}`);
-        });
-
-        it('should get a DataTable by ID with callback', function(done) {
-            const mockDataTable = mock.mockDataTable();
-            let headers;
-            mockApi.get(`/api/tables/${mockDataTable.id}`).reply(function() {
-                headers = this.req.headers;
-                return [200, mockDataTable];
-            });
-
-            const client = new CatalyticClient();
-            client.credentials = mock.mockCredentials();
-
-            client.dataTableClient.get(mockDataTable.id, (err, result) => {
-                assert.ifError(err);
+            return executeTest(client.dataTableClient, 'get', [mockDataTable.id], (err, result) => {
+                console.error(err);
+                expect(err).to.not.be.ok;
 
                 expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockDataTable)));
-                expect(headers.authorization)
-                    .to.be.an('array')
-                    .that.includes(`Bearer ${client.credentials.token}`);
-
-                done();
+                expect(client.internalClient.getDataTable).to.have.callCount(1);
+                expect(client.internalClient.getDataTable).to.have.been.calledWith(mockDataTable.id, {
+                    customHeaders: expectedCustomHeaders
+                });
             });
         });
 
         it('should return proper exception when DataTable not found', async function() {
             const id = v4();
-            let headers;
-            mockApi.get(`/api/tables/${id}`).reply(function() {
-                headers = this.req.headers;
-                return [404, { detail: 'Intentional not found error' }];
-            });
+            sinon
+                .stub(client.internalClient, 'getDataTable')
+                .callsFake(() => Promise.resolve(createResponse({ detail: 'Intentional not found error' }, 404)));
 
-            const client = new CatalyticClient();
-            client.credentials = mock.mockCredentials();
-
-            let error;
-            let result;
-
-            try {
-                result = await client.dataTableClient.get(id);
-            } catch (e) {
-                error = e;
-            }
-
-            expect(result).to.not.be.ok;
-            expect(error).to.be.ok; //.and.to.be.DataTableOf(InternalError);
-            expect(error.message).to.include('Intentional not found error');
-            expect(headers.authorization)
-                .to.be.an('array')
-                .that.includes(`Bearer ${client.credentials.token}`);
-        });
-
-        it('should return proper exception when DataTable not found with callback', function(done) {
-            const id = v4();
-            let headers;
-            mockApi.get(`/api/tables/${id}`).reply(function() {
-                headers = this.req.headers;
-                return [404, { detail: 'Intentional not found error' }];
-            });
-
-            const client = new CatalyticClient();
-            client.credentials = mock.mockCredentials();
-
-            client.dataTableClient.get(id, (error, result) => {
+            return executeTest(client.dataTableClient, 'get', [id], (error, result) => {
                 expect(result).to.not.be.ok;
-                expect(error).to.be.ok; //.and.to.be.DataTableOf(InternalError);
+                expect(error).to.be.ok;
                 expect(error.message).to.include('Intentional not found error');
-                expect(headers.authorization)
-                    .to.be.an('array')
-                    .that.includes(`Bearer ${client.credentials.token}`);
-
-                done();
+                expect(client.internalClient.getDataTable).to.have.callCount(1);
+                expect(client.internalClient.getDataTable).to.have.been.calledWith(id, {
+                    customHeaders: expectedCustomHeaders
+                });
             });
         });
     });
     describe('Find DataTables', function() {
         it('should find DataTables with no filter options', async function() {
             const mockDataTablesPage = mock.mockDataTablesPage();
-            let headers;
-            mockApi.get(`/api/tables`).reply(function() {
-                headers = this.req.headers;
-                return [200, mockDataTablesPage];
-            });
+            sinon
+                .stub(client.internalClient, 'findDataTables')
+                .callsFake(() => Promise.resolve(createResponse(mockDataTablesPage)));
 
-            const client = new CatalyticClient();
-            client.credentials = mock.mockCredentials();
-
-            const result = await client.dataTableClient.find();
-
-            expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockDataTablesPage)));
-            expect(headers.authorization)
-                .to.be.an('array')
-                .that.includes(`Bearer ${client.credentials.token}`);
-        });
-
-        it('should find DataTables with no filter options and callback', function(done) {
-            const mockDataTablesPage = mock.mockDataTablesPage();
-            let headers;
-            mockApi.get(`/api/tables`).reply(function() {
-                headers = this.req.headers;
-                return [200, mockDataTablesPage];
-            });
-
-            const client = new CatalyticClient();
-            client.credentials = mock.mockCredentials();
-
-            client.dataTableClient.find((err, result) => {
-                assert.ifError(err);
+            return executeTest(client.dataTableClient, 'find', [], (err, result) => {
+                expect(err).to.not.be.ok;
 
                 expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockDataTablesPage)));
-                expect(headers.authorization)
-                    .to.be.an('array')
-                    .that.includes(`Bearer ${client.credentials.token}`);
-
-                done();
+                expect(client.internalClient.findDataTables).to.have.callCount(1);
+                expect(client.internalClient.findDataTables).to.have.been.calledWith({
+                    customHeaders: expectedCustomHeaders
+                });
             });
         });
 
         it('should find DataTables with filter options', async function() {
-            const mockDataTablesPage = mock.mockDataTablesPage();
             const options = { pageSize: 3, query: 'some table' };
-            let headers;
-            mockApi
-                .get(`/api/tables`)
-                // eslint-disable-next-line @typescript-eslint/camelcase
-                .query({ page_size: options.pageSize, query: options.query })
-                .reply(function() {
-                    headers = this.req.headers;
-                    return [200, mockDataTablesPage];
-                });
-
-            const client = new CatalyticClient();
-            client.credentials = mock.mockCredentials();
-
-            const result = await client.dataTableClient.find(options);
-
-            expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockDataTablesPage)));
-            expect(headers.authorization)
-                .to.be.an('array')
-                .that.includes(`Bearer ${client.credentials.token}`);
-        });
-
-        it('should find DataTables with filter options and callback', function(done) {
             const mockDataTablesPage = mock.mockDataTablesPage();
-            const options = { pageSize: 3, query: 'some table' };
-            let headers;
-            mockApi
-                .get(`/api/tables`)
-                // eslint-disable-next-line @typescript-eslint/camelcase
-                .query({ page_size: options.pageSize, query: options.query })
-                .reply(function() {
-                    headers = this.req.headers;
-                    return [200, mockDataTablesPage];
-                });
+            sinon
+                .stub(client.internalClient, 'findDataTables')
+                .callsFake(() => Promise.resolve(createResponse(mockDataTablesPage)));
 
-            const client = new CatalyticClient();
-            client.credentials = mock.mockCredentials();
-
-            client.dataTableClient.find(options, (err, result) => {
-                assert.ifError(err);
+            return executeTest(client.dataTableClient, 'find', [options], (err, result) => {
+                console.error(err);
+                expect(err).to.not.be.ok;
 
                 expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockDataTablesPage)));
-                expect(headers.authorization)
-                    .to.be.an('array')
-                    .that.includes(`Bearer ${client.credentials.token}`);
-
-                done();
+                expect(client.internalClient.findDataTables).to.have.callCount(1);
+                expect(client.internalClient.findDataTables).to.have.been.calledWith({
+                    customHeaders: expectedCustomHeaders,
+                    ...options
+                });
             });
         });
 
         it('should return exception when bad response code returned', async function() {
-            let headers;
-            mockApi.get(`/api/tables`).reply(function() {
-                headers = this.req.headers;
-                return [400, { detail: 'Intentional bad request error' }];
-            });
+            sinon
+                .stub(client.internalClient, 'findDataTables')
+                .callsFake(() => Promise.resolve(createResponse({ detail: 'Intentional bad request error' }, 400)));
 
-            const client = new CatalyticClient();
-            client.credentials = mock.mockCredentials();
-
-            let error;
-            let result;
-
-            try {
-                result = await client.dataTableClient.find();
-            } catch (e) {
-                error = e;
-            }
-
-            expect(result).to.not.be.ok;
-            expect(error).to.be.ok;
-            expect(error.message).to.include('Intentional bad request error');
-            expect(headers.authorization)
-                .to.be.an('array')
-                .that.includes(`Bearer ${client.credentials.token}`);
-        });
-
-        it('should return exception when bad response code returned with callback', function(done) {
-            let headers;
-            mockApi.get(`/api/tables`).reply(function() {
-                headers = this.req.headers;
-                return [400, { detail: 'Intentional bad request error' }];
-            });
-
-            const client = new CatalyticClient();
-            client.credentials = mock.mockCredentials();
-
-            client.dataTableClient.find((error, result) => {
+            return executeTest(client.dataTableClient, 'find', [], (error, result) => {
                 expect(result).to.not.be.ok;
                 expect(error).to.be.ok;
                 expect(error.message).to.include('Intentional bad request error');
-                expect(headers.authorization)
-                    .to.be.an('array')
-                    .that.includes(`Bearer ${client.credentials.token}`);
-
-                done();
+                expect(client.internalClient.findDataTables).to.have.callCount(1);
+                expect(client.internalClient.findDataTables).to.have.been.calledWith({
+                    customHeaders: expectedCustomHeaders
+                });
             });
         });
     });

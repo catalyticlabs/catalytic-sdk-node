@@ -1,108 +1,58 @@
-import assert from 'assert';
-import { expect } from 'chai';
+import chai from 'chai';
+import sinonChai from 'sinon-chai';
+import sinon from 'sinon';
 import { v4 } from 'uuid';
 
-import nockApi from '../nockApi';
+chai.use(sinonChai);
+const expect = chai.expect;
+
 import CatalyticClient from '../../src/CatalyticClient';
 import mock from '../helpers/mockEntities';
+import { createResponse, executeTest } from '../helpers';
 
 describe('FileClient', function() {
-    let mockApi;
+    let client: CatalyticClient;
+    let expectedCustomHeaders;
 
     before(function() {
-        mockApi = nockApi();
+        client = new CatalyticClient();
+        client.credentials = mock.mockCredentials();
+        expectedCustomHeaders = { Authorization: `Bearer ${client.credentials.token}` };
+    });
+
+    afterEach(function() {
+        sinon.restore();
     });
 
     it('should get a File by ID', async function() {
-        const mockFile = mock.mockFileMetadata();
-        let headers;
-        mockApi.get(`/api/files/${mockFile.id}`).reply(function() {
-            headers = this.req.headers;
-            return [200, mockFile];
-        });
+        const mockFileMetadata = mock.mockFileMetadata();
+        sinon.stub(client.internalClient, 'getFile').callsFake(() => Promise.resolve(createResponse(mockFileMetadata)));
 
-        const client = new CatalyticClient();
-        client.credentials = mock.mockCredentials();
+        return executeTest(client.fileClient, 'get', [mockFileMetadata.id], (err, result) => {
+            expect(err).to.not.be.ok;
 
-        const result = await client.fileClient.get(mockFile.id);
-
-        expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockFile)));
-        expect(headers.authorization)
-            .to.be.an('array')
-            .that.includes(`Bearer ${client.credentials.token}`);
-    });
-
-    it('should get a File by ID with callback', function(done) {
-        const mockFile = mock.mockFileMetadata();
-        let headers;
-        mockApi.get(`/api/files/${mockFile.id}`).reply(function() {
-            headers = this.req.headers;
-            return [200, mockFile];
-        });
-
-        const client = new CatalyticClient();
-        client.credentials = mock.mockCredentials();
-
-        client.fileClient.get(mockFile.id, (err, result) => {
-            assert.ifError(err);
-
-            expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockFile)));
-            expect(headers.authorization)
-                .to.be.an('array')
-                .that.includes(`Bearer ${client.credentials.token}`);
-
-            done();
+            expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockFileMetadata)));
+            expect(client.internalClient.getFile).to.have.callCount(1);
+            expect(client.internalClient.getFile).to.have.been.calledWith(mockFileMetadata.id, {
+                customHeaders: expectedCustomHeaders
+            });
         });
     });
 
     it('should return proper exception when File not found', async function() {
         const id = v4();
-        let headers;
-        mockApi.get(`/api/files/${id}`).reply(function() {
-            headers = this.req.headers;
-            return [404, { detail: 'Intentional not found error' }];
-        });
+        sinon
+            .stub(client.internalClient, 'getFile')
+            .callsFake(() => Promise.resolve(createResponse({ detail: 'Intentional not found error' }, 404)));
 
-        const client = new CatalyticClient();
-        client.credentials = mock.mockCredentials();
-
-        let error;
-        let result;
-
-        try {
-            result = await client.fileClient.get(id);
-        } catch (e) {
-            error = e;
-        }
-
-        expect(result).to.not.be.ok;
-        expect(error).to.be.ok; //.and.to.be.FileOf(InternalError);
-        expect(error.message).to.include('Intentional not found error');
-        expect(headers.authorization)
-            .to.be.an('array')
-            .that.includes(`Bearer ${client.credentials.token}`);
-    });
-
-    it('should return proper exception when File not found with callback', function(done) {
-        const id = v4();
-        let headers;
-        mockApi.get(`/api/files/${id}`).reply(function() {
-            headers = this.req.headers;
-            return [404, { detail: 'Intentional not found error' }];
-        });
-
-        const client = new CatalyticClient();
-        client.credentials = mock.mockCredentials();
-
-        client.fileClient.get(id, (error, result) => {
+        return executeTest(client.fileClient, 'get', [id], (error, result) => {
             expect(result).to.not.be.ok;
-            expect(error).to.be.ok; //.and.to.be.FileOf(InternalError);
+            expect(error).to.be.ok;
             expect(error.message).to.include('Intentional not found error');
-            expect(headers.authorization)
-                .to.be.an('array')
-                .that.includes(`Bearer ${client.credentials.token}`);
-
-            done();
+            expect(client.internalClient.getFile).to.have.callCount(1);
+            expect(client.internalClient.getFile).to.have.been.calledWith(id, {
+                customHeaders: expectedCustomHeaders
+            });
         });
     });
 });

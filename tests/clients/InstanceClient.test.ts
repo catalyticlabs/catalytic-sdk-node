@@ -1,267 +1,117 @@
-import assert from 'assert';
-import { expect } from 'chai';
+import chai from 'chai';
+import sinonChai from 'sinon-chai';
+import sinon from 'sinon';
 import { v4 } from 'uuid';
 
-import nockApi from '../nockApi';
+chai.use(sinonChai);
+const expect = chai.expect;
+
 import CatalyticClient from '../../src/CatalyticClient';
 import mock from '../helpers/mockEntities';
+import { createResponse, executeTest } from '../helpers';
 
 describe('InstanceClient', function() {
-    let mockApi;
+    let client: CatalyticClient;
+    let expectedCustomHeaders;
 
     before(function() {
-        mockApi = nockApi();
+        client = new CatalyticClient();
+        client.credentials = mock.mockCredentials();
+        expectedCustomHeaders = { Authorization: `Bearer ${client.credentials.token}` };
+    });
+
+    afterEach(function() {
+        sinon.restore();
     });
 
     describe('Get Instance', function() {
-        it('should get a Instance by ID', async function() {
+        it('should get an Instance by ID', function() {
             const mockInstance = mock.mockInstance();
-            let headers;
-            mockApi.get(`/api/instances/${mockInstance.id}`).reply(function() {
-                headers = this.req.headers;
-                return [200, mockInstance];
-            });
+            sinon
+                .stub(client.internalClient, 'getInstance')
+                .callsFake(() => Promise.resolve(createResponse(mockInstance)));
 
-            const client = new CatalyticClient();
-            client.credentials = mock.mockCredentials();
-
-            const result = await client.instanceClient.get(mockInstance.id);
-
-            expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockInstance)));
-            expect(headers.authorization)
-                .to.be.an('array')
-                .that.includes(`Bearer ${client.credentials.token}`);
-        });
-
-        it('should get a Instance by ID with callback', function(done) {
-            const mockInstance = mock.mockInstance();
-            let headers;
-            mockApi.get(`/api/instances/${mockInstance.id}`).reply(function() {
-                headers = this.req.headers;
-                return [200, mockInstance];
-            });
-
-            const client = new CatalyticClient();
-            client.credentials = mock.mockCredentials();
-
-            client.instanceClient.get(mockInstance.id, (err, result) => {
-                assert.ifError(err);
+            return executeTest(client.instanceClient, 'get', [mockInstance.id], (err, result) => {
+                expect(err).to.not.be.ok;
 
                 expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockInstance)));
-                expect(headers.authorization)
-                    .to.be.an('array')
-                    .that.includes(`Bearer ${client.credentials.token}`);
-
-                done();
+                expect(client.internalClient.getInstance).to.have.callCount(1);
+                expect(client.internalClient.getInstance).to.have.been.calledWith(mockInstance.id, {
+                    customHeaders: expectedCustomHeaders
+                });
             });
         });
 
-        it('should return proper exception when Instance not found', async function() {
+        it('should return proper exception when Instance not found', function() {
             const id = v4();
-            let headers;
-            mockApi.get(`/api/instances/${id}`).reply(function() {
-                headers = this.req.headers;
-                return [404, { detail: 'Intentional not found error' }];
-            });
+            sinon
+                .stub(client.internalClient, 'getInstance')
+                .callsFake(() => Promise.resolve(createResponse({ detail: 'Intentional not found error' }, 404)));
 
-            const client = new CatalyticClient();
-            client.credentials = mock.mockCredentials();
-
-            let error;
-            let result;
-
-            try {
-                result = await client.instanceClient.get(id);
-            } catch (e) {
-                error = e;
-            }
-
-            expect(result).to.not.be.ok;
-            expect(error).to.be.ok;
-            expect(error.message).to.include('Intentional not found error');
-            expect(headers.authorization)
-                .to.be.an('array')
-                .that.includes(`Bearer ${client.credentials.token}`);
-        });
-
-        it('should return proper exception when Instance not found with callback', function(done) {
-            const id = v4();
-            let headers;
-            mockApi.get(`/api/instances/${id}`).reply(function() {
-                headers = this.req.headers;
-                return [404, { detail: 'Intentional not found error' }];
-            });
-
-            const client = new CatalyticClient();
-            client.credentials = mock.mockCredentials();
-
-            client.instanceClient.get(id, (error, result) => {
+            return executeTest(client.instanceClient, 'get', [id], (error, result) => {
                 expect(result).to.not.be.ok;
                 expect(error).to.be.ok;
                 expect(error.message).to.include('Intentional not found error');
-                expect(headers.authorization)
-                    .to.be.an('array')
-                    .that.includes(`Bearer ${client.credentials.token}`);
-
-                done();
+                expect(client.internalClient.getInstance).to.have.callCount(1);
+                expect(client.internalClient.getInstance).to.have.been.calledWith(id, {
+                    customHeaders: expectedCustomHeaders
+                });
             });
         });
     });
 
     describe('Find Instances', function() {
-        it('should find Instances with no filter options', async function() {
+        it('should find Instances with no filter options', function() {
             const mockInstancesPage = mock.mockInstancesPage();
-            let headers;
-            mockApi.get(`/api/instances`).reply(function() {
-                headers = this.req.headers;
-                return [200, mockInstancesPage];
-            });
+            sinon
+                .stub(client.internalClient, 'findInstances')
+                .callsFake(() => Promise.resolve(createResponse(mockInstancesPage)));
 
-            const client = new CatalyticClient();
-            client.credentials = mock.mockCredentials();
-
-            const result = await client.instanceClient.find();
-
-            expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockInstancesPage)));
-            expect(headers.authorization)
-                .to.be.an('array')
-                .that.includes(`Bearer ${client.credentials.token}`);
-        });
-
-        it('should find Instances with no filter options and callback', function(done) {
-            const mockInstancesPage = mock.mockInstancesPage();
-            let headers;
-            mockApi.get(`/api/instances`).reply(function() {
-                headers = this.req.headers;
-                return [200, mockInstancesPage];
-            });
-
-            const client = new CatalyticClient();
-            client.credentials = mock.mockCredentials();
-
-            client.instanceClient.find((err, result) => {
-                assert.ifError(err);
+            return executeTest(client.instanceClient, 'find', [], (err, result) => {
+                expect(err).to.not.be.ok;
 
                 expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockInstancesPage)));
-                expect(headers.authorization)
-                    .to.be.an('array')
-                    .that.includes(`Bearer ${client.credentials.token}`);
-
-                done();
+                expect(client.internalClient.findInstances).to.have.callCount(1);
+                expect(client.internalClient.findInstances).to.have.been.calledWith({
+                    customHeaders: expectedCustomHeaders,
+                    ...client.instanceClient.formatFindInstanceOptions({})
+                });
             });
         });
 
-        it('should find Instances with filter options', async function() {
+        it('should find Instances with filter options', function() {
             const mockInstancesPage = mock.mockInstancesPage();
             const options = { pageSize: 3, query: 'some user', owner: 'test@example.com', workflowID: v4() };
-            let headers;
-            mockApi
-                .get(`/api/instances`)
-                .query({
-                    // eslint-disable-next-line @typescript-eslint/camelcase
-                    page_size: options.pageSize,
-                    query: options.query,
-                    owner: options.owner,
-                    // eslint-disable-next-line @typescript-eslint/camelcase
-                    process_id: options.workflowID
-                })
-                .reply(function() {
-                    headers = this.req.headers;
-                    return [200, mockInstancesPage];
-                });
+            sinon
+                .stub(client.internalClient, 'findInstances')
+                .callsFake(() => Promise.resolve(createResponse(mockInstancesPage)));
 
-            const client = new CatalyticClient();
-            client.credentials = mock.mockCredentials();
-
-            const result = await client.instanceClient.find(options);
-
-            expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockInstancesPage)));
-            expect(headers.authorization)
-                .to.be.an('array')
-                .that.includes(`Bearer ${client.credentials.token}`);
-        });
-
-        it('should find Instances with filter options and callback', function(done) {
-            const mockInstancesPage = mock.mockInstancesPage();
-            const options = { pageSize: 3, query: 'some user', owner: 'test@example.com', workflowID: v4() };
-            let headers;
-            mockApi
-                .get(`/api/instances`)
-                // eslint-disable-next-line @typescript-eslint/camelcase
-                .query({
-                    // eslint-disable-next-line @typescript-eslint/camelcase
-                    page_size: options.pageSize,
-                    query: options.query,
-                    owner: options.owner,
-                    // eslint-disable-next-line @typescript-eslint/camelcase
-                    process_id: options.workflowID
-                })
-                .reply(function() {
-                    headers = this.req.headers;
-                    return [200, mockInstancesPage];
-                });
-
-            const client = new CatalyticClient();
-            client.credentials = mock.mockCredentials();
-
-            client.instanceClient.find(options, (err, result) => {
-                assert.ifError(err);
+            return executeTest(client.instanceClient, 'find', [options], (err, result) => {
+                expect(err).to.not.be.ok;
 
                 expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockInstancesPage)));
-                expect(headers.authorization)
-                    .to.be.an('array')
-                    .that.includes(`Bearer ${client.credentials.token}`);
-
-                done();
+                expect(client.internalClient.findInstances).to.have.callCount(1);
+                expect(client.internalClient.findInstances).to.have.been.calledWith({
+                    customHeaders: expectedCustomHeaders,
+                    ...client.instanceClient.formatFindInstanceOptions(options)
+                });
             });
         });
 
-        it('should return exception when bad response code returned', async function() {
-            let headers;
-            mockApi.get(`/api/instances`).reply(function() {
-                headers = this.req.headers;
-                return [400, { detail: 'Intentional bad request error' }];
-            });
+        it('should return exception when bad response code returned', function() {
+            sinon
+                .stub(client.internalClient, 'findInstances')
+                .callsFake(() => Promise.resolve(createResponse({ detail: 'Intentional bad request error' }, 400)));
 
-            const client = new CatalyticClient();
-            client.credentials = mock.mockCredentials();
-
-            let error;
-            let result;
-
-            try {
-                result = await client.instanceClient.find();
-            } catch (e) {
-                error = e;
-            }
-
-            expect(result).to.not.be.ok;
-            expect(error).to.be.ok;
-            expect(error.message).to.include('Intentional bad request error');
-            expect(headers.authorization)
-                .to.be.an('array')
-                .that.includes(`Bearer ${client.credentials.token}`);
-        });
-
-        it('should return exception when bad response code returned with callback', function(done) {
-            let headers;
-            mockApi.get(`/api/instances`).reply(function() {
-                headers = this.req.headers;
-                return [400, { detail: 'Intentional bad request error' }];
-            });
-
-            const client = new CatalyticClient();
-            client.credentials = mock.mockCredentials();
-
-            client.instanceClient.find((error, result) => {
+            return executeTest(client.instanceClient, 'find', [], (error, result) => {
                 expect(result).to.not.be.ok;
                 expect(error).to.be.ok;
                 expect(error.message).to.include('Intentional bad request error');
-                expect(headers.authorization)
-                    .to.be.an('array')
-                    .that.includes(`Bearer ${client.credentials.token}`);
-
-                done();
+                expect(client.internalClient.findInstances).to.have.callCount(1);
+                expect(client.internalClient.findInstances).to.have.been.calledWith({
+                    customHeaders: expectedCustomHeaders,
+                    ...client.instanceClient.formatFindInstanceOptions({})
+                });
             });
         });
     });

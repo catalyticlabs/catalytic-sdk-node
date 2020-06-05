@@ -100,7 +100,7 @@ export default class InstanceClient extends BaseClient {
         return this.parseResponse<InstancesPage>(result);
     }
 
-    private formatFindInstanceOptions(options?: FindInstanceOptions): CatalyticSDKAPIFindInstanceStepsOptionalParams {
+    formatFindInstanceOptions(options?: FindInstanceOptions): CatalyticSDKAPIFindInstanceStepsOptionalParams {
         return {
             query: options?.query,
             pageToken: options?.pageToken,
