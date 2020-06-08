@@ -41,4 +41,38 @@ export default class FileClient extends BaseClient {
         const result = await this.internalClient.getFile(id, { customHeaders: headers });
         return this.parseResponse<FileMetadata>(result);
     }
+
+    /**
+     * Uploads a file to Catalytic
+     *
+     * @param filePath The path of the file on disk
+     * @returns The Metadata of the uploaded File
+     */
+    upload(filePath: string): Promise<FileMetadata>;
+    /**
+     * Uploads a file to Catalytic
+     *
+     * @param filePath The path of the file on disk
+     * @param callback The callback
+     */
+    upload(filePath: string, callback: ClientMethodCallback<FileMetadata>): void;
+    /**
+     * Uploads a file to Catalytic
+     *
+     * @param filePath The path of the file on disk
+     * @param callback The optional callback
+     * @returns The Metadata of the uploaded File
+     */
+    upload(filePath: string, callback?: ClientMethodCallback<FileMetadata>): Promise<FileMetadata> {
+        if (callback) {
+            return callbackify(this._upload).call(this, filePath, callback);
+        }
+
+        return this._upload(filePath);
+    }
+
+    private async _upload(filePath: string): Promise<FileMetadata> {
+        // Calls protected BaseClient.uploadFile method
+        return this.uploadFile(filePath);
+    }
 }

@@ -32,7 +32,6 @@ describe('DataTableClient', function() {
                 .callsFake(() => Promise.resolve(createResponse(mockDataTable)));
 
             return executeTest(client.dataTableClient, 'get', [mockDataTable.id], (err, result) => {
-                console.error(err);
                 expect(err).to.not.be.ok;
 
                 expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockDataTable)));
@@ -86,7 +85,6 @@ describe('DataTableClient', function() {
                 .callsFake(() => Promise.resolve(createResponse(mockDataTablesPage)));
 
             return executeTest(client.dataTableClient, 'find', [options], (err, result) => {
-                console.error(err);
                 expect(err).to.not.be.ok;
 
                 expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockDataTablesPage)));

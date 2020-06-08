@@ -9,6 +9,8 @@ const expect = chai.expect;
 import CatalyticClient from '../../src/CatalyticClient';
 import mock from '../helpers/mockEntities';
 import { createResponse, executeTest } from '../helpers';
+import { join } from 'path';
+import { WorkflowImportError, WorkflowExportError } from '../../src/errors';
 
 describe('WorkflowClient', function() {
     let client: CatalyticClient;
@@ -108,6 +110,196 @@ describe('WorkflowClient', function() {
                 expect(error.message).to.include('Intentional bad request error');
                 expect(client.internalClient.findWorkflows).to.have.callCount(1);
                 expect(client.internalClient.findWorkflows).to.have.been.calledWith({
+                    customHeaders: expectedCustomHeaders
+                });
+            });
+        });
+    });
+
+    describe('Import Workflow', function() {
+        it('should import a Workflow', function() {
+            const filePath = join(__dirname, '../fixtures/test.txt');
+            const password = 'p@$$w0rd';
+
+            const mockFileMetadata = mock.mockFileMetadata();
+            const mockWorkflow = mock.mockWorkflow();
+            const mockWorkflowImport = mock.mockWorkflowImport();
+            mockWorkflowImport.workflowId = mockWorkflow.id;
+            // stubbing protected method on BaseClient, which is called by FileClient.upload
+            const uploadFileStub = sinon
+                .stub(client.workflowClient, 'uploadFile' as any)
+                .callsFake(() => Promise.resolve(mockFileMetadata));
+            sinon
+                .stub(client.internalClient, 'importWorkflow')
+                .callsFake(() => Promise.resolve(createResponse({ ...mockWorkflowImport, workflowId: null })));
+
+            sinon
+                .stub(client.internalClient, 'getWorkflowImport')
+                .callsFake(() => Promise.resolve(createResponse(mockWorkflowImport)));
+
+            sinon
+                .stub(client.internalClient, 'getWorkflow')
+                .callsFake(() => Promise.resolve(createResponse(mockWorkflow)));
+
+            return executeTest(client.workflowClient, 'import', [filePath, password], (err, result) => {
+                expect(err).to.not.be.ok;
+
+                expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockWorkflow)));
+
+                expect(uploadFileStub).to.have.callCount(1);
+                expect(uploadFileStub).to.have.been.calledWith(filePath);
+
+                expect(client.internalClient.importWorkflow).to.have.callCount(1);
+                expect(client.internalClient.importWorkflow).to.have.been.calledWith({
+                    body: {
+                        fileId: mockFileMetadata.id,
+                        password
+                    },
+                    customHeaders: expectedCustomHeaders
+                });
+
+                expect(client.internalClient.getWorkflowImport).to.have.callCount(1);
+                expect(client.internalClient.getWorkflowImport).to.have.been.calledWith(mockWorkflowImport.id, {
+                    customHeaders: expectedCustomHeaders
+                });
+
+                expect(client.internalClient.getWorkflow).to.have.callCount(1);
+                expect(client.internalClient.getWorkflow).to.have.been.calledWith(mockWorkflowImport.workflowId, {
+                    customHeaders: expectedCustomHeaders
+                });
+            });
+        });
+
+        it('should handle import Workflow error', function() {
+            const filePath = join(__dirname, '../fixtures/test.txt');
+            const password = 'p@$$w0rd';
+
+            const mockFileMetadata = mock.mockFileMetadata();
+            const mockWorkflow = mock.mockWorkflow();
+            const mockWorkflowImport = mock.mockWorkflowImport();
+            mockWorkflowImport.workflowId = mockWorkflow.id;
+            // stubbing protected method on BaseClient, which is called by FileClient.upload
+            const uploadFileStub = sinon
+                .stub(client.workflowClient, 'uploadFile' as any)
+                .callsFake(() => Promise.resolve(mockFileMetadata));
+            sinon
+                .stub(client.internalClient, 'importWorkflow')
+                .callsFake(() => Promise.resolve(createResponse({ ...mockWorkflowImport, workflowId: null })));
+
+            sinon
+                .stub(client.internalClient, 'getWorkflowImport')
+                .callsFake(() =>
+                    Promise.resolve(
+                        createResponse({ ...mockWorkflowImport, errorMessage: 'Intentional Workflow import failure' })
+                    )
+                );
+
+            return executeTest(client.workflowClient, 'import', [filePath, password], (err, result) => {
+                expect(result).to.not.be.ok;
+                expect(err).to.be.ok;
+                expect(err).to.be.instanceOf(WorkflowImportError);
+                expect(err.message).to.include('Intentional Workflow import failure');
+
+                expect(uploadFileStub).to.have.callCount(1);
+                expect(uploadFileStub).to.have.been.calledWith(filePath);
+
+                expect(client.internalClient.importWorkflow).to.have.callCount(1);
+                expect(client.internalClient.importWorkflow).to.have.been.calledWith({
+                    body: {
+                        fileId: mockFileMetadata.id,
+                        password
+                    },
+                    customHeaders: expectedCustomHeaders
+                });
+
+                expect(client.internalClient.getWorkflowImport).to.have.callCount(1);
+                expect(client.internalClient.getWorkflowImport).to.have.been.calledWith(mockWorkflowImport.id, {
+                    customHeaders: expectedCustomHeaders
+                });
+            });
+        });
+    });
+
+    describe('Export Workflow', function() {
+        it('should export a Workflow', function() {
+            const workflowId = v4();
+            const password = 'p@$$w0rd';
+            const mockFileMetadata = mock.mockFileMetadata();
+            const mockWorkflowExport = { fileId: mockFileMetadata.id, id: v4() };
+
+            sinon
+                .stub(client.internalClient, 'exportWorkflow')
+                .callsFake(() => Promise.resolve(createResponse({ ...mockWorkflowExport, fileId: null })));
+
+            sinon
+                .stub(client.internalClient, 'getWorkflowExport')
+                .callsFake(() => Promise.resolve(createResponse(mockWorkflowExport)));
+
+            sinon
+                .stub(client.internalClient, 'getFile')
+                .callsFake(() => Promise.resolve(createResponse(mockFileMetadata)));
+
+            return executeTest(client.workflowClient, 'export', [workflowId, password], (err, result) => {
+                expect(err).to.not.be.ok;
+
+                expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockFileMetadata)));
+
+                expect(client.internalClient.exportWorkflow).to.have.callCount(1);
+                expect(client.internalClient.exportWorkflow).to.have.been.calledWith(workflowId, {
+                    body: {
+                        workflowId,
+                        password
+                    },
+                    customHeaders: expectedCustomHeaders
+                });
+
+                expect(client.internalClient.getWorkflowExport).to.have.callCount(1);
+                expect(client.internalClient.getWorkflowExport).to.have.been.calledWith(mockWorkflowExport.id, {
+                    customHeaders: expectedCustomHeaders
+                });
+
+                expect(client.internalClient.getFile).to.have.callCount(1);
+                expect(client.internalClient.getFile).to.have.been.calledWith(mockWorkflowExport.fileId, {
+                    customHeaders: expectedCustomHeaders
+                });
+            });
+        });
+
+        it('should handle export Workflow error', function() {
+            const workflowId = v4();
+            const password = 'p@$$w0rd';
+            const mockFileMetadata = mock.mockFileMetadata();
+            const mockWorkflowExport = { fileId: mockFileMetadata.id, id: v4() };
+
+            sinon
+                .stub(client.internalClient, 'exportWorkflow')
+                .callsFake(() => Promise.resolve(createResponse({ ...mockWorkflowExport, fileId: null })));
+
+            sinon
+                .stub(client.internalClient, 'getWorkflowExport')
+                .callsFake(() =>
+                    Promise.resolve(
+                        createResponse({ ...mockWorkflowExport, errorMessage: 'Intentional Workflow export failure' })
+                    )
+                );
+
+            return executeTest(client.workflowClient, 'export', [workflowId, password], (err, result) => {
+                expect(result).to.not.be.ok;
+                expect(err).to.be.ok;
+                expect(err).to.be.instanceOf(WorkflowExportError);
+                expect(err.message).to.include('Intentional Workflow export failure');
+
+                expect(client.internalClient.exportWorkflow).to.have.callCount(1);
+                expect(client.internalClient.exportWorkflow).to.have.been.calledWith(workflowId, {
+                    body: {
+                        workflowId,
+                        password
+                    },
+                    customHeaders: expectedCustomHeaders
+                });
+
+                expect(client.internalClient.getWorkflowExport).to.have.callCount(1);
+                expect(client.internalClient.getWorkflowExport).to.have.been.calledWith(mockWorkflowExport.id, {
                     customHeaders: expectedCustomHeaders
                 });
             });
