@@ -1,3 +1,4 @@
+import Bluebird from 'bluebird';
 import sinon from 'sinon';
 
 import BaseClient, { InternalAPIResponse } from '../../src/clients/BaseClient';
@@ -34,5 +35,10 @@ export const executeTest = async function(
 
     sinon.resetHistory();
 
-    client[method].call(client, ...args, assert);
+    await Bluebird.fromCallback(cb =>
+        client[method].call(client, ...args, (err, result) => {
+            assert(err, result);
+            cb();
+        })
+    );
 };

@@ -10,7 +10,8 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 
-const SWAGGER_URL = 'https://sdk.catalytic.com/v1.0.1-pre-33/swagger/v1/swagger.json';
+const BASE_URI = require('../built/contstants').BaseUri;
+const SWAGGER_URL = `${BASE_URI}/swagger/v1/swagger.json`;
 
 getSwagger(SWAGGER_URL)
     .then(swagger => {

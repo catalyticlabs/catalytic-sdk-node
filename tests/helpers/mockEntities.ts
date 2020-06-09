@@ -12,8 +12,10 @@ import {
     WorkflowsPage,
     InstancesPage,
     CredentialsPage,
-    DataTablesPage
+    DataTablesPage,
+    FileMetadataPage
 } from '../../src/entities';
+import { WorkflowImport } from '../../src/internal/lib/models';
 
 export const mockCredentials = (): Credentials => {
     const domain = faker.company.companyName().toLowerCase() + '.pushbot.com';
@@ -55,6 +57,12 @@ export const mockFileMetadata = (): FileMetadata => {
     };
 
     return values;
+};
+
+export const mockFileMetadataPage = (): FileMetadataPage => {
+    const files = [mockFileMetadata()];
+
+    return { files, count: files.length };
 };
 
 export const mockInstance = (): Instance => {
@@ -104,6 +112,17 @@ export const mockWorkflow = (): Workflow => {
     return values;
 };
 
+export const mockWorkflowImport = (): WorkflowImport => {
+    const values = {
+        id: v4(),
+        name: faker.random.words(3),
+        workflowId: v4(),
+        errorMessage: null
+    };
+
+    return values;
+};
+
 export const mockWorkflowsPage = (): WorkflowsPage => {
     const workflows = [mockWorkflow(), mockWorkflow()];
 
@@ -116,10 +135,12 @@ export default {
     mockDataTable,
     mockDataTablesPage,
     mockFileMetadata,
+    mockFileMetadataPage,
     mockInstance,
     mockInstancesPage,
     mockUser,
     mockUsersPage,
     mockWorkflow,
+    mockWorkflowImport,
     mockWorkflowsPage
 };
