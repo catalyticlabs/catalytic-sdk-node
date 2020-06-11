@@ -1,4 +1,5 @@
 import chai from 'chai';
+import { createReadStream } from 'fs';
 import { join } from 'path';
 import sinonChai from 'sinon-chai';
 import sinon from 'sinon';
@@ -97,6 +98,78 @@ describe('FileClient', function() {
                 expect(err.message).to.include('Intentional server error');
                 expect(stub).to.have.callCount(1);
                 expect(stub).to.have.been.calledWith(filePath);
+            });
+        });
+    });
+
+    describe('Get a Download Stream', function() {
+        it('should get a download stream by fileID', async function() {
+            const filePath = join(__dirname, '../fixtures/test.txt');
+            const id = v4();
+            const stream = createReadStream(filePath);
+            // stubbing protected method on BaseClient, which is called by FileClient.upload
+            const stub = sinon
+                .stub(client.fileClient, 'getFileDownloadStream' as any)
+                .callsFake(() => Promise.resolve(stream));
+
+            return executeTest(client.fileClient, 'getDownloadStream', [id], (err, result) => {
+                expect(err).to.not.be.ok;
+
+                expect(result).to.deep.equal(stream);
+                expect(stub).to.have.callCount(1);
+                expect(stub).to.have.been.calledWith(id);
+            });
+        });
+
+        it('should return expected error response when error fetching download stream', function() {
+            const id = v4();
+            // stubbing protected method on BaseClient, which is called by FileClient.upload
+            const stub = sinon.stub(client.fileClient, 'getFileDownloadStream' as any).callsFake(() => {
+                throw new InternalError('Intentional server error');
+            });
+
+            return executeTest(client.fileClient, 'getDownloadStream', [id], (err, result) => {
+                expect(result).to.not.be.ok;
+                expect(err).to.be.ok;
+                expect(err).to.be.instanceOf(InternalError);
+                expect(err.message).to.include('Intentional server error');
+                expect(stub).to.have.callCount(1);
+                expect(stub).to.have.been.calledWith(id);
+            });
+        });
+    });
+
+    describe('Download File', function() {
+        it('should download a file by ID', async function() {
+            const outputPath = '/fake/path/to/file';
+            const id = v4();
+            // stubbing protected method on BaseClient, which is called by FileClient.download
+            const stub = sinon.stub(client.fileClient, 'downloadFile' as any).callsFake(() => Promise.resolve());
+
+            return executeTest(client.fileClient, 'download', [id, outputPath], (err, result) => {
+                expect(err).to.not.be.ok;
+                // no result returned from method
+                expect(result).to.not.be.ok;
+                expect(stub).to.have.callCount(1);
+                expect(stub).to.have.been.calledWith(id, outputPath);
+            });
+        });
+
+        it('should return expected error response when file fails to upload', function() {
+            const id = v4();
+            const outputPath = '/fake/path/to/file';
+            // stubbing protected method on BaseClient, which is called by FileClient.download
+            const stub = sinon.stub(client.fileClient, 'downloadFile' as any).callsFake(() => {
+                throw new InternalError('Intentional server error');
+            });
+
+            return executeTest(client.fileClient, 'download', [id, outputPath], (err, result) => {
+                expect(result).to.not.be.ok;
+                expect(err).to.be.ok;
+                expect(err).to.be.instanceOf(InternalError);
+                expect(err.message).to.include('Intentional server error');
+                expect(stub).to.have.callCount(1);
+                expect(stub).to.have.been.calledWith(id);
             });
         });
     });

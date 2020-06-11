@@ -1,8 +1,9 @@
 import * as msRest from '@azure/ms-rest-js';
 import axios from 'axios';
 import FormData from 'form-data';
-import { readFile } from 'fs';
+import { readFile, createWriteStream } from 'fs';
 import { basename } from 'path';
+import { Stream } from 'stream';
 import { promisify } from 'util';
 
 import { CatalyticSDKAPI } from '../internal/lib/catalyticSDKAPI';
@@ -58,6 +59,30 @@ export default abstract class BaseClient {
         }
 
         throw new InternalError('Failed to upload file');
+    }
+
+    protected async getFileDownloadStream(id: string): Promise<Stream> {
+        const url = `${BaseUri}api/files/${id}/download`;
+
+        const response = await axios({
+            url,
+            method: 'GET',
+            responseType: 'stream',
+            headers: this.getRequestHeaders()
+        });
+
+        return response.data as Stream;
+    }
+
+    protected async downloadFile(id: string, path: string): Promise<void> {
+        const writer = createWriteStream(path);
+        const stream = await this.getFileDownloadStream(id);
+        stream.pipe(writer);
+
+        return new Promise((resolve, reject) => {
+            writer.on('finish', resolve);
+            writer.on('error', reject);
+        });
     }
 
     protected parseResponse<T>(response: InternalAPIResponse): T {
