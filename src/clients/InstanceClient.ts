@@ -1,4 +1,3 @@
-import { callbackify } from 'util';
 import BaseClient, { FindOptions, ClientMethodCallback } from './BaseClient';
 import { Instance, InstancesPage } from '../entities';
 import { CatalyticSDKAPIFindInstanceStepsOptionalParams } from '../internal/lib/models';
@@ -7,29 +6,29 @@ export default class InstanceClient extends BaseClient {
     static entity = 'Instance';
 
     /**
-     * Gets a Instance by ID
+     * @summary Gets a Instance by ID
      *
      * @param id The ID of the Instance to get
      * @returns The Instance with the provided ID
      */
     get(id: string): Promise<Instance>;
     /**
-     * Gets a Instance by ID
+     * @summary Gets a Instance by ID
      *
      * @param id The ID of the Instance to get
      * @param callback The callback
      */
     get(id: string, callback: ClientMethodCallback<Instance>): void;
     /**
-     * Gets a Instance by ID
+     * @summary Gets a Instance by ID
      *
      * @param id The ID of the Instance to get
      * @param callback The optional callback
      * @returns The Instance with the provided ID
      */
-    get(id: string, callback?: ClientMethodCallback<Instance>): Promise<Instance> {
+    get(id: string, callback?: ClientMethodCallback<Instance>): Promise<Instance> | void {
         if (callback) {
-            return callbackify(this._get).call(this, id, callback);
+            return this.callbackifyBound(this._get)(id, callback);
         }
 
         return this._get(id);
@@ -43,33 +42,33 @@ export default class InstanceClient extends BaseClient {
     }
 
     /**
-     * Finds Instances
+     * @summary Finds Instances
      *
      * @returns A page of Instances
      */
     find(): Promise<InstancesPage>;
     /**
-     * Finds Instances
+     * @summary Finds Instances
      *
      * @param options Filter criteria to narrow Instances returned
      * @returns A page of Instances
      */
     find(options: FindInstanceOptions): Promise<InstancesPage>;
     /**
-     * Finds Instances
+     * @summary Finds Instances
      *
      * @param callback The callback
      */
     find(callback: ClientMethodCallback<InstancesPage>): void;
     /**
-     * Finds Instances
+     * @summary Finds Instances
      *
      * @param options Filter criteria to narrow Instances returned
      * @param callback The callback
      */
     find(options: FindInstanceOptions, callback: ClientMethodCallback<InstancesPage>): void;
     /**
-     * Finds Instances
+     * @summary Finds Instances
      *
      * @param options Filter criteria to narrow Instances returned
      * @param callback The callback
@@ -78,20 +77,20 @@ export default class InstanceClient extends BaseClient {
     find(
         options?: FindInstanceOptions | ClientMethodCallback<InstancesPage>,
         callback?: ClientMethodCallback<InstancesPage>
-    ): Promise<InstancesPage> {
+    ): Promise<InstancesPage> | void {
         if (typeof options === 'function') {
             callback = options;
             options = null;
         }
 
         if (callback) {
-            return callbackify(this._find).call(this, options, callback);
+            return this.callbackifyBound(this._find)(options as FindInstanceOptions, callback);
         }
 
         return this._find(options as FindInstanceOptions);
     }
 
-    private async _find(options?: FindInstanceOptions): Promise<InstancesPage> {
+    private async _find(options: FindInstanceOptions): Promise<InstancesPage> {
         console.log('Finding Instances');
         const headers = this.getRequestHeaders();
         const result = await this.internalClient.findInstances(
@@ -114,15 +113,15 @@ export default class InstanceClient extends BaseClient {
 
 export interface FindInstanceOptions extends FindOptions {
     /**
-     * Workflow ID to search for
+     * @summary Workflow ID to search for
      */
     workflowID?: string;
     /**
-     * Instance owner to search for
+     * @summary Instance owner to search for
      */
     owner?: string;
     /**
-     * Instance category to search for
+     * @summary Instance category to search for
      */
     category?: string;
 }

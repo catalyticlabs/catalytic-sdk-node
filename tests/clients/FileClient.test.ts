@@ -12,6 +12,7 @@ import CatalyticClient from '../../src/CatalyticClient';
 import mock from '../helpers/mockEntities';
 import { createResponse, executeTest } from '../helpers';
 import { InternalError, ResourceNotFoundError } from '../../src/errors';
+import { FileMetadataPage } from '../../src/entities';
 
 describe('FileClient', function() {
     let client: CatalyticClient;
@@ -67,13 +68,15 @@ describe('FileClient', function() {
     });
 
     describe('Upload File', function() {
-        it('should upload a File by ID', async function() {
+        it('should upload a File from a local path', async function() {
             const filePath = join(__dirname, '../fixtures/test.txt');
             const mockFileMetadata = mock.mockFileMetadata();
             // stubbing protected method on BaseClient, which is called by FileClient.upload
-            const stub = sinon
-                .stub(client.fileClient, 'uploadFile' as any)
-                .callsFake(() => Promise.resolve(mockFileMetadata));
+            const stub = sinon.stub(client.fileClient, 'uploadFile' as any).callsFake(() => {
+                const result = new FileMetadataPage();
+                result.files = [mockFileMetadata];
+                return Promise.resolve(result);
+            });
 
             return executeTest(client.fileClient, 'upload', [filePath], (err, result) => {
                 expect(err).to.not.be.ok;
@@ -107,7 +110,7 @@ describe('FileClient', function() {
             const filePath = join(__dirname, '../fixtures/test.txt');
             const id = v4();
             const stream = createReadStream(filePath);
-            // stubbing protected method on BaseClient, which is called by FileClient.upload
+            // stubbing protected method on BaseClient, which is called by FileClient.getDownloadStream
             const stub = sinon
                 .stub(client.fileClient, 'getFileDownloadStream' as any)
                 .callsFake(() => Promise.resolve(stream));
@@ -117,13 +120,13 @@ describe('FileClient', function() {
 
                 expect(result).to.deep.equal(stream);
                 expect(stub).to.have.callCount(1);
-                expect(stub).to.have.been.calledWith(id);
+                expect(stub).to.have.been.calledWith(`/files/${id}/download`);
             });
         });
 
         it('should return expected error response when error fetching download stream', function() {
             const id = v4();
-            // stubbing protected method on BaseClient, which is called by FileClient.upload
+            // stubbing protected method on BaseClient, which is called by FileClient.getDownloadStream
             const stub = sinon.stub(client.fileClient, 'getFileDownloadStream' as any).callsFake(() => {
                 throw new InternalError('Intentional server error');
             });
@@ -134,7 +137,7 @@ describe('FileClient', function() {
                 expect(err).to.be.instanceOf(InternalError);
                 expect(err.message).to.include('Intentional server error');
                 expect(stub).to.have.callCount(1);
-                expect(stub).to.have.been.calledWith(id);
+                expect(stub).to.have.been.calledWith(`/files/${id}/download`);
             });
         });
     });
@@ -151,7 +154,7 @@ describe('FileClient', function() {
                 // no result returned from method
                 expect(result).to.not.be.ok;
                 expect(stub).to.have.callCount(1);
-                expect(stub).to.have.been.calledWith(id, outputPath);
+                expect(stub).to.have.been.calledWith(`/files/${id}/download`, outputPath);
             });
         });
 
@@ -169,7 +172,7 @@ describe('FileClient', function() {
                 expect(err).to.be.instanceOf(InternalError);
                 expect(err.message).to.include('Intentional server error');
                 expect(stub).to.have.callCount(1);
-                expect(stub).to.have.been.calledWith(id);
+                expect(stub).to.have.been.calledWith(`/files/${id}/download`, outputPath);
             });
         });
     });

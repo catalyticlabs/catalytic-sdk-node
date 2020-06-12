@@ -11,6 +11,7 @@ import mock from '../helpers/mockEntities';
 import { createResponse, executeTest } from '../helpers';
 import { join } from 'path';
 import { WorkflowImportError, WorkflowExportError } from '../../src/errors';
+import { FileMetadataPage } from '../../src/entities';
 
 describe('WorkflowClient', function() {
     let client: CatalyticClient;
@@ -117,7 +118,7 @@ describe('WorkflowClient', function() {
     });
 
     describe('Import Workflow', function() {
-        it('should import a Workflow', function() {
+        it('should import a Workflow with password', function() {
             const filePath = join(__dirname, '../fixtures/test.txt');
             const password = 'p@$$w0rd';
 
@@ -125,10 +126,12 @@ describe('WorkflowClient', function() {
             const mockWorkflow = mock.mockWorkflow();
             const mockWorkflowImport = mock.mockWorkflowImport();
             mockWorkflowImport.workflowId = mockWorkflow.id;
-            // stubbing protected method on BaseClient, which is called by FileClient.upload
-            const uploadFileStub = sinon
-                .stub(client.workflowClient, 'uploadFile' as any)
-                .callsFake(() => Promise.resolve(mockFileMetadata));
+            // stubbing protected method on BaseClient, which is called by WorkflowClient.import
+            const uploadFileStub = sinon.stub(client.workflowClient, 'uploadFile' as any).callsFake(() => {
+                const result = new FileMetadataPage();
+                result.files = [mockFileMetadata];
+                return Promise.resolve(result);
+            });
             sinon
                 .stub(client.internalClient, 'importWorkflow')
                 .callsFake(() => Promise.resolve(createResponse({ ...mockWorkflowImport, workflowId: null })));
@@ -170,6 +173,60 @@ describe('WorkflowClient', function() {
             });
         });
 
+        it('should import a Workflow without password', function() {
+            const filePath = join(__dirname, '../fixtures/test.txt');
+
+            const mockFileMetadata = mock.mockFileMetadata();
+            const mockWorkflow = mock.mockWorkflow();
+            const mockWorkflowImport = mock.mockWorkflowImport();
+            mockWorkflowImport.workflowId = mockWorkflow.id;
+            // stubbing protected method on BaseClient, which is called by WorkflowClient.import
+            const uploadFileStub = sinon.stub(client.workflowClient, 'uploadFile' as any).callsFake(() => {
+                const result = new FileMetadataPage();
+                result.files = [mockFileMetadata];
+                return Promise.resolve(result);
+            });
+            sinon
+                .stub(client.internalClient, 'importWorkflow')
+                .callsFake(() => Promise.resolve(createResponse({ ...mockWorkflowImport, workflowId: null })));
+
+            sinon
+                .stub(client.internalClient, 'getWorkflowImport')
+                .callsFake(() => Promise.resolve(createResponse(mockWorkflowImport)));
+
+            sinon
+                .stub(client.internalClient, 'getWorkflow')
+                .callsFake(() => Promise.resolve(createResponse(mockWorkflow)));
+
+            return executeTest(client.workflowClient, 'import', [filePath], (err, result) => {
+                expect(err).to.not.be.ok;
+
+                expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockWorkflow)));
+
+                expect(uploadFileStub).to.have.callCount(1);
+                expect(uploadFileStub).to.have.been.calledWith(filePath);
+
+                expect(client.internalClient.importWorkflow).to.have.callCount(1);
+                expect(client.internalClient.importWorkflow).to.have.been.calledWith({
+                    body: {
+                        fileId: mockFileMetadata.id,
+                        password: null
+                    },
+                    customHeaders: expectedCustomHeaders
+                });
+
+                expect(client.internalClient.getWorkflowImport).to.have.callCount(1);
+                expect(client.internalClient.getWorkflowImport).to.have.been.calledWith(mockWorkflowImport.id, {
+                    customHeaders: expectedCustomHeaders
+                });
+
+                expect(client.internalClient.getWorkflow).to.have.callCount(1);
+                expect(client.internalClient.getWorkflow).to.have.been.calledWith(mockWorkflowImport.workflowId, {
+                    customHeaders: expectedCustomHeaders
+                });
+            });
+        });
+
         it('should handle import Workflow error', function() {
             const filePath = join(__dirname, '../fixtures/test.txt');
             const password = 'p@$$w0rd';
@@ -179,9 +236,12 @@ describe('WorkflowClient', function() {
             const mockWorkflowImport = mock.mockWorkflowImport();
             mockWorkflowImport.workflowId = mockWorkflow.id;
             // stubbing protected method on BaseClient, which is called by FileClient.upload
-            const uploadFileStub = sinon
-                .stub(client.workflowClient, 'uploadFile' as any)
-                .callsFake(() => Promise.resolve(mockFileMetadata));
+            // stubbing protected method on BaseClient, which is called by WorkflowClient.import
+            const uploadFileStub = sinon.stub(client.workflowClient, 'uploadFile' as any).callsFake(() => {
+                const result = new FileMetadataPage();
+                result.files = [mockFileMetadata];
+                return Promise.resolve(result);
+            });
             sinon
                 .stub(client.internalClient, 'importWorkflow')
                 .callsFake(() => Promise.resolve(createResponse({ ...mockWorkflowImport, workflowId: null })));
@@ -221,7 +281,7 @@ describe('WorkflowClient', function() {
     });
 
     describe('Export Workflow', function() {
-        it('should export a Workflow', function() {
+        it('should export a Workflow with password', function() {
             const workflowId = v4();
             const password = 'p@$$w0rd';
             const mockFileMetadata = mock.mockFileMetadata();
@@ -249,6 +309,49 @@ describe('WorkflowClient', function() {
                     body: {
                         workflowId,
                         password
+                    },
+                    customHeaders: expectedCustomHeaders
+                });
+
+                expect(client.internalClient.getWorkflowExport).to.have.callCount(1);
+                expect(client.internalClient.getWorkflowExport).to.have.been.calledWith(mockWorkflowExport.id, {
+                    customHeaders: expectedCustomHeaders
+                });
+
+                expect(client.internalClient.getFile).to.have.callCount(1);
+                expect(client.internalClient.getFile).to.have.been.calledWith(mockWorkflowExport.fileId, {
+                    customHeaders: expectedCustomHeaders
+                });
+            });
+        });
+
+        it('should export a Workflow without password', function() {
+            const workflowId = v4();
+            const mockFileMetadata = mock.mockFileMetadata();
+            const mockWorkflowExport = { fileId: mockFileMetadata.id, id: v4() };
+
+            sinon
+                .stub(client.internalClient, 'exportWorkflow')
+                .callsFake(() => Promise.resolve(createResponse({ ...mockWorkflowExport, fileId: null })));
+
+            sinon
+                .stub(client.internalClient, 'getWorkflowExport')
+                .callsFake(() => Promise.resolve(createResponse(mockWorkflowExport)));
+
+            sinon
+                .stub(client.internalClient, 'getFile')
+                .callsFake(() => Promise.resolve(createResponse(mockFileMetadata)));
+
+            return executeTest(client.workflowClient, 'export', [workflowId], (err, result) => {
+                expect(err).to.not.be.ok;
+
+                expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockFileMetadata)));
+
+                expect(client.internalClient.exportWorkflow).to.have.callCount(1);
+                expect(client.internalClient.exportWorkflow).to.have.been.calledWith(workflowId, {
+                    body: {
+                        workflowId,
+                        password: null
                     },
                     customHeaders: expectedCustomHeaders
                 });
