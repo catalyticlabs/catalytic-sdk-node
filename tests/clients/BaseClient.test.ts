@@ -8,7 +8,7 @@ import { v4 } from 'uuid';
 import mock from '../helpers/mockEntities';
 import CatalyticClient from '../../src/CatalyticClient';
 import { BaseUri } from '../../src/constants';
-import { InternalError, UnauthorizedError } from '../../src/errors';
+import { InternalError, UnauthorizedError, InvalidCredentialsError } from '../../src/errors';
 
 describe('BaseClient', function() {
     let client: CatalyticClient;
@@ -22,6 +22,29 @@ describe('BaseClient', function() {
 
     after(function() {
         nock.restore();
+    });
+
+    describe('GetRequestHeaders', function() {
+        it('should attach Token via Bearer auth header', function() {
+            const headers = client.fileClient['getRequestHeaders']();
+            expect(headers).to.have.property('Authorization', `Bearer ${client.credentials.token}`);
+        });
+
+        it('should throw InvalidCredentialsError if no Credentials attached to client', function() {
+            const originalCredentials = client.credentials;
+            client.credentials = null;
+
+            let err;
+            try {
+                client.fileClient['getRequestHeaders']();
+            } catch (e) {
+                err = e;
+            }
+            expect(err).to.be.ok.and.to.be.instanceOf(InvalidCredentialsError);
+            expect(err.message).to.equal('No Credentials provided');
+
+            client.credentials = originalCredentials;
+        });
     });
 
     describe('UploadFile', function() {

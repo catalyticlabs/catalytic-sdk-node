@@ -224,7 +224,29 @@ describe('DataTableClient', function() {
             );
         });
 
-        it('should upload a Data Table from a local path with some optional args', async function() {
+        it('should upload a Data Table from a local path with no sheetNumber specified', async function() {
+            const filePath = join(__dirname, '../fixtures/test.txt');
+            const tableName = 'My table';
+            const headerRow = 2;
+            const mockDataTable = mock.mockDataTable();
+            // stubbing protected method on BaseClient, which is called by dataTableClient.upload
+            const stub = sinon
+                .stub(client.dataTableClient, 'uploadFile' as any)
+                .callsFake(() => Promise.resolve(mockDataTable));
+
+            return executeTest(client.dataTableClient, 'upload', [filePath, tableName, headerRow], (err, result) => {
+                expect(err).to.not.be.ok;
+
+                expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockDataTable)));
+                expect(stub).to.have.callCount(1);
+                expect(stub).to.have.been.calledWith(
+                    filePath,
+                    `/tables:upload?headerRow=${headerRow}&sheetNumber=1&tableName=${encodeURIComponent(tableName)}`
+                );
+            });
+        });
+
+        it('should upload a Data Table from a local path with no sheetNumber or headerRow specified', async function() {
             const filePath = join(__dirname, '../fixtures/test.txt');
             const tableName = 'My table';
             const mockDataTable = mock.mockDataTable();
@@ -309,7 +331,7 @@ describe('DataTableClient', function() {
             );
         });
 
-        it('should upload a Data Table from a local file with some optional args', async function() {
+        it('should upload a Data Table from a local file with no sheetNumber specified', async function() {
             const filePath = join(__dirname, '../fixtures/test.txt');
             const id = v4();
             const headerRow = 5;
@@ -331,7 +353,7 @@ describe('DataTableClient', function() {
             });
         });
 
-        it('should upload a Data Table from a local file with no optional args', async function() {
+        it('should upload a Data Table from a local file with no sheetNumber or headerRow specified', async function() {
             const filePath = join(__dirname, '../fixtures/test.txt');
             const id = v4();
             const mockDataTable = mock.mockDataTable();

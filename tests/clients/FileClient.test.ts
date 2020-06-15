@@ -11,7 +11,7 @@ const expect = chai.expect;
 import CatalyticClient from '../../src/CatalyticClient';
 import mock from '../helpers/mockEntities';
 import { createResponse, executeTest } from '../helpers';
-import { InternalError, ResourceNotFoundError } from '../../src/errors';
+import { InternalError, ResourceNotFoundError, FileUploadError } from '../../src/errors';
 import { FileMetadataPage } from '../../src/entities';
 
 describe('FileClient', function() {
@@ -99,6 +99,23 @@ describe('FileClient', function() {
                 expect(err).to.be.ok;
                 expect(err).to.be.instanceOf(InternalError);
                 expect(err.message).to.include('Intentional server error');
+                expect(stub).to.have.callCount(1);
+                expect(stub).to.have.been.calledWith(filePath);
+            });
+        });
+
+        it('should return FileUploadError if uploaded file not included in response', function() {
+            const filePath = join(__dirname, '../fixtures/test.txt');
+            // stubbing protected method on BaseClient, which is called by FileClient.upload
+            const stub = sinon
+                .stub(client.fileClient, 'uploadFile' as any)
+                .callsFake(() => Promise.resolve(new FileMetadataPage()));
+
+            return executeTest(client.fileClient, 'upload', [filePath], (err, result) => {
+                expect(result).to.not.be.ok;
+                expect(err).to.be.ok;
+                expect(err).to.be.instanceOf(FileUploadError);
+                expect(err.message).to.include('Failed to upload file');
                 expect(stub).to.have.callCount(1);
                 expect(stub).to.have.been.calledWith(filePath);
             });

@@ -70,7 +70,7 @@ export default abstract class BaseClient {
                 url,
                 method: 'GET',
                 responseType: 'stream',
-                headers: this.getRequestHeaders()
+                headers: { ...this.getRequestHeaders(), 'User-Agent': UserAgent }
             });
 
             return response.data as Stream;

@@ -2,7 +2,7 @@ import { Stream } from 'stream';
 
 import BaseClient, { ClientMethodCallback } from './BaseClient';
 import { FileMetadata, FileMetadataPage } from '../entities';
-import { InternalError } from '../errors';
+import { FileUploadError } from '../errors';
 
 export default class FileClient extends BaseClient {
     static entity = 'File';
@@ -75,11 +75,11 @@ export default class FileClient extends BaseClient {
     private async _upload(filePath: string): Promise<FileMetadata> {
         // Calls protected BaseClient.uploadFile method
         const files = await this.uploadFile<FileMetadataPage>(filePath);
-        const result = files.files[0];
+        const result = (files.files || [])[0];
         if (!result) {
-            throw new InternalError('Failed to upload file');
+            throw new FileUploadError('Failed to upload file');
         }
-        return files.files[0];
+        return result;
     }
 
     /**
