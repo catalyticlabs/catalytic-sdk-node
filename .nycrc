@@ -1,5 +1,9 @@
 {
     "all": true,
     "reporter": ["lcov"],
-    "exclude": ["src/internal"]
+    "exclude": [
+        "src/internal",
+        "tests",
+        "bin"
+    ]
 }
