@@ -3,7 +3,7 @@
     "reporter": ["lcov"],
     "exclude": [
         "src/internal",
-        "tests",
-        "bin"
+        "tests/",
+        "bin/"
     ]
 }
