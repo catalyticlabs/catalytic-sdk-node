@@ -5,7 +5,8 @@
     "autorest": "autorest",
     "build": "tsc",
     "lint": "eslint ./src/**/*.ts ./tests/**/*.ts",
-    "test": "npm run build && mocha -r ts-node/register tests/**/*.test.ts"
+    "test": "yarn run build && mocha -r ts-node/register tests/**/*.test.ts",
+    "cover": "nyc yarn test"
   },
   "dependencies": {
     "@azure/ms-rest-js": "^2.0.4",
@@ -33,6 +34,7 @@
     "lodash": "^4.17.15",
     "mocha": "^7.1.2",
     "nock": "^12.0.3",
+    "nyc": "^15.1.0",
     "prettier": "^1.19.1",
     "sinon": "^9.0.2",
     "sinon-chai": "^3.5.0",
