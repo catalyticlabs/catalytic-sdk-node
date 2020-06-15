@@ -5,12 +5,14 @@ import {
     Credentials,
     DataTable,
     Instance,
+    InstanceStep,
     User,
     Workflow,
     FileMetadata,
     UsersPage,
     WorkflowsPage,
     InstancesPage,
+    InstanceStepsPage,
     CredentialsPage,
     DataTablesPage,
     FileMetadataPage
@@ -83,6 +85,25 @@ export const mockInstancesPage = (): InstancesPage => {
     return { instances };
 };
 
+export const mockInstanceStep = (): InstanceStep => {
+    const values = {
+        id: v4(),
+        instanceId: v4(),
+        workflowId: v4(),
+        name: faker.random.words(3),
+        owner: faker.internet.email(),
+        teamName: faker.company.companyName().toLowerCase()
+    };
+
+    return values;
+};
+
+export const mockInstanceStepsPage = (): InstanceStepsPage => {
+    const steps = [mockInstanceStep(), mockInstanceStep()];
+
+    return { steps };
+};
+
 export const mockUser = (): User => {
     const values = {
         id: v4(),
@@ -138,6 +159,8 @@ export default {
     mockFileMetadataPage,
     mockInstance,
     mockInstancesPage,
+    mockInstanceStep,
+    mockInstanceStepsPage,
     mockUser,
     mockUsersPage,
     mockWorkflow,
