@@ -74,8 +74,12 @@ describe('InstanceClient', function() {
                 expect(client.internalClient.findInstances).to.have.callCount(1);
                 expect(client.internalClient.findInstances).to.have.been.calledWith({
                     customHeaders: expectedCustomHeaders,
-                    // call with this signature since method is marked as private
-                    ...client.instanceClient['formatFindInstanceOptions']({})
+                    category: undefined,
+                    owner: undefined,
+                    pageSize: undefined,
+                    pageToken: undefined,
+                    processId: undefined,
+                    query: undefined
                 });
             });
         });
@@ -94,8 +98,12 @@ describe('InstanceClient', function() {
                 expect(client.internalClient.findInstances).to.have.callCount(1);
                 expect(client.internalClient.findInstances).to.have.been.calledWith({
                     customHeaders: expectedCustomHeaders,
-                    // call with this signature since method is marked as private
-                    ...client.instanceClient['formatFindInstanceOptions'](options)
+                    category: undefined,
+                    owner: options.owner,
+                    pageSize: options.pageSize,
+                    pageToken: undefined,
+                    processId: options.workflowID,
+                    query: options.query
                 });
             });
         });
@@ -112,8 +120,12 @@ describe('InstanceClient', function() {
                 expect(client.internalClient.findInstances).to.have.callCount(1);
                 expect(client.internalClient.findInstances).to.have.been.calledWith({
                     customHeaders: expectedCustomHeaders,
-                    // call with this signature since method is marked as private
-                    ...client.instanceClient['formatFindInstanceOptions']({})
+                    category: undefined,
+                    owner: undefined,
+                    pageSize: undefined,
+                    pageToken: undefined,
+                    processId: undefined,
+                    query: undefined
                 });
             });
         });
@@ -337,15 +349,19 @@ describe('InstanceClient', function() {
                     expect(client.internalClient.findInstanceSteps).to.have.callCount(1);
                     expect(client.internalClient.findInstanceSteps).to.have.been.calledWith('*', {
                         customHeaders: expectedCustomHeaders,
-                        // call with this signature since method is marked as private
-                        ...client.instanceClient['formatFindInstanceStepOptions']({})
+                        pageSize: undefined,
+                        pageToken: undefined,
+                        participatingUsers: undefined,
+                        processId: undefined,
+                        query: undefined,
+                        runId: undefined
                     });
                 });
             });
 
             it('should find InstanceSteps with filter options', function() {
                 const mockInstanceStepsPage = mock.mockInstanceStepsPage();
-                const options = { pageSize: 3, query: 'some user', owner: 'test@example.com', instanceID: v4() };
+                const options = { pageSize: 3, query: 'some user', assignedTo: 'test@example.com', instanceID: v4() };
                 sinon
                     .stub(client.internalClient, 'findInstanceSteps')
                     .callsFake(() => Promise.resolve(createResponse(mockInstanceStepsPage)));
@@ -357,8 +373,12 @@ describe('InstanceClient', function() {
                     expect(client.internalClient.findInstanceSteps).to.have.callCount(1);
                     expect(client.internalClient.findInstanceSteps).to.have.been.calledWith('*', {
                         customHeaders: expectedCustomHeaders,
-                        // call with this signature since method is marked as private
-                        ...client.instanceClient['formatFindInstanceStepOptions'](options)
+                        pageSize: options.pageSize,
+                        pageToken: undefined,
+                        participatingUsers: options.assignedTo,
+                        processId: undefined,
+                        query: options.query,
+                        runId: options.instanceID
                     });
                 });
             });
@@ -375,8 +395,12 @@ describe('InstanceClient', function() {
                     expect(client.internalClient.findInstanceSteps).to.have.callCount(1);
                     expect(client.internalClient.findInstanceSteps).to.have.been.calledWith('*', {
                         customHeaders: expectedCustomHeaders,
-                        // call with this signature since method is marked as private
-                        ...client.instanceClient['formatFindInstanceStepOptions']({})
+                        pageSize: undefined,
+                        pageToken: undefined,
+                        participatingUsers: undefined,
+                        processId: undefined,
+                        query: undefined,
+                        runId: undefined
                     });
                 });
             });

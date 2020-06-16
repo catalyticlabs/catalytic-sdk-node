@@ -4,7 +4,8 @@ import {
     CatalyticSDKAPIFindInstanceStepsOptionalParams,
     StartInstanceRequest,
     ReassignStepRequest,
-    CompleteStepRequest
+    CompleteStepRequest,
+    CatalyticSDKAPIFindInstancesOptionalParams
 } from '../internal/lib/models';
 
 export default class InstanceClient extends BaseClient {
@@ -104,7 +105,7 @@ export default class InstanceClient extends BaseClient {
         return this.parseResponse<InstancesPage>(result);
     }
 
-    private formatFindInstanceOptions(options?: FindInstancesOptions): CatalyticSDKAPIFindInstanceStepsOptionalParams {
+    private formatFindInstanceOptions(options?: FindInstancesOptions): CatalyticSDKAPIFindInstancesOptionalParams {
         return {
             query: options?.query,
             pageToken: options?.pageToken,
@@ -356,7 +357,7 @@ export default class InstanceClient extends BaseClient {
             query: options?.query,
             pageToken: options?.pageToken,
             pageSize: options?.pageSize,
-            participatingUsers: options?.assignee,
+            participatingUsers: options?.assignedTo,
             processId: options?.workflowID,
             runId: options?.instanceID
         };
@@ -517,5 +518,5 @@ export interface FindInstanceStepsOptions extends FindOptions {
     /**
      * @summary The email or username of the Catalytic user to which the InstanceSteps are assigned. Results will include InstanceSteps assigned to groups to which the user belongs
      */
-    assignee?: string;
+    assignedTo?: string;
 }
