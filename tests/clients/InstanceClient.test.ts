@@ -12,6 +12,7 @@ import { displayNameToInternal } from '../../src/utils';
 
 import mock from '../helpers/mockEntities';
 import { createResponse, executeTest } from '../helpers';
+import { FieldInputError } from '../../src/errors';
 
 describe('InstanceClient', function() {
     let client: CatalyticClient;
@@ -271,6 +272,38 @@ describe('InstanceClient', function() {
                     customHeaders: expectedCustomHeaders
                 });
             });
+        });
+
+        it('should throw proper error when invalid inputs passed', async function() {
+            const workflowID = v4();
+            const name = 'test instance name';
+            sinon
+                .stub(client.internalClient, 'startInstance')
+                .callsFake(() => Promise.resolve(createResponse({ detail: 'Intentional bad request error' }, 400)));
+
+            await executeTest(
+                client.instanceClient,
+                'start',
+                [workflowID, name, { name: 'My Field', value: 'some value' }],
+                (err, result) => {
+                    expect(result).to.not.be.ok;
+                    expect(err).to.be.ok.and.to.be.instanceOf(FieldInputError);
+                    expect(err.message).to.include('Fields must be an Array of FieldInput objects');
+                    expect(client.internalClient.startInstance).to.have.callCount(0);
+                }
+            );
+
+            await executeTest(
+                client.instanceClient,
+                'start',
+                [workflowID, name, [{ value: 'some value' }]],
+                (err, result) => {
+                    expect(result).to.not.be.ok;
+                    expect(err).to.be.ok.and.to.be.instanceOf(FieldInputError);
+                    expect(err.message).to.include('No name or reference name provided for field at index 0');
+                    expect(client.internalClient.startInstance).to.have.callCount(0);
+                }
+            );
         });
 
         it('should throw proper error when Instance start request fails', function() {

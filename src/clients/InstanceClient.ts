@@ -279,15 +279,15 @@ export default class InstanceClient extends BaseClient implements InstanceClient
         if (!Array.isArray(fields)) {
             throw new FieldInputError('Fields must be an Array of FieldInput objects');
         }
-        if (fields?.some(f => !f.name && !f.referenceName)) {
+        if (fields.some(f => !f.name && !f.referenceName)) {
             throw new FieldInputError(
                 `No name or reference name provided for field at index ${fields.indexOf(
                     fields.find(f => !f.name && !f.referenceName)
                 )}`
             );
         }
-        return fields?.map(f => ({
-            name: f.name || f.referenceName,
+        return fields.map(f => ({
+            name: f.name,
             referenceName: f.referenceName || displayNameToInternal(f.name),
             value: f.value
         }));
