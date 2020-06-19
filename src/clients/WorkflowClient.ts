@@ -1,32 +1,15 @@
-import BaseClient, { FindOptions, ClientMethodCallback } from './BaseClient';
 import { Workflow, WorkflowsPage, FileMetadata, FileMetadataPage } from '../entities';
-import { WorkflowImport, WorkflowExport } from '../internal/lib/models';
 import { WorkflowImportError, WorkflowExportError } from '../errors';
+import { WorkflowImport, WorkflowExport } from '../internal/lib/models';
+import { BaseFindOptions, ClientMethodCallback } from '../types';
 
-export default class WorkflowClient extends BaseClient {
+import BaseClient from './BaseClient';
+
+export default class WorkflowClient extends BaseClient implements WorkflowClientInterface {
     static entity = 'Workflow';
 
-    /**
-     * @summary Gets a Workflow by ID
-     *
-     * @param id The ID of the Workflow to get
-     * @returns The Workflow with the provided ID
-     */
     get(id: string): Promise<Workflow>;
-    /**
-     * @summary Gets a Workflow by ID
-     *
-     * @param id The ID of the Workflow to get
-     * @param callback The callback
-     */
     get(id: string, callback: ClientMethodCallback<Workflow>): void;
-    /**
-     * @summary Gets a Workflow by ID
-     *
-     * @param id The ID of the Workflow to get
-     * @param callback The optional callback
-     * @returns The Workflow with the provided ID
-     */
     get(id: string, callback?: ClientMethodCallback<Workflow>): Promise<Workflow> | void {
         if (callback) {
             return this.callbackifyBound(this._get)(id, callback);
@@ -42,38 +25,10 @@ export default class WorkflowClient extends BaseClient {
         return this.parseResponse<Workflow>(result);
     }
 
-    /**
-     * @summary Finds Workflows
-     *
-     * @returns A page of Workflows
-     */
     find(): Promise<WorkflowsPage>;
-    /**
-     * @summary Finds Workflows
-     *
-     * @param options Filter criteria to narrow Workflows returned
-     * @returns A page of Workflows
-     */
     find(options: FindWorkflowOptions): Promise<WorkflowsPage>;
-    /**
-     * @summary Finds Workflows
-     * @param callback The callback
-     */
     find(callback: ClientMethodCallback<WorkflowsPage>);
-    /**
-     * @summary Finds Workflows
-     *
-     * @param options Filter criteria to narrow Workflows returned
-     * @param callback The callback
-     */
     find(options: FindWorkflowOptions, callback: ClientMethodCallback<WorkflowsPage>): void;
-    /**
-     * @summary Finds Workflows
-     *
-     * @param options Filter criteria to narrow Workflows returned
-     * @param callback The callback
-     * @returns A page of Workflows
-     */
     find(
         options?: FindWorkflowOptions | ClientMethodCallback<WorkflowsPage>,
         callback?: ClientMethodCallback<WorkflowsPage>
@@ -97,19 +52,7 @@ export default class WorkflowClient extends BaseClient {
         return this.parseResponse<WorkflowsPage>(result);
     }
 
-    /**
-     * @summary Import a Catalytic Workflow from an exported .catalytic file
-     *
-     * @param filePath The path to the .catalytic file on disk
-     * @returns The imported Workflow
-     */
     import(filePath: string): Promise<Workflow>;
-    /**
-     * @summary Import a Catalytic Workflow from an exported .catalytic file
-     *
-     * @param filePath The path to the .catalytic file on disk
-     * @param callback The callback
-     */
     import(filePath: string, callback: ClientMethodCallback<Workflow>): void;
     /**
      * @summary Import a Catalytic Workflow from an exported .catalytic file
@@ -193,19 +136,7 @@ export default class WorkflowClient extends BaseClient {
         return await this._get(workflowImport.workflowId);
     }
 
-    /**
-     * @summary Export a Catalytic Workflow to a .catalytic file
-     *
-     * @param id The ID of the Workflow to export
-     * @returns The FileMetadata corresponding to the .catalytic Workflow export file
-     */
     export(id: string): Promise<FileMetadata>;
-    /**
-     * @summary Export a Catalytic Workflow to a .catalytic file
-     *
-     * @param id The ID of the Workflow to export
-     * @param callback The callback
-     */
     export(id: string, callback: ClientMethodCallback<FileMetadata>): void;
     /**
      * @summary Export a Catalytic Workflow to a .catalytic file
@@ -282,7 +213,157 @@ export default class WorkflowClient extends BaseClient {
         return this.parseResponse<FileMetadata>(result);
     }
 }
-export interface FindWorkflowOptions extends FindOptions {
+
+export interface WorkflowClientInterface {
+    /**
+     * @summary Gets a Workflow by ID
+     *
+     * @param id The ID of the Workflow to get
+     * @returns The Workflow with the provided ID
+     */
+    get(id: string): Promise<Workflow>;
+    /**
+     * @summary Gets a Workflow by ID
+     *
+     * @param id The ID of the Workflow to get
+     * @param callback The callback
+     */
+    get(id: string, callback: ClientMethodCallback<Workflow>): void;
+    /**
+     * @summary Gets a Workflow by ID
+     *
+     * @param id The ID of the Workflow to get
+     * @param callback The optional callback
+     * @returns The Workflow with the provided ID
+     */
+    get(id: string, callback?: ClientMethodCallback<Workflow>): Promise<Workflow> | void;
+
+    /**
+     * @summary Finds Workflows
+     *
+     * @returns A page of Workflows
+     */
+    find(): Promise<WorkflowsPage>;
+    /**
+     * @summary Finds Workflows
+     *
+     * @param options Filter criteria to narrow Workflows returned
+     * @returns A page of Workflows
+     */
+    find(options: FindWorkflowOptions): Promise<WorkflowsPage>;
+    /**
+     * @summary Finds Workflows
+     * @param callback The callback
+     */
+    find(callback: ClientMethodCallback<WorkflowsPage>);
+    /**
+     * @summary Finds Workflows
+     *
+     * @param options Filter criteria to narrow Workflows returned
+     * @param callback The callback
+     */
+    find(options: FindWorkflowOptions, callback: ClientMethodCallback<WorkflowsPage>): void;
+    /**
+     * @summary Finds Workflows
+     *
+     * @param options Filter criteria to narrow Workflows returned
+     * @param callback The callback
+     * @returns A page of Workflows
+     */
+    find(
+        options?: FindWorkflowOptions | ClientMethodCallback<WorkflowsPage>,
+        callback?: ClientMethodCallback<WorkflowsPage>
+    ): Promise<WorkflowsPage> | void;
+
+    /**
+     * @summary Import a Catalytic Workflow from an exported .catalytic file
+     *
+     * @param filePath The path to the .catalytic file on disk
+     * @returns The imported Workflow
+     */
+    import(filePath: string): Promise<Workflow>;
+    /**
+     * @summary Import a Catalytic Workflow from an exported .catalytic file
+     *
+     * @param filePath The path to the .catalytic file on disk
+     * @param callback The callback
+     */
+    import(filePath: string, callback: ClientMethodCallback<Workflow>): void;
+    /**
+     * @summary Import a Catalytic Workflow from an exported .catalytic file
+     *
+     * @param filePath The path to the .catalytic file on disk
+     * @param password [Optional] The password used to secure the .catalytic export file, if applicable
+     * @returns The imported Workflow
+     */
+    import(filePath: string, password: string): Promise<Workflow>;
+    /**
+     * @summary Import a Catalytic Workflow from an exported .catalytic file
+     *
+     * @param filePath The path to the .catalytic file on disk
+     * @param password [Optional] The password used to secure the .catalytic export file, if applicable
+     * @param callback The callback
+     */
+    import(filePath: string, password: string, callback: ClientMethodCallback<Workflow>): void;
+    /**
+     * @summary Import a Catalytic Workflow from an exported .catalytic file
+     *
+     * @param filePath The path to the .catalytic file on disk
+     * @param password [Optional] The password used to secure the .catalytic export file, if applicable
+     * @param callback The callback
+     * @returns The imported Workflow
+     */
+    import(
+        filePath: string,
+        password?: string | ClientMethodCallback<Workflow>,
+        callback?: ClientMethodCallback<Workflow>
+    ): Promise<Workflow> | void;
+
+    /**
+     * @summary Export a Catalytic Workflow to a .catalytic file
+     *
+     * @param id The ID of the Workflow to export
+     * @returns The FileMetadata corresponding to the .catalytic Workflow export file
+     */
+    export(id: string): Promise<FileMetadata>;
+    /**
+     * @summary Export a Catalytic Workflow to a .catalytic file
+     *
+     * @param id The ID of the Workflow to export
+     * @param callback The callback
+     */
+    export(id: string, callback: ClientMethodCallback<FileMetadata>): void;
+    /**
+     * @summary Export a Catalytic Workflow to a .catalytic file
+     *
+     * @param id The ID of the Workflow to export
+     * @param password [Optional] The password used to secure the .catalytic export file
+     * @returns The FileMetadata corresponding to the .catalytic Workflow export file
+     */
+    export(id: string, password: string): Promise<FileMetadata>;
+    /**
+     * @summary Export a Catalytic Workflow to a .catalytic file
+     *
+     * @param id The ID of the Workflow to export
+     * @param password [Optional] The password used to secure the .catalytic export file
+     * @param callback The callback
+     */
+    export(id: string, password: string, callback: ClientMethodCallback<FileMetadata>): void;
+    /**
+     * @summary Export a Catalytic Workflow to a .catalytic file
+     *
+     * @param id The ID of the Workflow to export
+     * @param password [Optional] The password used to secure the .catalytic export file
+     * @param callback The callback
+     * @returns The FileMetadata corresponding to the .catalytic Workflow export file
+     */
+    export(
+        id: string,
+        password?: string | ClientMethodCallback<FileMetadata>,
+        callback?: ClientMethodCallback<FileMetadata>
+    ): Promise<FileMetadata> | void;
+}
+export interface FindWorkflowOptions extends BaseFindOptions {
     /**
      * @summary Workflow owner to search for
      */

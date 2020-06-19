@@ -1,5 +1,6 @@
-import BaseClient, { FindOptions, ClientMethodCallback } from './BaseClient';
-import { Instance, InstancesPage, InstanceStep } from '../entities';
+import { WildcardId } from '../constants';
+import { Instance, InstancesPage, InstanceStep, InstanceStepsPage } from '../entities';
+import { FieldInputError } from '../errors';
 import {
     CatalyticSDKAPIFindInstanceStepsOptionalParams,
     StartInstanceRequest,
@@ -7,10 +8,293 @@ import {
     CompleteStepRequest,
     CatalyticSDKAPIFindInstancesOptionalParams
 } from '../internal/lib/models';
+import { BaseFindOptions, ClientMethodCallback, FieldInput } from '../types';
+import { displayNameToInternal } from '../utils';
 
-export default class InstanceClient extends BaseClient {
+import BaseClient from './BaseClient';
+
+export default class InstanceClient extends BaseClient implements InstanceClientInterface {
     static entity = 'Instance';
 
+    get(id: string): Promise<Instance>;
+    get(id: string, callback: ClientMethodCallback<Instance>): void;
+    get(id: string, callback?: ClientMethodCallback<Instance>): Promise<Instance> | void {
+        if (callback) {
+            return this.callbackifyBound(this._get)(id, callback);
+        }
+
+        return this._get(id);
+    }
+
+    private async _get(id: string): Promise<Instance> {
+        console.log(`Getting Instance with ID '${id}'`);
+        const headers = this.getRequestHeaders();
+        const result = await this.internalClient.getInstance(id, { customHeaders: headers });
+        return this.parseResponse<Instance>(result);
+    }
+
+    find(): Promise<InstancesPage>;
+    find(options: FindInstancesOptions): Promise<InstancesPage>;
+    find(callback: ClientMethodCallback<InstancesPage>): void;
+    find(options: FindInstancesOptions, callback: ClientMethodCallback<InstancesPage>): void;
+    find(
+        options?: FindInstancesOptions | ClientMethodCallback<InstancesPage>,
+        callback?: ClientMethodCallback<InstancesPage>
+    ): Promise<InstancesPage> | void {
+        if (typeof options === 'function') {
+            callback = options;
+            options = null;
+        }
+
+        if (callback) {
+            return this.callbackifyBound(this._find)(options as FindInstancesOptions, callback);
+        }
+
+        return this._find(options as FindInstancesOptions);
+    }
+
+    private async _find(options: FindInstancesOptions): Promise<InstancesPage> {
+        console.log('Finding Instances');
+        const headers = this.getRequestHeaders();
+        const result = await this.internalClient.findInstances(
+            Object.assign(this.formatFindInstanceOptions(options), { customHeaders: headers })
+        );
+        return this.parseResponse<InstancesPage>(result);
+    }
+
+    private formatFindInstanceOptions(options?: FindInstancesOptions): CatalyticSDKAPIFindInstancesOptionalParams {
+        return {
+            query: options?.query,
+            pageToken: options?.pageToken,
+            pageSize: options?.pageSize,
+            owner: options?.owner,
+            category: options?.category,
+            processId: options?.workflowID
+        };
+    }
+
+    start(workflowID: string): Promise<Instance>;
+    start(workflowID: string, name: string): Promise<Instance>;
+    start(workflowID: string, inputs: FieldInput[]): Promise<Instance>;
+    start(workflowID: string, name: string, inputs: FieldInput[]): Promise<Instance>;
+    start(workflowID: string, callback: ClientMethodCallback<Instance>): Promise<Instance>;
+    start(workflowID: string, name: string, callback: ClientMethodCallback<Instance>): Promise<Instance>;
+    start(workflowID: string, inputs: FieldInput[], callback: ClientMethodCallback<Instance>): Promise<Instance>;
+    start(
+        workflowID: string,
+        name: string,
+        inputs: FieldInput[],
+        callback: ClientMethodCallback<Instance>
+    ): Promise<Instance>;
+    start(
+        workflowID: string,
+        name: string | FieldInput[] | ClientMethodCallback<Instance> = null,
+        inputs: FieldInput[] | ClientMethodCallback<Instance> = null,
+        callback?: ClientMethodCallback<Instance>
+    ): Promise<Instance> | void {
+        if (typeof inputs === 'function') {
+            callback = inputs;
+            inputs = null;
+        }
+
+        if (Array.isArray(name)) {
+            inputs = name;
+            name = null;
+        } else if (typeof name === 'function') {
+            callback = name;
+            name = null;
+        }
+
+        if (callback) {
+            return this.callbackifyBound(this._start)(workflowID, name as string, inputs as FieldInput[], callback);
+        }
+
+        return this._start(workflowID, name as string, inputs as FieldInput[]);
+    }
+
+    private async _start(workflowID: string, name: string, inputs: FieldInput[]): Promise<Instance> {
+        console.log(`Starting new Instance of Workflow '${workflowID}'`);
+
+        const body: StartInstanceRequest = {
+            workflowId: workflowID,
+            name,
+            inputFields: this.formatFields(inputs)
+        };
+
+        const result = await this.internalClient.startInstance({ body, customHeaders: this.getRequestHeaders() });
+        return this.parseResponse<Instance>(result);
+    }
+
+    stop(id: string): Promise<Instance>;
+    stop(id: string, callback: ClientMethodCallback<Instance>): void;
+    stop(id: string, callback?: ClientMethodCallback<Instance>): Promise<Instance> | void {
+        if (callback) {
+            return this.callbackifyBound(this._stop)(id, callback);
+        }
+        return this._stop(id);
+    }
+
+    private async _stop(id: string): Promise<Instance> {
+        console.log(`Stopping Instance '${id}'`);
+
+        const result = await this.internalClient.stopInstance(id, { customHeaders: this.getRequestHeaders() });
+        return this.parseResponse<Instance>(result);
+    }
+
+    getInstanceStep(id: string): Promise<InstanceStep>;
+    getInstanceStep(id: string, callback: ClientMethodCallback<InstanceStep>): void;
+    getInstanceStep(id: string, callback?: ClientMethodCallback<InstanceStep>): Promise<InstanceStep> | void {
+        if (callback) {
+            return this.callbackifyBound(this._getStep)(id, callback);
+        }
+
+        return this._getStep(id);
+    }
+
+    private async _getStep(id: string): Promise<InstanceStep> {
+        console.log(`Getting InstanceStep '${id}'`);
+        const result = await this.internalClient.getInstanceStep(id, WildcardId, {
+            customHeaders: this.getRequestHeaders()
+        });
+
+        return this.parseResponse<InstanceStep>(result);
+    }
+
+    findInstanceSteps(): Promise<InstancesPage>;
+    findInstanceSteps(options: FindInstanceStepsOptions): Promise<InstancesPage>;
+    findInstanceSteps(callback: ClientMethodCallback<InstancesPage>): void;
+    findInstanceSteps(options: FindInstanceStepsOptions, callback: ClientMethodCallback<InstancesPage>): void;
+    findInstanceSteps(
+        options?: FindInstanceStepsOptions | ClientMethodCallback<InstancesPage>,
+        callback?: ClientMethodCallback<InstancesPage>
+    ): Promise<InstancesPage> | void {
+        if (typeof options === 'function') {
+            callback = options;
+            options = null;
+        }
+
+        if (callback) {
+            return this.callbackifyBound(this._findInstanceSteps)(options as FindInstanceStepsOptions, callback);
+        }
+
+        return this._findInstanceSteps(options as FindInstanceStepsOptions);
+    }
+
+    private async _findInstanceSteps(options: FindInstanceStepsOptions): Promise<InstancesPage> {
+        console.log('Finding InstanceSteps');
+        const headers = this.getRequestHeaders();
+        const result = await this.internalClient.findInstanceSteps(
+            WildcardId,
+            Object.assign(this.formatFindInstanceStepOptions(options), { customHeaders: headers })
+        );
+
+        return this.parseResponse<InstanceStepsPage>(result);
+    }
+
+    private formatFindInstanceStepOptions(
+        options?: FindInstanceStepsOptions
+    ): CatalyticSDKAPIFindInstanceStepsOptionalParams {
+        return {
+            query: options?.query,
+            pageToken: options?.pageToken,
+            pageSize: options?.pageSize,
+            participatingUsers: options?.assignedTo,
+            processId: options?.workflowID,
+            runId: options?.instanceID
+        };
+    }
+
+    reassignInstanceStep(id: string, newAssigneeEmailAddress: string): Promise<InstanceStep>;
+    reassignInstanceStep(
+        id: string,
+        newAssigneeEmailAddress: string,
+        callback: ClientMethodCallback<InstanceStep>
+    ): void;
+    reassignInstanceStep(
+        id: string,
+        newAssigneeEmailAddress: string,
+        callback?: ClientMethodCallback<InstanceStep>
+    ): Promise<InstanceStep> | void {
+        if (callback) {
+            return this.callbackifyBound(this._reassignStep)(id, newAssigneeEmailAddress, callback);
+        }
+
+        return this._reassignStep(id, newAssigneeEmailAddress);
+    }
+
+    private async _reassignStep(id: string, newAssigneeEmailAddress: string): Promise<InstanceStep> {
+        console.log(`Reassigning InstanceStep ${id} to ${newAssigneeEmailAddress}`);
+
+        const body: ReassignStepRequest = {
+            id,
+            assignTo: newAssigneeEmailAddress
+        };
+        const result = await this.internalClient.reassignStep(id, WildcardId, {
+            customHeaders: this.getRequestHeaders(),
+            body
+        });
+
+        return this.parseResponse<InstanceStep>(result);
+    }
+
+    completeInstanceStep(id: string): Promise<InstanceStep>;
+    completeInstanceStep(id: string, fields: FieldInput[]): Promise<InstanceStep>;
+    completeInstanceStep(id: string, callback: ClientMethodCallback<InstanceStep>): void;
+    completeInstanceStep(id: string, fields: FieldInput[], callback: ClientMethodCallback<InstanceStep>): void;
+    completeInstanceStep(
+        id: string,
+        fields: FieldInput[] | ClientMethodCallback<InstanceStep> = null,
+        callback?: ClientMethodCallback<InstanceStep>
+    ): Promise<InstanceStep> | void {
+        console.log(`Completing InstanceStep '${id}' with ${fields?.length} fields`);
+        if (typeof fields === 'function') {
+            callback = fields;
+            fields = null;
+        }
+
+        if (callback) {
+            return this.callbackifyBound(this._completeStep)(id, fields as FieldInput[], callback);
+        }
+
+        return this._completeStep(id, fields as FieldInput[]);
+    }
+
+    private async _completeStep(id: string, fields: FieldInput[]): Promise<InstanceStep> {
+        const body: CompleteStepRequest = {
+            id,
+            stepOutputFields: this.formatFields(fields)
+        };
+
+        const result = await this.internalClient.completeStep(id, WildcardId, {
+            body,
+            customHeaders: this.getRequestHeaders()
+        });
+        return this.parseResponse<InstanceStep>(result);
+    }
+
+    private formatFields(fields: FieldInput[]): FieldInput[] {
+        if (!fields) {
+            return fields;
+        }
+        if (!Array.isArray(fields)) {
+            throw new FieldInputError('Fields must be an Array of FieldInput objects');
+        }
+        if (fields?.some(f => !f.name && !f.referenceName)) {
+            throw new FieldInputError(
+                `No name or reference name provided for field at index ${fields.indexOf(
+                    fields.find(f => !f.name && !f.referenceName)
+                )}`
+            );
+        }
+        return fields?.map(f => ({
+            name: f.name || f.referenceName,
+            referenceName: f.referenceName || displayNameToInternal(f.name),
+            value: f.value
+        }));
+    }
+}
+
+export interface InstanceClientInterface {
     /**
      * @summary Gets a Instance by ID
      *
@@ -32,20 +316,7 @@ export default class InstanceClient extends BaseClient {
      * @param callback The optional callback
      * @returns The Instance with the provided ID
      */
-    get(id: string, callback?: ClientMethodCallback<Instance>): Promise<Instance> | void {
-        if (callback) {
-            return this.callbackifyBound(this._get)(id, callback);
-        }
-
-        return this._get(id);
-    }
-
-    private async _get(id: string): Promise<Instance> {
-        console.log(`Getting Instance with ID '${id}'`);
-        const headers = this.getRequestHeaders();
-        const result = await this.internalClient.getInstance(id, { customHeaders: headers });
-        return this.parseResponse<Instance>(result);
-    }
+    get(id: string, callback?: ClientMethodCallback<Instance>): Promise<Instance> | void;
 
     /**
      * @summary Finds Instances
@@ -83,38 +354,7 @@ export default class InstanceClient extends BaseClient {
     find(
         options?: FindInstancesOptions | ClientMethodCallback<InstancesPage>,
         callback?: ClientMethodCallback<InstancesPage>
-    ): Promise<InstancesPage> | void {
-        if (typeof options === 'function') {
-            callback = options;
-            options = null;
-        }
-
-        if (callback) {
-            return this.callbackifyBound(this._find)(options as FindInstancesOptions, callback);
-        }
-
-        return this._find(options as FindInstancesOptions);
-    }
-
-    private async _find(options: FindInstancesOptions): Promise<InstancesPage> {
-        console.log('Finding Instances');
-        const headers = this.getRequestHeaders();
-        const result = await this.internalClient.findInstances(
-            Object.assign(this.formatFindInstanceOptions(options), { customHeaders: headers })
-        );
-        return this.parseResponse<InstancesPage>(result);
-    }
-
-    private formatFindInstanceOptions(options?: FindInstancesOptions): CatalyticSDKAPIFindInstancesOptionalParams {
-        return {
-            query: options?.query,
-            pageToken: options?.pageToken,
-            pageSize: options?.pageSize,
-            owner: options?.owner,
-            category: options?.category,
-            processId: options?.workflowID
-        };
-    }
+    ): Promise<InstancesPage> | void;
 
     /**
      * @summary Start a new Instance of a Workflow
@@ -187,42 +427,10 @@ export default class InstanceClient extends BaseClient {
      */
     start(
         workflowID: string,
-        name: string | FieldInput[] | ClientMethodCallback<Instance> = null,
-        inputs: FieldInput[] | ClientMethodCallback<Instance> = null,
+        name: string | FieldInput[] | ClientMethodCallback<Instance>,
+        inputs: FieldInput[] | ClientMethodCallback<Instance>,
         callback?: ClientMethodCallback<Instance>
-    ): Promise<Instance> | void {
-        if (typeof inputs === 'function') {
-            callback = inputs;
-            inputs = null;
-        }
-
-        if (Array.isArray(name)) {
-            inputs = name;
-            name = null;
-        } else if (typeof name === 'function') {
-            callback = name;
-            name = null;
-        }
-
-        if (callback) {
-            return this.callbackifyBound(this._start)(workflowID, name as string, inputs as FieldInput[], callback);
-        }
-
-        return this._start(workflowID, name as string, inputs as FieldInput[]);
-    }
-
-    private async _start(workflowID: string, name: string, inputs: FieldInput[]): Promise<Instance> {
-        console.log(`Starting new Instance of Workflow '${workflowID}'`);
-
-        const body: StartInstanceRequest = {
-            workflowId: workflowID,
-            name,
-            inputFields: inputs
-        };
-
-        const result = await this.internalClient.startInstance({ body, customHeaders: this.getRequestHeaders() });
-        return this.parseResponse<Instance>(result);
-    }
+    ): Promise<Instance> | void;
 
     /**
      * @summary Stop an Instance by ID
@@ -242,19 +450,7 @@ export default class InstanceClient extends BaseClient {
      * @param callback The optional callback
      * @returns The stopped Instance
      */
-    stop(id: string, callback?: ClientMethodCallback<Instance>): Promise<Instance> | void {
-        if (callback) {
-            return this.callbackifyBound(this._stop)(id, callback);
-        }
-        return this._stop(id);
-    }
-
-    private async _stop(id: string): Promise<Instance> {
-        console.log(`Stopping Instance '${id}'`);
-
-        const result = await this.internalClient.stopInstance(id, { customHeaders: this.getRequestHeaders() });
-        return this.parseResponse<Instance>(result);
-    }
+    stop(id: string, callback?: ClientMethodCallback<Instance>): Promise<Instance> | void;
 
     /**
      * @summary Get an InstanceStep by ID
@@ -274,22 +470,7 @@ export default class InstanceClient extends BaseClient {
      * @param callback The optional callback
      * @returns The InstanceStep with the provided ID
      */
-    getInstanceStep(id: string, callback?: ClientMethodCallback<InstanceStep>): Promise<InstanceStep> | void {
-        if (callback) {
-            return this.callbackifyBound(this._getStep)(id, callback);
-        }
-
-        return this._getStep(id);
-    }
-
-    private async _getStep(id: string): Promise<InstanceStep> {
-        console.log(`Getting InstanceStep '${id}'`);
-        const result = await this.internalClient.getInstanceStep(id, '*', {
-            customHeaders: this.getRequestHeaders()
-        });
-
-        return this.parseResponse<InstanceStep>(result);
-    }
+    getInstanceStep(id: string, callback?: ClientMethodCallback<InstanceStep>): Promise<InstanceStep> | void;
 
     /**
      * @summary Finds InstanceSteps
@@ -327,41 +508,7 @@ export default class InstanceClient extends BaseClient {
     findInstanceSteps(
         options?: FindInstanceStepsOptions | ClientMethodCallback<InstancesPage>,
         callback?: ClientMethodCallback<InstancesPage>
-    ): Promise<InstancesPage> | void {
-        if (typeof options === 'function') {
-            callback = options;
-            options = null;
-        }
-
-        if (callback) {
-            return this.callbackifyBound(this._findInstanceSteps)(options as FindInstanceStepsOptions, callback);
-        }
-
-        return this._findInstanceSteps(options as FindInstanceStepsOptions);
-    }
-
-    private async _findInstanceSteps(options: FindInstanceStepsOptions): Promise<InstancesPage> {
-        console.log('Finding InstanceSteps');
-        const headers = this.getRequestHeaders();
-        const result = await this.internalClient.findInstanceSteps(
-            '*',
-            Object.assign(this.formatFindInstanceStepOptions(options), { customHeaders: headers })
-        );
-        return this.parseResponse<InstancesPage>(result);
-    }
-
-    private formatFindInstanceStepOptions(
-        options?: FindInstanceStepsOptions
-    ): CatalyticSDKAPIFindInstanceStepsOptionalParams {
-        return {
-            query: options?.query,
-            pageToken: options?.pageToken,
-            pageSize: options?.pageSize,
-            participatingUsers: options?.assignedTo,
-            processId: options?.workflowID,
-            runId: options?.instanceID
-        };
-    }
+    ): Promise<InstancesPage> | void;
 
     /**
      * @summary Reassign an InstanceStep
@@ -392,28 +539,7 @@ export default class InstanceClient extends BaseClient {
         id: string,
         newAssigneeEmailAddress: string,
         callback?: ClientMethodCallback<InstanceStep>
-    ): Promise<InstanceStep> | void {
-        if (callback) {
-            return this.callbackifyBound(this._reassignStep)(id, newAssigneeEmailAddress, callback);
-        }
-
-        return this._reassignStep(id, newAssigneeEmailAddress);
-    }
-
-    private async _reassignStep(id: string, newAssigneeEmailAddress: string): Promise<InstanceStep> {
-        console.log(`Reassigned InstanceStep ${id} to ${newAssigneeEmailAddress}`);
-
-        const body: ReassignStepRequest = {
-            id,
-            assignTo: newAssigneeEmailAddress
-        };
-        const result = await this.internalClient.reassignStep(id, '*', {
-            customHeaders: this.getRequestHeaders(),
-            body
-        });
-
-        return this.parseResponse<InstanceStep>(result);
-    }
+    ): Promise<InstanceStep> | void;
 
     /**
      * @summary Complete an InstanceStep with no output fields
@@ -450,48 +576,12 @@ export default class InstanceClient extends BaseClient {
      */
     completeInstanceStep(
         id: string,
-        fields: FieldInput[] | ClientMethodCallback<InstanceStep> = null,
+        fields?: FieldInput[] | ClientMethodCallback<InstanceStep>,
         callback?: ClientMethodCallback<InstanceStep>
-    ): Promise<InstanceStep> | void {
-        console.log(`Completing InstanceStep '${id}' with ${fields?.length} fields`);
-        if (typeof fields === 'function') {
-            callback = fields;
-            fields = null;
-        }
-
-        if (callback) {
-            return this.callbackifyBound(this._completeStep)(id, fields as FieldInput[], callback);
-        }
-
-        return this._completeStep(id, fields as FieldInput[]);
-    }
-
-    private async _completeStep(id: string, fields: FieldInput[]): Promise<InstanceStep> {
-        const body: CompleteStepRequest = {
-            id,
-            stepOutputFields: fields
-        };
-
-        const result = await this.internalClient.completeStep(id, '*', {
-            body,
-            customHeaders: this.getRequestHeaders()
-        });
-        return this.parseResponse<InstanceStep>(result);
-    }
+    ): Promise<InstanceStep> | void;
 }
 
-export interface FieldInput {
-    /**
-     * @summary The name or referenceName of the Field on the Instance
-     */
-    name: string;
-    /**
-     * @summary The string-serialized value of the Field
-     */
-    value: string;
-}
-
-export interface FindInstancesOptions extends FindOptions {
+export interface FindInstancesOptions extends BaseFindOptions {
     /**
      * @summary Workflow ID to search for
      */
@@ -506,7 +596,7 @@ export interface FindInstancesOptions extends FindOptions {
     category?: string;
 }
 
-export interface FindInstanceStepsOptions extends FindOptions {
+export interface FindInstanceStepsOptions extends BaseFindOptions {
     /**
      * @summary Workflow ID to search for
      */

@@ -1,7 +1,7 @@
 import Bluebird from 'bluebird';
 import sinon from 'sinon';
 
-import BaseClient, { InternalAPIResponse } from '../../src/clients/BaseClient';
+import { InternalAPIResponse } from '../../src/types';
 
 export const createResponse = (body: any, status = 200): InternalAPIResponse => {
     return {
@@ -17,7 +17,7 @@ export const createResponse = (body: any, status = 200): InternalAPIResponse => 
 };
 
 export const executeTest = async function(
-    client: BaseClient,
+    client: any,
     method: string,
     args: Array<any>,
     assert: (err?: Error, result?: any) => void

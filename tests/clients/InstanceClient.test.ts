@@ -7,6 +7,9 @@ chai.use(sinonChai);
 const expect = chai.expect;
 
 import CatalyticClient from '../../src/CatalyticClient';
+import { WildcardId } from '../../src/constants';
+import { displayNameToInternal } from '../../src/utils';
+
 import mock from '../helpers/mockEntities';
 import { createResponse, executeTest } from '../helpers';
 
@@ -218,8 +221,8 @@ describe('InstanceClient', function() {
         it('should start an instance with inputs', function() {
             const workflowID = v4();
             const inputs = [
-                { name: 'my-field', value: 'some value' },
-                { name: 'another-field', value: 'second value' }
+                { name: 'My Field', value: 'some value' },
+                { name: 'Another Field', value: 'second value' }
             ];
             const mockInstance = mock.mockInstance();
             sinon
@@ -234,7 +237,7 @@ describe('InstanceClient', function() {
                 expect(client.internalClient.startInstance).to.have.been.calledWith({
                     body: {
                         workflowId: workflowID,
-                        inputFields: inputs,
+                        inputFields: inputs.map(f => ({ ...f, referenceName: displayNameToInternal(f.name) })),
                         name: null
                     },
                     customHeaders: expectedCustomHeaders
@@ -246,8 +249,8 @@ describe('InstanceClient', function() {
             const workflowID = v4();
             const name = 'test instance name';
             const inputs = [
-                { name: 'my-field', value: 'some value' },
-                { name: 'another-field', value: 'second value' }
+                { name: 'My Field', value: 'some value' },
+                { name: 'Another Field', value: 'second value' }
             ];
             const mockInstance = mock.mockInstance();
             sinon
@@ -262,7 +265,7 @@ describe('InstanceClient', function() {
                 expect(client.internalClient.startInstance).to.have.been.calledWith({
                     body: {
                         workflowId: workflowID,
-                        inputFields: inputs,
+                        inputFields: inputs.map(f => ({ ...f, referenceName: displayNameToInternal(f.name) })),
                         name
                     },
                     customHeaders: expectedCustomHeaders
@@ -274,8 +277,8 @@ describe('InstanceClient', function() {
             const workflowID = v4();
             const name = 'test instance name';
             const inputs = [
-                { name: 'my-field', value: 'some value' },
-                { name: 'another-field', value: 'second value' }
+                { name: 'My Field', value: 'some value' },
+                { name: 'Another Field', value: 'second value' }
             ];
             sinon
                 .stub(client.internalClient, 'startInstance')
@@ -289,7 +292,7 @@ describe('InstanceClient', function() {
                 expect(client.internalClient.startInstance).to.have.been.calledWith({
                     body: {
                         workflowId: workflowID,
-                        inputFields: inputs,
+                        inputFields: inputs.map(f => ({ ...f, referenceName: displayNameToInternal(f.name) })),
                         name
                     },
                     customHeaders: expectedCustomHeaders
@@ -311,9 +314,13 @@ describe('InstanceClient', function() {
 
                     expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockInstanceStep)));
                     expect(client.internalClient.getInstanceStep).to.have.callCount(1);
-                    expect(client.internalClient.getInstanceStep).to.have.been.calledWith(mockInstanceStep.id, '*', {
-                        customHeaders: expectedCustomHeaders
-                    });
+                    expect(client.internalClient.getInstanceStep).to.have.been.calledWith(
+                        mockInstanceStep.id,
+                        WildcardId,
+                        {
+                            customHeaders: expectedCustomHeaders
+                        }
+                    );
                 });
             });
 
@@ -328,7 +335,7 @@ describe('InstanceClient', function() {
                     expect(error).to.be.ok;
                     expect(error.message).to.include('Intentional not found error');
                     expect(client.internalClient.getInstanceStep).to.have.callCount(1);
-                    expect(client.internalClient.getInstanceStep).to.have.been.calledWith(id, '*', {
+                    expect(client.internalClient.getInstanceStep).to.have.been.calledWith(id, WildcardId, {
                         customHeaders: expectedCustomHeaders
                     });
                 });
@@ -347,7 +354,7 @@ describe('InstanceClient', function() {
 
                     expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockInstanceStepsPage)));
                     expect(client.internalClient.findInstanceSteps).to.have.callCount(1);
-                    expect(client.internalClient.findInstanceSteps).to.have.been.calledWith('*', {
+                    expect(client.internalClient.findInstanceSteps).to.have.been.calledWith(WildcardId, {
                         customHeaders: expectedCustomHeaders,
                         pageSize: undefined,
                         pageToken: undefined,
@@ -371,7 +378,7 @@ describe('InstanceClient', function() {
 
                     expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockInstanceStepsPage)));
                     expect(client.internalClient.findInstanceSteps).to.have.callCount(1);
-                    expect(client.internalClient.findInstanceSteps).to.have.been.calledWith('*', {
+                    expect(client.internalClient.findInstanceSteps).to.have.been.calledWith(WildcardId, {
                         customHeaders: expectedCustomHeaders,
                         pageSize: options.pageSize,
                         pageToken: undefined,
@@ -393,7 +400,7 @@ describe('InstanceClient', function() {
                     expect(error).to.be.ok;
                     expect(error.message).to.include('Intentional bad request error');
                     expect(client.internalClient.findInstanceSteps).to.have.callCount(1);
-                    expect(client.internalClient.findInstanceSteps).to.have.been.calledWith('*', {
+                    expect(client.internalClient.findInstanceSteps).to.have.been.calledWith(WildcardId, {
                         customHeaders: expectedCustomHeaders,
                         pageSize: undefined,
                         pageToken: undefined,
@@ -423,13 +430,17 @@ describe('InstanceClient', function() {
 
                         expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockInstanceStep)));
                         expect(client.internalClient.reassignStep).to.have.callCount(1);
-                        expect(client.internalClient.reassignStep).to.have.been.calledWith(mockInstanceStep.id, '*', {
-                            customHeaders: expectedCustomHeaders,
-                            body: {
-                                id: mockInstanceStep.id,
-                                assignTo: email
+                        expect(client.internalClient.reassignStep).to.have.been.calledWith(
+                            mockInstanceStep.id,
+                            WildcardId,
+                            {
+                                customHeaders: expectedCustomHeaders,
+                                body: {
+                                    id: mockInstanceStep.id,
+                                    assignTo: email
+                                }
                             }
-                        });
+                        );
                     }
                 );
             });
@@ -450,13 +461,17 @@ describe('InstanceClient', function() {
                         expect(err).to.be.ok;
                         expect(err.message).to.include('Intentional bad request error');
                         expect(client.internalClient.reassignStep).to.have.callCount(1);
-                        expect(client.internalClient.reassignStep).to.have.been.calledWith(mockInstanceStep.id, '*', {
-                            customHeaders: expectedCustomHeaders,
-                            body: {
-                                id: mockInstanceStep.id,
-                                assignTo: email
+                        expect(client.internalClient.reassignStep).to.have.been.calledWith(
+                            mockInstanceStep.id,
+                            WildcardId,
+                            {
+                                customHeaders: expectedCustomHeaders,
+                                body: {
+                                    id: mockInstanceStep.id,
+                                    assignTo: email
+                                }
                             }
-                        });
+                        );
                     }
                 );
             });
@@ -478,13 +493,17 @@ describe('InstanceClient', function() {
 
                         expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockInstanceStep)));
                         expect(client.internalClient.completeStep).to.have.callCount(1);
-                        expect(client.internalClient.completeStep).to.have.been.calledWith(mockInstanceStep.id, '*', {
-                            customHeaders: expectedCustomHeaders,
-                            body: {
-                                id: mockInstanceStep.id,
-                                stepOutputFields: null
+                        expect(client.internalClient.completeStep).to.have.been.calledWith(
+                            mockInstanceStep.id,
+                            WildcardId,
+                            {
+                                customHeaders: expectedCustomHeaders,
+                                body: {
+                                    id: mockInstanceStep.id,
+                                    stepOutputFields: null
+                                }
                             }
-                        });
+                        );
                     }
                 );
             });
@@ -492,8 +511,8 @@ describe('InstanceClient', function() {
             it('should complete an InstanceStep with output fields', function() {
                 const mockInstanceStep = mock.mockInstanceStep();
                 const fields = [
-                    { name: 'my-field', value: 'some value' },
-                    { name: 'another-field', value: 'second value' }
+                    { name: 'My Field', value: 'some value' },
+                    { name: 'Another Field', value: 'second value' }
                 ];
                 sinon
                     .stub(client.internalClient, 'completeStep')
@@ -508,13 +527,20 @@ describe('InstanceClient', function() {
 
                         expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockInstanceStep)));
                         expect(client.internalClient.completeStep).to.have.callCount(1);
-                        expect(client.internalClient.completeStep).to.have.been.calledWith(mockInstanceStep.id, '*', {
-                            customHeaders: expectedCustomHeaders,
-                            body: {
-                                id: mockInstanceStep.id,
-                                stepOutputFields: fields
+                        expect(client.internalClient.completeStep).to.have.been.calledWith(
+                            mockInstanceStep.id,
+                            WildcardId,
+                            {
+                                customHeaders: expectedCustomHeaders,
+                                body: {
+                                    id: mockInstanceStep.id,
+                                    stepOutputFields: fields.map(f => ({
+                                        ...f,
+                                        referenceName: displayNameToInternal(f.name)
+                                    }))
+                                }
                             }
-                        });
+                        );
                     }
                 );
             });
@@ -522,8 +548,8 @@ describe('InstanceClient', function() {
             it('should throw error when bad status code returned', function() {
                 const mockInstanceStep = mock.mockInstanceStep();
                 const fields = [
-                    { name: 'my-field', value: 'some value' },
-                    { name: 'another-field', value: 'second value' }
+                    { name: 'My Field', value: 'some value' },
+                    { name: 'Another Field', value: 'second value' }
                 ];
                 sinon
                     .stub(client.internalClient, 'completeStep')
@@ -538,13 +564,20 @@ describe('InstanceClient', function() {
                         expect(err).to.be.ok;
                         expect(err.message).to.include('Intentional bad request error');
                         expect(client.internalClient.completeStep).to.have.callCount(1);
-                        expect(client.internalClient.completeStep).to.have.been.calledWith(mockInstanceStep.id, '*', {
-                            customHeaders: expectedCustomHeaders,
-                            body: {
-                                id: mockInstanceStep.id,
-                                stepOutputFields: fields
+                        expect(client.internalClient.completeStep).to.have.been.calledWith(
+                            mockInstanceStep.id,
+                            WildcardId,
+                            {
+                                customHeaders: expectedCustomHeaders,
+                                body: {
+                                    id: mockInstanceStep.id,
+                                    stepOutputFields: fields.map(f => ({
+                                        ...f,
+                                        referenceName: displayNameToInternal(f.name)
+                                    }))
+                                }
                             }
-                        });
+                        );
                     }
                 );
             });

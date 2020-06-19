@@ -1,5 +1,7 @@
 import nock from 'nock';
 
+import { BaseUri } from '../src/constants';
+
 export default function createMockApi(): nock.Scope {
-    return nock('https://sdk.catalytic.com/v1.0.1-pre-33');
+    return nock(BaseUri);
 }

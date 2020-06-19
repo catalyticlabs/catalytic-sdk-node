@@ -1,9 +1,56 @@
-import BaseClient, { FindOptions, ClientMethodCallback } from './BaseClient';
 import { User, UsersPage } from '../entities';
+import { BaseFindOptions, ClientMethodCallback } from '../types';
 
-export default class UserClient extends BaseClient {
+import BaseClient from './BaseClient';
+
+export default class UserClient extends BaseClient implements UserClientInterface {
     static entity = 'User';
 
+    get(id: string): Promise<User>;
+    get(id: string, callback: ClientMethodCallback<User>): void;
+    get(id: string, callback?: ClientMethodCallback<User>): Promise<User> | void {
+        if (callback) {
+            return this.callbackifyBound(this._get)(id, callback);
+        }
+
+        return this._get(id);
+    }
+
+    private async _get(id: string): Promise<User> {
+        console.log(`Getting User with ID '${id}'`);
+        const headers = this.getRequestHeaders();
+        const result = await this.internalClient.getUser(id, { customHeaders: headers });
+        return this.parseResponse<User>(result);
+    }
+
+    find(): Promise<UsersPage>;
+    find(options: FindUserOptions): Promise<UsersPage>;
+    find(callback: ClientMethodCallback<UsersPage>): void;
+    find(options: FindUserOptions, callback: ClientMethodCallback<UsersPage>): void;
+    find(
+        options?: FindUserOptions | ClientMethodCallback<UsersPage>,
+        callback?: ClientMethodCallback<UsersPage>
+    ): Promise<UsersPage> | void {
+        if (typeof options === 'function') {
+            callback = options;
+            options = null;
+        }
+
+        if (callback) {
+            return this.callbackifyBound(this._find)(options as FindUserOptions, callback);
+        }
+
+        return this._find(options as FindUserOptions);
+    }
+    private async _find(options: FindUserOptions): Promise<UsersPage> {
+        console.log('Finding Users');
+        const headers = this.getRequestHeaders();
+        const result = await this.internalClient.findUsers(Object.assign({}, options, { customHeaders: headers }));
+        return this.parseResponse<UsersPage>(result);
+    }
+}
+
+export interface UserClientInterface {
     /**
      * @summary Gets a User by ID
      *
@@ -25,20 +72,7 @@ export default class UserClient extends BaseClient {
      * @param callback The optional callback
      * @returns The User with the provided ID
      */
-    get(id: string, callback?: ClientMethodCallback<User>): Promise<User> | void {
-        if (callback) {
-            return this.callbackifyBound(this._get)(id, callback);
-        }
-
-        return this._get(id);
-    }
-
-    private async _get(id: string): Promise<User> {
-        console.log(`Getting User with ID '${id}'`);
-        const headers = this.getRequestHeaders();
-        const result = await this.internalClient.getUser(id, { customHeaders: headers });
-        return this.parseResponse<User>(result);
-    }
+    get(id: string, callback?: ClientMethodCallback<User>): Promise<User> | void;
 
     /**
      * @summary Finds Users
@@ -76,25 +110,8 @@ export default class UserClient extends BaseClient {
     find(
         options?: FindUserOptions | ClientMethodCallback<UsersPage>,
         callback?: ClientMethodCallback<UsersPage>
-    ): Promise<UsersPage> | void {
-        if (typeof options === 'function') {
-            callback = options;
-            options = null;
-        }
-
-        if (callback) {
-            return this.callbackifyBound(this._find)(options as FindUserOptions, callback);
-        }
-
-        return this._find(options as FindUserOptions);
-    }
-    private async _find(options: FindUserOptions): Promise<UsersPage> {
-        console.log('Finding Users');
-        const headers = this.getRequestHeaders();
-        const result = await this.internalClient.findUsers(Object.assign({}, options, { customHeaders: headers }));
-        return this.parseResponse<UsersPage>(result);
-    }
+    ): Promise<UsersPage> | void;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface FindUserOptions extends FindOptions {}
+export interface FindUserOptions extends BaseFindOptions {}

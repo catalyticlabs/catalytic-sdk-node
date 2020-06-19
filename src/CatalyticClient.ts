@@ -2,18 +2,31 @@ import { CatalyticSDKAPI } from './internal/lib/catalyticSDKAPI';
 import Credentials, { CredentialsProvider } from './entities/Credentials';
 import { UserAgent } from './constants';
 
-import { CredentialsClient, DataTableClient, FileClient, InstanceClient, UserClient, WorkflowClient } from './clients';
+import {
+    CredentialsClient,
+    CredentialsClientInterface,
+    DataTableClient,
+    DataTableClientInterface,
+    FileClient,
+    FileClientInterface,
+    InstanceClient,
+    InstanceClientInterface,
+    UserClient,
+    UserClientInterface,
+    WorkflowClient,
+    WorkflowClientInterface
+} from './clients';
 
 export default class CatalyticClient implements CredentialsProvider {
     public credentials: Credentials;
     public internalClient: CatalyticSDKAPI;
 
-    public credentialsClient: CredentialsClient;
-    public dataTableClient: DataTableClient;
-    public fileClient: FileClient;
-    public instanceClient: InstanceClient;
-    public userClient: UserClient;
-    public workflowClient: WorkflowClient;
+    public credentialsClient: CredentialsClientInterface;
+    public dataTableClient: DataTableClientInterface;
+    public fileClient: FileClientInterface;
+    public instanceClient: InstanceClientInterface;
+    public userClient: UserClientInterface;
+    public workflowClient: WorkflowClientInterface;
 
     constructor(baseUri?: string) {
         this.internalClient = new CatalyticSDKAPI({
