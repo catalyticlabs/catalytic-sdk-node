@@ -2,8 +2,7 @@
     "compilerOptions": {
         "declaration": true,
         "esModuleInterop": true,
-        "outDir": "./built",
-        "resolveJsonModule": true
+        "outDir": "./built"
     },
     "module": "commonjs",
     "lib": ["es2018"],

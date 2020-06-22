@@ -1,12 +1,28 @@
 {
-  "name": "catalytic-sdk-node",
+  "name": "@catalytic/sdk",
   "version": "0.0.1",
+  "description": "Catalytic SDK for Node.js",
+  "author": "Catalytic, Inc.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/catalyticlabs/catalytic-sdk-node"
+  },
+  "bugs": {
+    "url": "https://github.com/catalyticlabs/catalytic-sdk-node/issues",
+    "email": "sdk@catalytic.com"
+  },
+  "main": "built/index.js",
+  "types": "built/index.d.ts",
+  "files": [
+    "built/**/*"
+  ],
   "scripts": {
     "autorest": "autorest",
     "build": "tsc",
     "lint": "eslint ./src/*.ts ./src/**/*.ts ./tests/*.ts ./tests/**/*.ts",
-    "test": "yarn run build && mocha -r ts-node/register tests/*.test.ts tests/**/*.test.ts",
-    "cover": "nyc yarn test"
+    "test": "mocha -r ts-node/register tests/*.test.ts tests/**/*.test.ts",
+    "cover": "nyc yarn test",
+    "prepublish": "yarn build && yarn test"
   },
   "dependencies": {
     "@azure/ms-rest-js": "^2.0.4",
@@ -44,8 +60,7 @@
     "uuid": "^8.0.0"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "license": "SEE LICENSE IN license.txt",
   "eslintIgnore": [
     "built/*",
     "src/internal/*"
