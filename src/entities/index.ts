@@ -1,5 +1,5 @@
-export { default as Credentials } from './Credentials';
-export { default as CredentialsPage } from './CredentialsPage';
+export { default as AccessToken } from './AccessToken';
+export { default as AccessTokensPage } from './AccessTokensPage';
 export { default as DataTable } from './DataTable';
 export { default as DataTablesPage } from './DataTablesPage';
 export { default as DataTableColumn } from './DataTableColumn';

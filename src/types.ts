@@ -1,4 +1,5 @@
 import { HttpResponse } from '@azure/ms-rest-js';
+import { AccessToken } from './entities';
 
 export interface FieldInput {
     /**
@@ -48,4 +49,8 @@ export interface InternalAPIResponse {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         parsedBody: any;
     };
+}
+
+export interface AccessTokenProvider {
+    accessToken: AccessToken;
 }

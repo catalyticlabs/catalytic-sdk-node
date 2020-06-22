@@ -16,8 +16,8 @@ describe('UserClient', function() {
 
     before(function() {
         client = new CatalyticClient();
-        client.credentials = mock.mockCredentials();
-        expectedCustomHeaders = { Authorization: `Bearer ${client.credentials.token}` };
+        client.accessToken = mock.mockAccessToken();
+        expectedCustomHeaders = { Authorization: `Bearer ${client.accessToken.token}` };
     });
 
     afterEach(function() {
@@ -27,14 +27,14 @@ describe('UserClient', function() {
     describe('Get User', function() {
         it('should get a User by ID', async function() {
             const mockUser = mock.mockUser();
-            sinon.stub(client.internalClient, 'getUser').callsFake(() => Promise.resolve(createResponse(mockUser)));
+            sinon.stub(client._internalClient, 'getUser').callsFake(() => Promise.resolve(createResponse(mockUser)));
 
             return executeTest(client.userClient, 'get', [mockUser.id], (err, result) => {
                 expect(err).to.not.be.ok;
 
                 expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockUser)));
-                expect(client.internalClient.getUser).to.have.callCount(1);
-                expect(client.internalClient.getUser).to.have.been.calledWith(mockUser.id, {
+                expect(client._internalClient.getUser).to.have.callCount(1);
+                expect(client._internalClient.getUser).to.have.been.calledWith(mockUser.id, {
                     customHeaders: expectedCustomHeaders
                 });
             });
@@ -43,15 +43,15 @@ describe('UserClient', function() {
         it('should return proper exception when User not found', async function() {
             const id = v4();
             sinon
-                .stub(client.internalClient, 'getUser')
+                .stub(client._internalClient, 'getUser')
                 .callsFake(() => Promise.resolve(createResponse({ detail: 'Intentional not found error' }, 404)));
 
             return executeTest(client.userClient, 'get', [id], (error, result) => {
                 expect(result).to.not.be.ok;
                 expect(error).to.be.ok;
                 expect(error.message).to.include('Intentional not found error');
-                expect(client.internalClient.getUser).to.have.callCount(1);
-                expect(client.internalClient.getUser).to.have.been.calledWith(id, {
+                expect(client._internalClient.getUser).to.have.callCount(1);
+                expect(client._internalClient.getUser).to.have.been.calledWith(id, {
                     customHeaders: expectedCustomHeaders
                 });
             });
@@ -62,15 +62,15 @@ describe('UserClient', function() {
         it('should find DataTables with no filter options', async function() {
             const mockUsersPage = mock.mockUsersPage();
             sinon
-                .stub(client.internalClient, 'findUsers')
+                .stub(client._internalClient, 'findUsers')
                 .callsFake(() => Promise.resolve(createResponse(mockUsersPage)));
 
             return executeTest(client.userClient, 'find', [], (err, result) => {
                 expect(err).to.not.be.ok;
 
                 expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockUsersPage)));
-                expect(client.internalClient.findUsers).to.have.callCount(1);
-                expect(client.internalClient.findUsers).to.have.been.calledWith({
+                expect(client._internalClient.findUsers).to.have.callCount(1);
+                expect(client._internalClient.findUsers).to.have.been.calledWith({
                     customHeaders: expectedCustomHeaders
                 });
             });
@@ -80,15 +80,15 @@ describe('UserClient', function() {
             const options = { pageSize: 3, query: 'some table' };
             const mockUsersPage = mock.mockUsersPage();
             sinon
-                .stub(client.internalClient, 'findUsers')
+                .stub(client._internalClient, 'findUsers')
                 .callsFake(() => Promise.resolve(createResponse(mockUsersPage)));
 
             return executeTest(client.userClient, 'find', [options], (err, result) => {
                 expect(err).to.not.be.ok;
 
                 expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockUsersPage)));
-                expect(client.internalClient.findUsers).to.have.callCount(1);
-                expect(client.internalClient.findUsers).to.have.been.calledWith({
+                expect(client._internalClient.findUsers).to.have.callCount(1);
+                expect(client._internalClient.findUsers).to.have.been.calledWith({
                     customHeaders: expectedCustomHeaders,
                     ...options
                 });
@@ -97,15 +97,15 @@ describe('UserClient', function() {
 
         it('should return exception when bad response code returned', async function() {
             sinon
-                .stub(client.internalClient, 'findUsers')
+                .stub(client._internalClient, 'findUsers')
                 .callsFake(() => Promise.resolve(createResponse({ detail: 'Intentional bad request error' }, 400)));
 
             return executeTest(client.userClient, 'find', [], (error, result) => {
                 expect(result).to.not.be.ok;
                 expect(error).to.be.ok;
                 expect(error.message).to.include('Intentional bad request error');
-                expect(client.internalClient.findUsers).to.have.callCount(1);
-                expect(client.internalClient.findUsers).to.have.been.calledWith({
+                expect(client._internalClient.findUsers).to.have.callCount(1);
+                expect(client._internalClient.findUsers).to.have.been.calledWith({
                     customHeaders: expectedCustomHeaders
                 });
             });

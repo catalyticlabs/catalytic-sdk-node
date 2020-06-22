@@ -20,77 +20,156 @@ class CatalyticSDKAPI extends CatalyticSDKAPIContext {
   }
 
   /**
-   * @summary Create new Credentials in the provided Catalytic team domain.
-   * Credentials must be approved prior to use.
+   * @summary Find Access Tokens
    * @param [options] The optional parameters
-   * @returns Promise<Models.CreateCredentialsResponse>
+   * @returns Promise<Models.FindAccessTokensResponse>
    */
-  createCredentials(options?: Models.CatalyticSDKAPICreateCredentialsOptionalParams): Promise<Models.CreateCredentialsResponse>;
+  findAccessTokens(options?: Models.CatalyticSDKAPIFindAccessTokensOptionalParams): Promise<Models.FindAccessTokensResponse>;
   /**
    * @param callback The callback
    */
-  createCredentials(callback: msRest.ServiceCallback<any>): void;
+  findAccessTokens(callback: msRest.ServiceCallback<any>): void;
   /**
    * @param options The optional parameters
    * @param callback The callback
    */
-  createCredentials(options: Models.CatalyticSDKAPICreateCredentialsOptionalParams, callback: msRest.ServiceCallback<any>): void;
-  createCredentials(options?: Models.CatalyticSDKAPICreateCredentialsOptionalParams | msRest.ServiceCallback<any>, callback?: msRest.ServiceCallback<any>): Promise<Models.CreateCredentialsResponse> {
+  findAccessTokens(options: Models.CatalyticSDKAPIFindAccessTokensOptionalParams, callback: msRest.ServiceCallback<any>): void;
+  findAccessTokens(options?: Models.CatalyticSDKAPIFindAccessTokensOptionalParams | msRest.ServiceCallback<any>, callback?: msRest.ServiceCallback<any>): Promise<Models.FindAccessTokensResponse> {
     return this.sendOperationRequest(
       {
         options
       },
-      createCredentialsOperationSpec,
-      callback) as Promise<Models.CreateCredentialsResponse>;
+      findAccessTokensOperationSpec,
+      callback) as Promise<Models.FindAccessTokensResponse>;
   }
 
   /**
-   * @summary Create new Credentials using provided Catalytic team domain and Approve using provided
+   * @param id
+   * @param [options] The optional parameters
+   * @returns Promise<Models.GetAccessTokenResponse>
+   */
+  getAccessToken(id: string, options?: msRest.RequestOptionsBase): Promise<Models.GetAccessTokenResponse>;
+  /**
+   * @param id
+   * @param callback The callback
+   */
+  getAccessToken(id: string, callback: msRest.ServiceCallback<any>): void;
+  /**
+   * @param id
+   * @param options The optional parameters
+   * @param callback The callback
+   */
+  getAccessToken(id: string, options: msRest.RequestOptionsBase, callback: msRest.ServiceCallback<any>): void;
+  getAccessToken(id: string, options?: msRest.RequestOptionsBase | msRest.ServiceCallback<any>, callback?: msRest.ServiceCallback<any>): Promise<Models.GetAccessTokenResponse> {
+    return this.sendOperationRequest(
+      {
+        id,
+        options
+      },
+      getAccessTokenOperationSpec,
+      callback) as Promise<Models.GetAccessTokenResponse>;
+  }
+
+  /**
+   * @summary Revoke Access Token
+   * @param id The public Id of the AccessToken
+   * @param [options] The optional parameters
+   * @returns Promise<Models.RevokeAccessTokenResponse>
+   */
+  revokeAccessToken(id: string, options?: msRest.RequestOptionsBase): Promise<Models.RevokeAccessTokenResponse>;
+  /**
+   * @param id The public Id of the AccessToken
+   * @param callback The callback
+   */
+  revokeAccessToken(id: string, callback: msRest.ServiceCallback<any>): void;
+  /**
+   * @param id The public Id of the AccessToken
+   * @param options The optional parameters
+   * @param callback The callback
+   */
+  revokeAccessToken(id: string, options: msRest.RequestOptionsBase, callback: msRest.ServiceCallback<any>): void;
+  revokeAccessToken(id: string, options?: msRest.RequestOptionsBase | msRest.ServiceCallback<any>, callback?: msRest.ServiceCallback<any>): Promise<Models.RevokeAccessTokenResponse> {
+    return this.sendOperationRequest(
+      {
+        id,
+        options
+      },
+      revokeAccessTokenOperationSpec,
+      callback) as Promise<Models.RevokeAccessTokenResponse>;
+  }
+
+  /**
+   * @summary Create new AccessToken in the provided Catalytic team domain.
+   * AccessToken must be approved prior to use.
+   * @param [options] The optional parameters
+   * @returns Promise<Models.CreateAccessTokenResponse>
+   */
+  createAccessToken(options?: Models.CatalyticSDKAPICreateAccessTokenOptionalParams): Promise<Models.CreateAccessTokenResponse>;
+  /**
+   * @param callback The callback
+   */
+  createAccessToken(callback: msRest.ServiceCallback<any>): void;
+  /**
+   * @param options The optional parameters
+   * @param callback The callback
+   */
+  createAccessToken(options: Models.CatalyticSDKAPICreateAccessTokenOptionalParams, callback: msRest.ServiceCallback<any>): void;
+  createAccessToken(options?: Models.CatalyticSDKAPICreateAccessTokenOptionalParams | msRest.ServiceCallback<any>, callback?: msRest.ServiceCallback<any>): Promise<Models.CreateAccessTokenResponse> {
+    return this.sendOperationRequest(
+      {
+        options
+      },
+      createAccessTokenOperationSpec,
+      callback) as Promise<Models.CreateAccessTokenResponse>;
+  }
+
+  /**
+   * @summary Create new AccessToken using provided Catalytic team domain and Approve using provided
    * email and password.
    * @param [options] The optional parameters
-   * @returns Promise<Models.CreateAndApproveCredentialsResponse>
+   * @returns Promise<Models.CreateAndApproveAccessTokenResponse>
    */
-  createAndApproveCredentials(options?: Models.CatalyticSDKAPICreateAndApproveCredentialsOptionalParams): Promise<Models.CreateAndApproveCredentialsResponse>;
+  createAndApproveAccessToken(options?: Models.CatalyticSDKAPICreateAndApproveAccessTokenOptionalParams): Promise<Models.CreateAndApproveAccessTokenResponse>;
   /**
    * @param callback The callback
    */
-  createAndApproveCredentials(callback: msRest.ServiceCallback<any>): void;
+  createAndApproveAccessToken(callback: msRest.ServiceCallback<any>): void;
   /**
    * @param options The optional parameters
    * @param callback The callback
    */
-  createAndApproveCredentials(options: Models.CatalyticSDKAPICreateAndApproveCredentialsOptionalParams, callback: msRest.ServiceCallback<any>): void;
-  createAndApproveCredentials(options?: Models.CatalyticSDKAPICreateAndApproveCredentialsOptionalParams | msRest.ServiceCallback<any>, callback?: msRest.ServiceCallback<any>): Promise<Models.CreateAndApproveCredentialsResponse> {
+  createAndApproveAccessToken(options: Models.CatalyticSDKAPICreateAndApproveAccessTokenOptionalParams, callback: msRest.ServiceCallback<any>): void;
+  createAndApproveAccessToken(options?: Models.CatalyticSDKAPICreateAndApproveAccessTokenOptionalParams | msRest.ServiceCallback<any>, callback?: msRest.ServiceCallback<any>): Promise<Models.CreateAndApproveAccessTokenResponse> {
     return this.sendOperationRequest(
       {
         options
       },
-      createAndApproveCredentialsOperationSpec,
-      callback) as Promise<Models.CreateAndApproveCredentialsResponse>;
+      createAndApproveAccessTokenOperationSpec,
+      callback) as Promise<Models.CreateAndApproveAccessTokenResponse>;
   }
 
   /**
-   * @summary Wait until Credentials are approved
+   * @summary Wait until AccessToken is approved
    * @param [options] The optional parameters
-   * @returns Promise<Models.WaitForCredentialsApprovalResponse>
+   * @returns Promise<Models.WaitForAccessTokenApprovalResponse>
    */
-  waitForCredentialsApproval(options?: Models.CatalyticSDKAPIWaitForCredentialsApprovalOptionalParams): Promise<Models.WaitForCredentialsApprovalResponse>;
+  waitForAccessTokenApproval(options?: Models.CatalyticSDKAPIWaitForAccessTokenApprovalOptionalParams): Promise<Models.WaitForAccessTokenApprovalResponse>;
   /**
    * @param callback The callback
    */
-  waitForCredentialsApproval(callback: msRest.ServiceCallback<any>): void;
+  waitForAccessTokenApproval(callback: msRest.ServiceCallback<any>): void;
   /**
    * @param options The optional parameters
    * @param callback The callback
    */
-  waitForCredentialsApproval(options: Models.CatalyticSDKAPIWaitForCredentialsApprovalOptionalParams, callback: msRest.ServiceCallback<any>): void;
-  waitForCredentialsApproval(options?: Models.CatalyticSDKAPIWaitForCredentialsApprovalOptionalParams | msRest.ServiceCallback<any>, callback?: msRest.ServiceCallback<any>): Promise<Models.WaitForCredentialsApprovalResponse> {
+  waitForAccessTokenApproval(options: Models.CatalyticSDKAPIWaitForAccessTokenApprovalOptionalParams, callback: msRest.ServiceCallback<any>): void;
+  waitForAccessTokenApproval(options?: Models.CatalyticSDKAPIWaitForAccessTokenApprovalOptionalParams | msRest.ServiceCallback<any>, callback?: msRest.ServiceCallback<any>): Promise<Models.WaitForAccessTokenApprovalResponse> {
     return this.sendOperationRequest(
       {
         options
       },
-      waitForCredentialsApprovalOperationSpec,
-      callback) as Promise<Models.WaitForCredentialsApprovalResponse>;
+      waitForAccessTokenApprovalOperationSpec,
+      callback) as Promise<Models.WaitForAccessTokenApprovalResponse>;
   }
 
   /**
@@ -598,85 +677,6 @@ class CatalyticSDKAPI extends CatalyticSDKAPIContext {
   }
 
   /**
-   * @summary Find User Tokens
-   * @param [options] The optional parameters
-   * @returns Promise<Models.FindCredentialsResponse>
-   */
-  findCredentials(options?: Models.CatalyticSDKAPIFindCredentialsOptionalParams): Promise<Models.FindCredentialsResponse>;
-  /**
-   * @param callback The callback
-   */
-  findCredentials(callback: msRest.ServiceCallback<any>): void;
-  /**
-   * @param options The optional parameters
-   * @param callback The callback
-   */
-  findCredentials(options: Models.CatalyticSDKAPIFindCredentialsOptionalParams, callback: msRest.ServiceCallback<any>): void;
-  findCredentials(options?: Models.CatalyticSDKAPIFindCredentialsOptionalParams | msRest.ServiceCallback<any>, callback?: msRest.ServiceCallback<any>): Promise<Models.FindCredentialsResponse> {
-    return this.sendOperationRequest(
-      {
-        options
-      },
-      findCredentialsOperationSpec,
-      callback) as Promise<Models.FindCredentialsResponse>;
-  }
-
-  /**
-   * @param id
-   * @param [options] The optional parameters
-   * @returns Promise<Models.GetCredentialsResponse>
-   */
-  getCredentials(id: string, options?: msRest.RequestOptionsBase): Promise<Models.GetCredentialsResponse>;
-  /**
-   * @param id
-   * @param callback The callback
-   */
-  getCredentials(id: string, callback: msRest.ServiceCallback<any>): void;
-  /**
-   * @param id
-   * @param options The optional parameters
-   * @param callback The callback
-   */
-  getCredentials(id: string, options: msRest.RequestOptionsBase, callback: msRest.ServiceCallback<any>): void;
-  getCredentials(id: string, options?: msRest.RequestOptionsBase | msRest.ServiceCallback<any>, callback?: msRest.ServiceCallback<any>): Promise<Models.GetCredentialsResponse> {
-    return this.sendOperationRequest(
-      {
-        id,
-        options
-      },
-      getCredentialsOperationSpec,
-      callback) as Promise<Models.GetCredentialsResponse>;
-  }
-
-  /**
-   * @summary Revoke User Token
-   * @param id The public Access Identifier of the Credentials
-   * @param [options] The optional parameters
-   * @returns Promise<Models.RevokeCredentialsResponse>
-   */
-  revokeCredentials(id: string, options?: msRest.RequestOptionsBase): Promise<Models.RevokeCredentialsResponse>;
-  /**
-   * @param id The public Access Identifier of the Credentials
-   * @param callback The callback
-   */
-  revokeCredentials(id: string, callback: msRest.ServiceCallback<any>): void;
-  /**
-   * @param id The public Access Identifier of the Credentials
-   * @param options The optional parameters
-   * @param callback The callback
-   */
-  revokeCredentials(id: string, options: msRest.RequestOptionsBase, callback: msRest.ServiceCallback<any>): void;
-  revokeCredentials(id: string, options?: msRest.RequestOptionsBase | msRest.ServiceCallback<any>, callback?: msRest.ServiceCallback<any>): Promise<Models.RevokeCredentialsResponse> {
-    return this.sendOperationRequest(
-      {
-        id,
-        options
-      },
-      revokeCredentialsOperationSpec,
-      callback) as Promise<Models.RevokeCredentialsResponse>;
-  }
-
-  /**
    * @summary Gets details of a specific User
    * @param id The ID or username of the User to get
    * @param [options] The optional parameters
@@ -891,20 +891,104 @@ class CatalyticSDKAPI extends CatalyticSDKAPIContext {
 
 // Operation Specifications
 const serializer = new msRest.Serializer(Mappers);
-const createCredentialsOperationSpec: msRest.OperationSpec = {
+const findAccessTokensOperationSpec: msRest.OperationSpec = {
+  httpMethod: "GET",
+  path: "v1.0.1-pre-34/api/access-tokens",
+  queryParameters: [
+    Parameters.query,
+    Parameters.status,
+    Parameters.processId,
+    Parameters.runId,
+    Parameters.owner,
+    Parameters.category,
+    Parameters.participatingUsers,
+    Parameters.startedBefore,
+    Parameters.startedAfter,
+    Parameters.endedBefore,
+    Parameters.endedAfter,
+    Parameters.pageToken,
+    Parameters.pageSize
+  ],
+  responses: {
+    200: {
+      bodyMapper: Mappers.AccessTokensPage
+    },
+    400: {
+      bodyMapper: Mappers.ProblemDetails
+    },
+    401: {
+      bodyMapper: Mappers.ProblemDetails
+    },
+    403: {
+      bodyMapper: Mappers.ProblemDetails
+    },
+    default: {}
+  },
+  serializer
+};
+
+const getAccessTokenOperationSpec: msRest.OperationSpec = {
+  httpMethod: "GET",
+  path: "v1.0.1-pre-34/api/access-tokens/{id}",
+  urlParameters: [
+    Parameters.id
+  ],
+  responses: {
+    200: {
+      bodyMapper: Mappers.AccessToken
+    },
+    401: {
+      bodyMapper: Mappers.ProblemDetails
+    },
+    403: {
+      bodyMapper: Mappers.ProblemDetails
+    },
+    404: {
+      bodyMapper: Mappers.ProblemDetails
+    },
+    default: {}
+  },
+  serializer
+};
+
+const revokeAccessTokenOperationSpec: msRest.OperationSpec = {
   httpMethod: "POST",
-  path: "v1.0.1-pre-33/api/auth",
+  path: "v1.0.1-pre-34/api/access-tokens/{id}:revoke",
+  urlParameters: [
+    Parameters.id
+  ],
+  responses: {
+    200: {
+      bodyMapper: Mappers.AccessToken
+    },
+    401: {
+      bodyMapper: Mappers.ProblemDetails
+    },
+    403: {
+      bodyMapper: Mappers.ProblemDetails
+    },
+    404: {
+      bodyMapper: Mappers.ProblemDetails
+    },
+    default: {}
+  },
+  serializer
+};
+
+const createAccessTokenOperationSpec: msRest.OperationSpec = {
+  httpMethod: "POST",
+  path: "v1.0.1-pre-34/api/auth",
   requestBody: {
     parameterPath: [
       "options",
       "body"
     ],
-    mapper: Mappers.CredentialsCreationRequest
+    mapper: Mappers.AccessTokenCreationRequest
   },
   contentType: "application/json-patch+json; charset=utf-8",
   responses: {
     201: {
-      bodyMapper: Mappers.Credentials
+      bodyMapper: Mappers.AccessToken
     },
     400: {
       bodyMapper: Mappers.ProblemDetails
@@ -917,20 +1001,20 @@ const createCredentialsOperationSpec: msRest.OperationSpec = {
   serializer
 };
 
-const createAndApproveCredentialsOperationSpec: msRest.OperationSpec = {
+const createAndApproveAccessTokenOperationSpec: msRest.OperationSpec = {
   httpMethod: "POST",
-  path: "v1.0.1-pre-33/api/auth/create-and-approve",
+  path: "v1.0.1-pre-34/api/auth/create-and-approve",
   requestBody: {
     parameterPath: [
       "options",
       "body"
     ],
-    mapper: Mappers.CredentialsCreationWithEmailAndPasswordRequest
+    mapper: Mappers.AccessTokenCreationWithEmailAndPasswordRequest
   },
   contentType: "application/json-patch+json; charset=utf-8",
   responses: {
     201: {
-      bodyMapper: Mappers.Credentials
+      bodyMapper: Mappers.AccessToken
     },
     400: {
       bodyMapper: Mappers.ProblemDetails
@@ -943,15 +1027,15 @@ const createAndApproveCredentialsOperationSpec: msRest.OperationSpec = {
   serializer
 };
 
-const waitForCredentialsApprovalOperationSpec: msRest.OperationSpec = {
+const waitForAccessTokenApprovalOperationSpec: msRest.OperationSpec = {
   httpMethod: "POST",
-  path: "v1.0.1-pre-33/api/auth/wait-for-approval",
+  path: "v1.0.1-pre-34/api/auth/wait-for-approval",
   requestBody: {
     parameterPath: [
       "options",
       "body"
     ],
-    mapper: Mappers.WaitForCredentialsApprovalRequest
+    mapper: Mappers.WaitForAccessTokenApprovalRequest
   },
   contentType: "application/json-patch+json; charset=utf-8",
   responses: {
@@ -976,7 +1060,7 @@ const waitForCredentialsApprovalOperationSpec: msRest.OperationSpec = {
 
 const getDataTableOperationSpec: msRest.OperationSpec = {
   httpMethod: "GET",
-  path: "v1.0.1-pre-33/api/tables/{id}",
+  path: "v1.0.1-pre-34/api/tables/{id}",
   urlParameters: [
     Parameters.id
   ],
@@ -997,7 +1081,7 @@ const getDataTableOperationSpec: msRest.OperationSpec = {
 
 const downloadDataTableOperationSpec: msRest.OperationSpec = {
   httpMethod: "GET",
-  path: "v1.0.1-pre-33/api/tables/{id}/download",
+  path: "v1.0.1-pre-34/api/tables/{id}/download",
   urlParameters: [
     Parameters.id
   ],
@@ -1026,7 +1110,7 @@ const downloadDataTableOperationSpec: msRest.OperationSpec = {
 
 const replaceDataTableOperationSpec: msRest.OperationSpec = {
   httpMethod: "POST",
-  path: "v1.0.1-pre-33/api/tables/{id}:replace",
+  path: "v1.0.1-pre-34/api/tables/{id}:replace",
   urlParameters: [
     Parameters.id
   ],
@@ -1055,7 +1139,7 @@ const replaceDataTableOperationSpec: msRest.OperationSpec = {
 
 const uploadDataTableOperationSpec: msRest.OperationSpec = {
   httpMethod: "POST",
-  path: "v1.0.1-pre-33/api/tables:upload",
+  path: "v1.0.1-pre-34/api/tables:upload",
   queryParameters: [
     Parameters.tableName,
     Parameters.headerRow,
@@ -1079,7 +1163,7 @@ const uploadDataTableOperationSpec: msRest.OperationSpec = {
 
 const findDataTablesOperationSpec: msRest.OperationSpec = {
   httpMethod: "GET",
-  path: "v1.0.1-pre-33/api/tables",
+  path: "v1.0.1-pre-34/api/tables",
   queryParameters: [
     Parameters.query,
     Parameters.status,
@@ -1088,6 +1172,10 @@ const findDataTablesOperationSpec: msRest.OperationSpec = {
     Parameters.owner,
     Parameters.category,
     Parameters.participatingUsers,
+    Parameters.startedBefore,
+    Parameters.startedAfter,
+    Parameters.endedBefore,
+    Parameters.endedAfter,
     Parameters.pageToken,
     Parameters.pageSize
   ],
@@ -1105,7 +1193,7 @@ const findDataTablesOperationSpec: msRest.OperationSpec = {
 
 const getFileOperationSpec: msRest.OperationSpec = {
   httpMethod: "GET",
-  path: "v1.0.1-pre-33/api/files/{id}",
+  path: "v1.0.1-pre-34/api/files/{id}",
   urlParameters: [
     Parameters.id
   ],
@@ -1126,7 +1214,7 @@ const getFileOperationSpec: msRest.OperationSpec = {
 
 const downloadFileOperationSpec: msRest.OperationSpec = {
   httpMethod: "GET",
-  path: "v1.0.1-pre-33/api/files/{id}/download",
+  path: "v1.0.1-pre-34/api/files/{id}/download",
   urlParameters: [
     Parameters.id
   ],
@@ -1152,7 +1240,7 @@ const downloadFileOperationSpec: msRest.OperationSpec = {
 
 const uploadFilesOperationSpec: msRest.OperationSpec = {
   httpMethod: "POST",
-  path: "v1.0.1-pre-33/api/files:upload",
+  path: "v1.0.1-pre-34/api/files:upload",
   formDataParameters: [
     Parameters.files
   ],
@@ -1171,7 +1259,7 @@ const uploadFilesOperationSpec: msRest.OperationSpec = {
 
 const findInstancesOperationSpec: msRest.OperationSpec = {
   httpMethod: "GET",
-  path: "v1.0.1-pre-33/api/instances",
+  path: "v1.0.1-pre-34/api/instances",
   queryParameters: [
     Parameters.query,
     Parameters.status,
@@ -1180,6 +1268,10 @@ const findInstancesOperationSpec: msRest.OperationSpec = {
     Parameters.owner,
     Parameters.category,
     Parameters.participatingUsers,
+    Parameters.startedBefore,
+    Parameters.startedAfter,
+    Parameters.endedBefore,
+    Parameters.endedAfter,
     Parameters.pageToken,
     Parameters.pageSize
   ],
@@ -1197,7 +1289,7 @@ const findInstancesOperationSpec: msRest.OperationSpec = {
 
 const startInstanceOperationSpec: msRest.OperationSpec = {
   httpMethod: "POST",
-  path: "v1.0.1-pre-33/api/instances",
+  path: "v1.0.1-pre-34/api/instances",
   requestBody: {
     parameterPath: [
       "options",
@@ -1220,7 +1312,7 @@ const startInstanceOperationSpec: msRest.OperationSpec = {
 
 const getInstanceOperationSpec: msRest.OperationSpec = {
   httpMethod: "GET",
-  path: "v1.0.1-pre-33/api/instances/{id}",
+  path: "v1.0.1-pre-34/api/instances/{id}",
   urlParameters: [
     Parameters.id
   ],
@@ -1241,7 +1333,7 @@ const getInstanceOperationSpec: msRest.OperationSpec = {
 
 const stopInstanceOperationSpec: msRest.OperationSpec = {
   httpMethod: "POST",
-  path: "v1.0.1-pre-33/api/instances/{id}:stop",
+  path: "v1.0.1-pre-34/api/instances/{id}:stop",
   urlParameters: [
     Parameters.id
   ],
@@ -1262,7 +1354,7 @@ const stopInstanceOperationSpec: msRest.OperationSpec = {
 
 const findInstanceStepsOperationSpec: msRest.OperationSpec = {
   httpMethod: "GET",
-  path: "v1.0.1-pre-33/api/instances/{instanceId}/steps",
+  path: "v1.0.1-pre-34/api/instances/{instanceId}/steps",
   urlParameters: [
     Parameters.instanceId
   ],
@@ -1274,6 +1366,10 @@ const findInstanceStepsOperationSpec: msRest.OperationSpec = {
     Parameters.owner,
     Parameters.category,
     Parameters.participatingUsers,
+    Parameters.startedBefore,
+    Parameters.startedAfter,
+    Parameters.endedBefore,
+    Parameters.endedAfter,
     Parameters.pageToken,
     Parameters.pageSize
   ],
@@ -1291,7 +1387,7 @@ const findInstanceStepsOperationSpec: msRest.OperationSpec = {
 
 const getInstanceStepOperationSpec: msRest.OperationSpec = {
   httpMethod: "GET",
-  path: "v1.0.1-pre-33/api/instances/{instanceId}/steps/{id}",
+  path: "v1.0.1-pre-34/api/instances/{instanceId}/steps/{id}",
   urlParameters: [
     Parameters.id,
     Parameters.instanceId
@@ -1313,7 +1409,7 @@ const getInstanceStepOperationSpec: msRest.OperationSpec = {
 
 const completeStepOperationSpec: msRest.OperationSpec = {
   httpMethod: "POST",
-  path: "v1.0.1-pre-33/api/instances/{instanceId}/steps/{id}:complete",
+  path: "v1.0.1-pre-34/api/instances/{instanceId}/steps/{id}:complete",
   urlParameters: [
     Parameters.id,
     Parameters.instanceId
@@ -1346,7 +1442,7 @@ const completeStepOperationSpec: msRest.OperationSpec = {
 
 const startStepOperationSpec: msRest.OperationSpec = {
   httpMethod: "POST",
-  path: "v1.0.1-pre-33/api/instances/{instanceId}/steps/{id}:start",
+  path: "v1.0.1-pre-34/api/instances/{instanceId}/steps/{id}:start",
   urlParameters: [
     Parameters.id,
     Parameters.instanceId
@@ -1371,7 +1467,7 @@ const startStepOperationSpec: msRest.OperationSpec = {
 
 const snoozeStepOperationSpec: msRest.OperationSpec = {
   httpMethod: "POST",
-  path: "v1.0.1-pre-33/api/instances/{instanceId}/steps/{id}:snooze",
+  path: "v1.0.1-pre-34/api/instances/{instanceId}/steps/{id}:snooze",
   urlParameters: [
     Parameters.id,
     Parameters.instanceId
@@ -1396,7 +1492,7 @@ const snoozeStepOperationSpec: msRest.OperationSpec = {
 
 const reassignStepOperationSpec: msRest.OperationSpec = {
   httpMethod: "POST",
-  path: "v1.0.1-pre-33/api/instances/{instanceId}/steps/{id}:reassign",
+  path: "v1.0.1-pre-34/api/instances/{instanceId}/steps/{id}:reassign",
   urlParameters: [
     Parameters.id,
     Parameters.instanceId
@@ -1427,89 +1523,9 @@ const reassignStepOperationSpec: msRest.OperationSpec = {
   serializer
 };
 
-const findCredentialsOperationSpec: msRest.OperationSpec = {
-  httpMethod: "GET",
-  path: "v1.0.1-pre-33/api/credentials",
-  queryParameters: [
-    Parameters.query,
-    Parameters.status,
-    Parameters.processId,
-    Parameters.runId,
-    Parameters.owner,
-    Parameters.category,
-    Parameters.participatingUsers,
-    Parameters.pageToken,
-    Parameters.pageSize
-  ],
-  responses: {
-    200: {
-      bodyMapper: Mappers.CredentialsPage
-    },
-    400: {
-      bodyMapper: Mappers.ProblemDetails
-    },
-    401: {
-      bodyMapper: Mappers.ProblemDetails
-    },
-    403: {
-      bodyMapper: Mappers.ProblemDetails
-    },
-    default: {}
-  },
-  serializer
-};
-
-const getCredentialsOperationSpec: msRest.OperationSpec = {
-  httpMethod: "GET",
-  path: "v1.0.1-pre-33/api/credentials/{id}",
-  urlParameters: [
-    Parameters.id
-  ],
-  responses: {
-    200: {
-      bodyMapper: Mappers.Credentials
-    },
-    401: {
-      bodyMapper: Mappers.ProblemDetails
-    },
-    403: {
-      bodyMapper: Mappers.ProblemDetails
-    },
-    404: {
-      bodyMapper: Mappers.ProblemDetails
-    },
-    default: {}
-  },
-  serializer
-};
-
-const revokeCredentialsOperationSpec: msRest.OperationSpec = {
-  httpMethod: "POST",
-  path: "v1.0.1-pre-33/api/credentials/{id}:revoke",
-  urlParameters: [
-    Parameters.id
-  ],
-  responses: {
-    200: {
-      bodyMapper: Mappers.Credentials
-    },
-    401: {
-      bodyMapper: Mappers.ProblemDetails
-    },
-    403: {
-      bodyMapper: Mappers.ProblemDetails
-    },
-    404: {
-      bodyMapper: Mappers.ProblemDetails
-    },
-    default: {}
-  },
-  serializer
-};
-
 const getUserOperationSpec: msRest.OperationSpec = {
   httpMethod: "GET",
-  path: "v1.0.1-pre-33/api/users/{id}",
+  path: "v1.0.1-pre-34/api/users/{id}",
   urlParameters: [
     Parameters.id
   ],
@@ -1530,7 +1546,7 @@ const getUserOperationSpec: msRest.OperationSpec = {
 
 const findUsersOperationSpec: msRest.OperationSpec = {
   httpMethod: "GET",
-  path: "v1.0.1-pre-33/api/users",
+  path: "v1.0.1-pre-34/api/users",
   queryParameters: [
     Parameters.query,
     Parameters.status,
@@ -1539,6 +1555,10 @@ const findUsersOperationSpec: msRest.OperationSpec = {
     Parameters.owner,
     Parameters.category,
     Parameters.participatingUsers,
+    Parameters.startedBefore,
+    Parameters.startedAfter,
+    Parameters.endedBefore,
+    Parameters.endedAfter,
     Parameters.pageToken,
     Parameters.pageSize
   ],
@@ -1556,7 +1576,7 @@ const findUsersOperationSpec: msRest.OperationSpec = {
 
 const findWorkflowsOperationSpec: msRest.OperationSpec = {
   httpMethod: "GET",
-  path: "v1.0.1-pre-33/api/workflows",
+  path: "v1.0.1-pre-34/api/workflows",
   queryParameters: [
     Parameters.query,
     Parameters.status,
@@ -1565,6 +1585,10 @@ const findWorkflowsOperationSpec: msRest.OperationSpec = {
     Parameters.owner,
     Parameters.category,
     Parameters.participatingUsers,
+    Parameters.startedBefore,
+    Parameters.startedAfter,
+    Parameters.endedBefore,
+    Parameters.endedAfter,
     Parameters.pageToken,
     Parameters.pageSize
   ],
@@ -1582,7 +1606,7 @@ const findWorkflowsOperationSpec: msRest.OperationSpec = {
 
 const getWorkflowOperationSpec: msRest.OperationSpec = {
   httpMethod: "GET",
-  path: "v1.0.1-pre-33/api/workflows/{id}",
+  path: "v1.0.1-pre-34/api/workflows/{id}",
   urlParameters: [
     Parameters.id
   ],
@@ -1603,7 +1627,7 @@ const getWorkflowOperationSpec: msRest.OperationSpec = {
 
 const importWorkflowOperationSpec: msRest.OperationSpec = {
   httpMethod: "POST",
-  path: "v1.0.1-pre-33/api/workflows:import",
+  path: "v1.0.1-pre-34/api/workflows:import",
   requestBody: {
     parameterPath: [
       "options",
@@ -1629,7 +1653,7 @@ const importWorkflowOperationSpec: msRest.OperationSpec = {
 
 const getWorkflowImportOperationSpec: msRest.OperationSpec = {
   httpMethod: "GET",
-  path: "v1.0.1-pre-33/api/workflows/imports/{id}",
+  path: "v1.0.1-pre-34/api/workflows/imports/{id}",
   urlParameters: [
     Parameters.id
   ],
@@ -1650,7 +1674,7 @@ const getWorkflowImportOperationSpec: msRest.OperationSpec = {
 
 const exportWorkflowOperationSpec: msRest.OperationSpec = {
   httpMethod: "POST",
-  path: "v1.0.1-pre-33/api/workflows/{id}:export",
+  path: "v1.0.1-pre-34/api/workflows/{id}:export",
   urlParameters: [
     Parameters.id
   ],
@@ -1679,7 +1703,7 @@ const exportWorkflowOperationSpec: msRest.OperationSpec = {
 
 const getWorkflowExportOperationSpec: msRest.OperationSpec = {
   httpMethod: "GET",
-  path: "v1.0.1-pre-33/api/workflows/exports/{id}",
+  path: "v1.0.1-pre-34/api/workflows/exports/{id}",
   urlParameters: [
     Parameters.id
   ],

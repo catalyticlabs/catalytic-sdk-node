@@ -21,7 +21,7 @@ export default class WorkflowClient extends BaseClient implements WorkflowClient
     private async _get(id: string): Promise<Workflow> {
         console.log(`Getting Workflow with ID '${id}'`);
         const headers = this.getRequestHeaders();
-        const result = await this.internalClient.getWorkflow(id, { customHeaders: headers });
+        const result = await this._internalClient.getWorkflow(id, { customHeaders: headers });
         return this.parseResponse<Workflow>(result);
     }
 
@@ -48,7 +48,7 @@ export default class WorkflowClient extends BaseClient implements WorkflowClient
     private async _find(options: FindWorkflowOptions): Promise<WorkflowsPage> {
         console.log('Finding Workflows');
         const headers = this.getRequestHeaders();
-        const result = await this.internalClient.findWorkflows(Object.assign({}, options, { customHeaders: headers }));
+        const result = await this._internalClient.findWorkflows(Object.assign({}, options, { customHeaders: headers }));
         return this.parseResponse<WorkflowsPage>(result);
     }
 
@@ -114,11 +114,11 @@ export default class WorkflowClient extends BaseClient implements WorkflowClient
             customHeaders: headers
         };
 
-        const importResult = await this.internalClient.importWorkflow(request);
+        const importResult = await this._internalClient.importWorkflow(request);
         let workflowImport = this.parseResponse<WorkflowImport>(importResult);
 
         while (!workflowImport.workflowId) {
-            const pollResult = await this.internalClient.getWorkflowImport(workflowImport.id, {
+            const pollResult = await this._internalClient.getWorkflowImport(workflowImport.id, {
                 customHeaders: headers
             });
             workflowImport = this.parseResponse<WorkflowImport>(pollResult);
@@ -190,11 +190,11 @@ export default class WorkflowClient extends BaseClient implements WorkflowClient
             customHeaders: headers
         };
 
-        const exportResult = await this.internalClient.exportWorkflow(id, request);
+        const exportResult = await this._internalClient.exportWorkflow(id, request);
         let workflowExport = this.parseResponse<WorkflowExport>(exportResult);
 
         while (!workflowExport.fileId) {
-            const pollResult = await this.internalClient.getWorkflowExport(workflowExport.id, {
+            const pollResult = await this._internalClient.getWorkflowExport(workflowExport.id, {
                 customHeaders: headers
             });
             workflowExport = this.parseResponse<WorkflowExport>(pollResult);
@@ -209,7 +209,7 @@ export default class WorkflowClient extends BaseClient implements WorkflowClient
             }
         }
 
-        const result = await this.internalClient.getFile(workflowExport.fileId, { customHeaders: headers });
+        const result = await this._internalClient.getFile(workflowExport.fileId, { customHeaders: headers });
         return this.parseResponse<FileMetadata>(result);
     }
 }

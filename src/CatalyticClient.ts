@@ -1,10 +1,11 @@
 import { CatalyticSDKAPI } from './internal/lib/catalyticSDKAPI';
-import Credentials, { CredentialsProvider } from './entities/Credentials';
+import AccessToken from './entities/AccessToken';
 import { UserAgent } from './constants';
+import { AccessTokenProvider } from './types';
 
 import {
-    CredentialsClient,
-    CredentialsClientInterface,
+    AccessTokenClient,
+    AccessTokenClientInterface,
     DataTableClient,
     DataTableClientInterface,
     FileClient,
@@ -17,11 +18,12 @@ import {
     WorkflowClientInterface
 } from './clients';
 
-export default class CatalyticClient implements CredentialsProvider {
-    public credentials: Credentials;
-    public internalClient: CatalyticSDKAPI;
+export default class CatalyticClient implements AccessTokenProvider, CatalyticClientInterface {
+    _internalClient: CatalyticSDKAPI;
 
-    public credentialsClient: CredentialsClientInterface;
+    public accessToken: AccessToken;
+
+    public accessTokenClient: AccessTokenClientInterface;
     public dataTableClient: DataTableClientInterface;
     public fileClient: FileClientInterface;
     public instanceClient: InstanceClientInterface;
@@ -29,16 +31,25 @@ export default class CatalyticClient implements CredentialsProvider {
     public workflowClient: WorkflowClientInterface;
 
     constructor(baseUri?: string) {
-        this.internalClient = new CatalyticSDKAPI({
+        this._internalClient = new CatalyticSDKAPI({
             baseUri,
             userAgent: (defaultUserAgent): string => `${defaultUserAgent} ${UserAgent}`
         });
 
-        this.credentialsClient = new CredentialsClient(this.internalClient, this);
-        this.dataTableClient = new DataTableClient(this.internalClient, this);
-        this.fileClient = new FileClient(this.internalClient, this);
-        this.instanceClient = new InstanceClient(this.internalClient, this);
-        this.userClient = new UserClient(this.internalClient, this);
-        this.workflowClient = new WorkflowClient(this.internalClient, this);
+        this.accessTokenClient = new AccessTokenClient(this._internalClient, this);
+        this.dataTableClient = new DataTableClient(this._internalClient, this);
+        this.fileClient = new FileClient(this._internalClient, this);
+        this.instanceClient = new InstanceClient(this._internalClient, this);
+        this.userClient = new UserClient(this._internalClient, this);
+        this.workflowClient = new WorkflowClient(this._internalClient, this);
     }
+}
+
+export interface CatalyticClientInterface {
+    accessTokenClient: AccessTokenClientInterface;
+    dataTableClient: DataTableClientInterface;
+    fileClient: FileClientInterface;
+    instanceClient: InstanceClientInterface;
+    userClient: UserClientInterface;
+    workflowClient: WorkflowClientInterface;
 }

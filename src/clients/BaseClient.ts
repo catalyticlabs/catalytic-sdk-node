@@ -6,29 +6,28 @@ import { Stream } from 'stream';
 import { promisify, callbackify } from 'util';
 
 import { CatalyticSDKAPI } from '../internal/lib/catalyticSDKAPI';
-import { CredentialsProvider } from '../entities/Credentials';
-import { InvalidCredentialsError, UnauthorizedError, ResourceNotFoundError, InternalError } from '../errors';
+import { InvalidAccessTokenError, UnauthorizedError, ResourceNotFoundError, InternalError } from '../errors';
 import { BaseUri, UserAgent } from '../constants';
-import { ClientMethodCallback, InternalAPIResponse } from '../types';
+import { ClientMethodCallback, AccessTokenProvider, InternalAPIResponse } from '../types';
 
 export default abstract class BaseClient {
     static entity: string;
 
-    protected internalClient: CatalyticSDKAPI;
-    protected credentialsProvider: CredentialsProvider;
+    protected _internalClient: CatalyticSDKAPI;
+    protected _accessTokenProvider: AccessTokenProvider;
 
-    constructor(internalClient: CatalyticSDKAPI, credentialsProvider: CredentialsProvider) {
-        this.internalClient = internalClient;
-        this.credentialsProvider = credentialsProvider;
+    constructor(internalClient: CatalyticSDKAPI, accessTokenProvider: AccessTokenProvider) {
+        this._internalClient = internalClient;
+        this._accessTokenProvider = accessTokenProvider;
     }
 
     protected getRequestHeaders(): { [headerName: string]: string } {
-        const credentials = this.credentialsProvider.credentials;
-        if (!credentials) {
-            throw new InvalidCredentialsError('No Credentials provided');
+        const accessToken = this._accessTokenProvider.accessToken;
+        if (!accessToken) {
+            throw new InvalidAccessTokenError('No Access Token provided');
         }
         return {
-            Authorization: `Bearer ${credentials.token}`
+            Authorization: `Bearer ${accessToken.token}`
         };
     }
 

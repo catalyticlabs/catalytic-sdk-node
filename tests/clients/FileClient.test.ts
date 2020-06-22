@@ -20,8 +20,8 @@ describe('FileClient', function() {
 
     before(function() {
         client = new CatalyticClient();
-        client.credentials = mock.mockCredentials();
-        expectedCustomHeaders = { Authorization: `Bearer ${client.credentials.token}` };
+        client.accessToken = mock.mockAccessToken();
+        expectedCustomHeaders = { Authorization: `Bearer ${client.accessToken.token}` };
     });
 
     afterEach(function() {
@@ -32,15 +32,15 @@ describe('FileClient', function() {
         it('should get a File by ID', async function() {
             const mockFileMetadata = mock.mockFileMetadata();
             sinon
-                .stub(client.internalClient, 'getFile')
+                .stub(client._internalClient, 'getFile')
                 .callsFake(() => Promise.resolve(createResponse(mockFileMetadata)));
 
             return executeTest(client.fileClient, 'get', [mockFileMetadata.id], (err, result) => {
                 expect(err).to.not.be.ok;
 
                 expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockFileMetadata)));
-                expect(client.internalClient.getFile).to.have.callCount(1);
-                expect(client.internalClient.getFile).to.have.been.calledWith(mockFileMetadata.id, {
+                expect(client._internalClient.getFile).to.have.callCount(1);
+                expect(client._internalClient.getFile).to.have.been.calledWith(mockFileMetadata.id, {
                     customHeaders: expectedCustomHeaders
                 });
             });
@@ -49,7 +49,7 @@ describe('FileClient', function() {
         it('should return proper exception when File not found', async function() {
             const id = v4();
             sinon
-                .stub(client.internalClient, 'getFile')
+                .stub(client._internalClient, 'getFile')
                 .callsFake(() => Promise.resolve(createResponse({ detail: 'Intentional not found error' }, 404)));
 
             return executeTest(client.fileClient, 'get', [id], (error, result) => {
@@ -59,8 +59,8 @@ describe('FileClient', function() {
                 expect(error.message)
                     .to.include('Intentional not found error')
                     .and.to.include('File');
-                expect(client.internalClient.getFile).to.have.callCount(1);
-                expect(client.internalClient.getFile).to.have.been.calledWith(id, {
+                expect(client._internalClient.getFile).to.have.callCount(1);
+                expect(client._internalClient.getFile).to.have.been.calledWith(id, {
                     customHeaders: expectedCustomHeaders
                 });
             });

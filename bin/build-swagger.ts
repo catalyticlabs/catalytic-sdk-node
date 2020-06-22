@@ -1,16 +1,14 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/no-use-before-define */
-/* eslint-disable @typescript-eslint/no-var-requires */
 
-const _ = require('lodash');
-const axios = require('axios');
-const Bluebird = require('bluebird');
-const exec = require('child_process').exec;
-const fs = require('fs');
-const os = require('os');
-const path = require('path');
+import _ from 'lodash';
+import axios from 'axios';
+import Bluebird from 'bluebird';
+import { exec } from 'child_process';
+import fs from 'fs';
+import os from 'os';
+import path from 'path';
 
-const BASE_URI = require('../built/contstants').BaseUri;
+import { BaseUri as BASE_URI } from '../src/constants';
 const SWAGGER_URL = `${BASE_URI}/swagger/v1/swagger.json`;
 
 getSwagger(SWAGGER_URL)
@@ -25,11 +23,11 @@ getSwagger(SWAGGER_URL)
     .tap(() => console.log('done'))
     .catch(err => console.error(err));
 
-function getSwagger(swaggerUrl) {
+function getSwagger(swaggerUrl): Bluebird<any> {
     return Bluebird.resolve(axios.get(swaggerUrl).then(response => response.data));
 }
 
-function autorest(swaggerPath) {
+function autorest(swaggerPath: string): Bluebird<string> {
     return Bluebird.fromCallback(callback => {
         exec(
             `npm run autorest -- README.md --input-file="${swaggerPath}"`,
@@ -50,7 +48,7 @@ function autorest(swaggerPath) {
     });
 }
 
-function clean(obj) {
+function clean(obj: any): any {
     return _.transform(
         obj,
         (result, value, key) => {

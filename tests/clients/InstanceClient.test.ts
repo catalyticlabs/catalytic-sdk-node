@@ -20,8 +20,8 @@ describe('InstanceClient', function() {
 
     before(function() {
         client = new CatalyticClient();
-        client.credentials = mock.mockCredentials();
-        expectedCustomHeaders = { Authorization: `Bearer ${client.credentials.token}` };
+        client.accessToken = mock.mockAccessToken();
+        expectedCustomHeaders = { Authorization: `Bearer ${client.accessToken.token}` };
     });
 
     afterEach(function() {
@@ -32,15 +32,15 @@ describe('InstanceClient', function() {
         it('should get an Instance by ID', function() {
             const mockInstance = mock.mockInstance();
             sinon
-                .stub(client.internalClient, 'getInstance')
+                .stub(client._internalClient, 'getInstance')
                 .callsFake(() => Promise.resolve(createResponse(mockInstance)));
 
             return executeTest(client.instanceClient, 'get', [mockInstance.id], (err, result) => {
                 expect(err).to.not.be.ok;
 
                 expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockInstance)));
-                expect(client.internalClient.getInstance).to.have.callCount(1);
-                expect(client.internalClient.getInstance).to.have.been.calledWith(mockInstance.id, {
+                expect(client._internalClient.getInstance).to.have.callCount(1);
+                expect(client._internalClient.getInstance).to.have.been.calledWith(mockInstance.id, {
                     customHeaders: expectedCustomHeaders
                 });
             });
@@ -49,15 +49,15 @@ describe('InstanceClient', function() {
         it('should return proper exception when Instance not found', function() {
             const id = v4();
             sinon
-                .stub(client.internalClient, 'getInstance')
+                .stub(client._internalClient, 'getInstance')
                 .callsFake(() => Promise.resolve(createResponse({ detail: 'Intentional not found error' }, 404)));
 
             return executeTest(client.instanceClient, 'get', [id], (error, result) => {
                 expect(result).to.not.be.ok;
                 expect(error).to.be.ok;
                 expect(error.message).to.include('Intentional not found error');
-                expect(client.internalClient.getInstance).to.have.callCount(1);
-                expect(client.internalClient.getInstance).to.have.been.calledWith(id, {
+                expect(client._internalClient.getInstance).to.have.callCount(1);
+                expect(client._internalClient.getInstance).to.have.been.calledWith(id, {
                     customHeaders: expectedCustomHeaders
                 });
             });
@@ -68,15 +68,15 @@ describe('InstanceClient', function() {
         it('should find Instances with no filter options', function() {
             const mockInstancesPage = mock.mockInstancesPage();
             sinon
-                .stub(client.internalClient, 'findInstances')
+                .stub(client._internalClient, 'findInstances')
                 .callsFake(() => Promise.resolve(createResponse(mockInstancesPage)));
 
             return executeTest(client.instanceClient, 'find', [], (err, result) => {
                 expect(err).to.not.be.ok;
 
                 expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockInstancesPage)));
-                expect(client.internalClient.findInstances).to.have.callCount(1);
-                expect(client.internalClient.findInstances).to.have.been.calledWith({
+                expect(client._internalClient.findInstances).to.have.callCount(1);
+                expect(client._internalClient.findInstances).to.have.been.calledWith({
                     customHeaders: expectedCustomHeaders,
                     category: undefined,
                     owner: undefined,
@@ -92,15 +92,15 @@ describe('InstanceClient', function() {
             const mockInstancesPage = mock.mockInstancesPage();
             const options = { pageSize: 3, query: 'some user', owner: 'test@example.com', workflowID: v4() };
             sinon
-                .stub(client.internalClient, 'findInstances')
+                .stub(client._internalClient, 'findInstances')
                 .callsFake(() => Promise.resolve(createResponse(mockInstancesPage)));
 
             return executeTest(client.instanceClient, 'find', [options], (err, result) => {
                 expect(err).to.not.be.ok;
 
                 expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockInstancesPage)));
-                expect(client.internalClient.findInstances).to.have.callCount(1);
-                expect(client.internalClient.findInstances).to.have.been.calledWith({
+                expect(client._internalClient.findInstances).to.have.callCount(1);
+                expect(client._internalClient.findInstances).to.have.been.calledWith({
                     customHeaders: expectedCustomHeaders,
                     category: undefined,
                     owner: options.owner,
@@ -114,15 +114,15 @@ describe('InstanceClient', function() {
 
         it('should throw error when bad response code returned', function() {
             sinon
-                .stub(client.internalClient, 'findInstances')
+                .stub(client._internalClient, 'findInstances')
                 .callsFake(() => Promise.resolve(createResponse({ detail: 'Intentional bad request error' }, 400)));
 
             return executeTest(client.instanceClient, 'find', [], (error, result) => {
                 expect(result).to.not.be.ok;
                 expect(error).to.be.ok;
                 expect(error.message).to.include('Intentional bad request error');
-                expect(client.internalClient.findInstances).to.have.callCount(1);
-                expect(client.internalClient.findInstances).to.have.been.calledWith({
+                expect(client._internalClient.findInstances).to.have.callCount(1);
+                expect(client._internalClient.findInstances).to.have.been.calledWith({
                     customHeaders: expectedCustomHeaders,
                     category: undefined,
                     owner: undefined,
@@ -139,15 +139,15 @@ describe('InstanceClient', function() {
         it('should stop an Instance by ID', function() {
             const mockInstance = mock.mockInstance();
             sinon
-                .stub(client.internalClient, 'stopInstance')
+                .stub(client._internalClient, 'stopInstance')
                 .callsFake(() => Promise.resolve(createResponse(mockInstance)));
 
             return executeTest(client.instanceClient, 'stop', [mockInstance.id], (err, result) => {
                 expect(err).to.not.be.ok;
 
                 expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockInstance)));
-                expect(client.internalClient.stopInstance).to.have.callCount(1);
-                expect(client.internalClient.stopInstance).to.have.been.calledWith(mockInstance.id, {
+                expect(client._internalClient.stopInstance).to.have.callCount(1);
+                expect(client._internalClient.stopInstance).to.have.been.calledWith(mockInstance.id, {
                     customHeaders: expectedCustomHeaders
                 });
             });
@@ -156,15 +156,15 @@ describe('InstanceClient', function() {
         it('should return proper exception when Instance not found', function() {
             const id = v4();
             sinon
-                .stub(client.internalClient, 'stopInstance')
+                .stub(client._internalClient, 'stopInstance')
                 .callsFake(() => Promise.resolve(createResponse({ detail: 'Intentional not found error' }, 404)));
 
             return executeTest(client.instanceClient, 'stop', [id], (error, result) => {
                 expect(result).to.not.be.ok;
                 expect(error).to.be.ok;
                 expect(error.message).to.include('Intentional not found error');
-                expect(client.internalClient.stopInstance).to.have.callCount(1);
-                expect(client.internalClient.stopInstance).to.have.been.calledWith(id, {
+                expect(client._internalClient.stopInstance).to.have.callCount(1);
+                expect(client._internalClient.stopInstance).to.have.been.calledWith(id, {
                     customHeaders: expectedCustomHeaders
                 });
             });
@@ -176,15 +176,15 @@ describe('InstanceClient', function() {
             const workflowID = v4();
             const mockInstance = mock.mockInstance();
             sinon
-                .stub(client.internalClient, 'startInstance')
+                .stub(client._internalClient, 'startInstance')
                 .callsFake(() => Promise.resolve(createResponse(mockInstance)));
 
             return executeTest(client.instanceClient, 'start', [workflowID], (err, result) => {
                 expect(err).to.not.be.ok;
 
                 expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockInstance)));
-                expect(client.internalClient.startInstance).to.have.callCount(1);
-                expect(client.internalClient.startInstance).to.have.been.calledWith({
+                expect(client._internalClient.startInstance).to.have.callCount(1);
+                expect(client._internalClient.startInstance).to.have.been.calledWith({
                     body: {
                         workflowId: workflowID,
                         inputFields: null,
@@ -200,15 +200,15 @@ describe('InstanceClient', function() {
             const name = 'test instance name';
             const mockInstance = mock.mockInstance();
             sinon
-                .stub(client.internalClient, 'startInstance')
+                .stub(client._internalClient, 'startInstance')
                 .callsFake(() => Promise.resolve(createResponse(mockInstance)));
 
             return executeTest(client.instanceClient, 'start', [workflowID, name], (err, result) => {
                 expect(err).to.not.be.ok;
 
                 expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockInstance)));
-                expect(client.internalClient.startInstance).to.have.callCount(1);
-                expect(client.internalClient.startInstance).to.have.been.calledWith({
+                expect(client._internalClient.startInstance).to.have.callCount(1);
+                expect(client._internalClient.startInstance).to.have.been.calledWith({
                     body: {
                         workflowId: workflowID,
                         name,
@@ -227,15 +227,15 @@ describe('InstanceClient', function() {
             ];
             const mockInstance = mock.mockInstance();
             sinon
-                .stub(client.internalClient, 'startInstance')
+                .stub(client._internalClient, 'startInstance')
                 .callsFake(() => Promise.resolve(createResponse(mockInstance)));
 
             return executeTest(client.instanceClient, 'start', [workflowID, inputs], (err, result) => {
                 expect(err).to.not.be.ok;
 
                 expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockInstance)));
-                expect(client.internalClient.startInstance).to.have.callCount(1);
-                expect(client.internalClient.startInstance).to.have.been.calledWith({
+                expect(client._internalClient.startInstance).to.have.callCount(1);
+                expect(client._internalClient.startInstance).to.have.been.calledWith({
                     body: {
                         workflowId: workflowID,
                         inputFields: inputs.map(f => ({ ...f, referenceName: displayNameToInternal(f.name) })),
@@ -255,15 +255,15 @@ describe('InstanceClient', function() {
             ];
             const mockInstance = mock.mockInstance();
             sinon
-                .stub(client.internalClient, 'startInstance')
+                .stub(client._internalClient, 'startInstance')
                 .callsFake(() => Promise.resolve(createResponse(mockInstance)));
 
             return executeTest(client.instanceClient, 'start', [workflowID, name, inputs], (err, result) => {
                 expect(err).to.not.be.ok;
 
                 expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockInstance)));
-                expect(client.internalClient.startInstance).to.have.callCount(1);
-                expect(client.internalClient.startInstance).to.have.been.calledWith({
+                expect(client._internalClient.startInstance).to.have.callCount(1);
+                expect(client._internalClient.startInstance).to.have.been.calledWith({
                     body: {
                         workflowId: workflowID,
                         inputFields: inputs.map(f => ({ ...f, referenceName: displayNameToInternal(f.name) })),
@@ -278,7 +278,7 @@ describe('InstanceClient', function() {
             const workflowID = v4();
             const name = 'test instance name';
             sinon
-                .stub(client.internalClient, 'startInstance')
+                .stub(client._internalClient, 'startInstance')
                 .callsFake(() => Promise.resolve(createResponse({ detail: 'Intentional bad request error' }, 400)));
 
             await executeTest(
@@ -289,7 +289,7 @@ describe('InstanceClient', function() {
                     expect(result).to.not.be.ok;
                     expect(err).to.be.ok.and.to.be.instanceOf(FieldInputError);
                     expect(err.message).to.include('Fields must be an Array of FieldInput objects');
-                    expect(client.internalClient.startInstance).to.have.callCount(0);
+                    expect(client._internalClient.startInstance).to.have.callCount(0);
                 }
             );
 
@@ -301,7 +301,7 @@ describe('InstanceClient', function() {
                     expect(result).to.not.be.ok;
                     expect(err).to.be.ok.and.to.be.instanceOf(FieldInputError);
                     expect(err.message).to.include('No name or reference name provided for field at index 0');
-                    expect(client.internalClient.startInstance).to.have.callCount(0);
+                    expect(client._internalClient.startInstance).to.have.callCount(0);
                 }
             );
         });
@@ -314,15 +314,15 @@ describe('InstanceClient', function() {
                 { name: 'Another Field', value: 'second value' }
             ];
             sinon
-                .stub(client.internalClient, 'startInstance')
+                .stub(client._internalClient, 'startInstance')
                 .callsFake(() => Promise.resolve(createResponse({ detail: 'Intentional bad request error' }, 400)));
 
             return executeTest(client.instanceClient, 'start', [workflowID, name, inputs], (err, result) => {
                 expect(result).to.not.be.ok;
                 expect(err).to.be.ok;
                 expect(err.message).to.include('Intentional bad request error');
-                expect(client.internalClient.startInstance).to.have.callCount(1);
-                expect(client.internalClient.startInstance).to.have.been.calledWith({
+                expect(client._internalClient.startInstance).to.have.callCount(1);
+                expect(client._internalClient.startInstance).to.have.been.calledWith({
                     body: {
                         workflowId: workflowID,
                         inputFields: inputs.map(f => ({ ...f, referenceName: displayNameToInternal(f.name) })),
@@ -339,15 +339,15 @@ describe('InstanceClient', function() {
             it('should get an InstanceStep by ID', function() {
                 const mockInstanceStep = mock.mockInstanceStep();
                 sinon
-                    .stub(client.internalClient, 'getInstanceStep')
+                    .stub(client._internalClient, 'getInstanceStep')
                     .callsFake(() => Promise.resolve(createResponse(mockInstanceStep)));
 
                 return executeTest(client.instanceClient, 'getInstanceStep', [mockInstanceStep.id], (err, result) => {
                     expect(err).to.not.be.ok;
 
                     expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockInstanceStep)));
-                    expect(client.internalClient.getInstanceStep).to.have.callCount(1);
-                    expect(client.internalClient.getInstanceStep).to.have.been.calledWith(
+                    expect(client._internalClient.getInstanceStep).to.have.callCount(1);
+                    expect(client._internalClient.getInstanceStep).to.have.been.calledWith(
                         mockInstanceStep.id,
                         WildcardId,
                         {
@@ -360,15 +360,15 @@ describe('InstanceClient', function() {
             it('should return proper exception when Instance not found', function() {
                 const id = v4();
                 sinon
-                    .stub(client.internalClient, 'getInstanceStep')
+                    .stub(client._internalClient, 'getInstanceStep')
                     .callsFake(() => Promise.resolve(createResponse({ detail: 'Intentional not found error' }, 404)));
 
                 return executeTest(client.instanceClient, 'getInstanceStep', [id], (error, result) => {
                     expect(result).to.not.be.ok;
                     expect(error).to.be.ok;
                     expect(error.message).to.include('Intentional not found error');
-                    expect(client.internalClient.getInstanceStep).to.have.callCount(1);
-                    expect(client.internalClient.getInstanceStep).to.have.been.calledWith(id, WildcardId, {
+                    expect(client._internalClient.getInstanceStep).to.have.callCount(1);
+                    expect(client._internalClient.getInstanceStep).to.have.been.calledWith(id, WildcardId, {
                         customHeaders: expectedCustomHeaders
                     });
                 });
@@ -379,15 +379,15 @@ describe('InstanceClient', function() {
             it('should find InstanceSteps with no filter options', function() {
                 const mockInstanceStepsPage = mock.mockInstanceStepsPage();
                 sinon
-                    .stub(client.internalClient, 'findInstanceSteps')
+                    .stub(client._internalClient, 'findInstanceSteps')
                     .callsFake(() => Promise.resolve(createResponse(mockInstanceStepsPage)));
 
                 return executeTest(client.instanceClient, 'findInstanceSteps', [], (err, result) => {
                     expect(err).to.not.be.ok;
 
                     expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockInstanceStepsPage)));
-                    expect(client.internalClient.findInstanceSteps).to.have.callCount(1);
-                    expect(client.internalClient.findInstanceSteps).to.have.been.calledWith(WildcardId, {
+                    expect(client._internalClient.findInstanceSteps).to.have.callCount(1);
+                    expect(client._internalClient.findInstanceSteps).to.have.been.calledWith(WildcardId, {
                         customHeaders: expectedCustomHeaders,
                         pageSize: undefined,
                         pageToken: undefined,
@@ -403,15 +403,15 @@ describe('InstanceClient', function() {
                 const mockInstanceStepsPage = mock.mockInstanceStepsPage();
                 const options = { pageSize: 3, query: 'some user', assignedTo: 'test@example.com', instanceID: v4() };
                 sinon
-                    .stub(client.internalClient, 'findInstanceSteps')
+                    .stub(client._internalClient, 'findInstanceSteps')
                     .callsFake(() => Promise.resolve(createResponse(mockInstanceStepsPage)));
 
                 return executeTest(client.instanceClient, 'findInstanceSteps', [options], (err, result) => {
                     expect(err).to.not.be.ok;
 
                     expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockInstanceStepsPage)));
-                    expect(client.internalClient.findInstanceSteps).to.have.callCount(1);
-                    expect(client.internalClient.findInstanceSteps).to.have.been.calledWith(WildcardId, {
+                    expect(client._internalClient.findInstanceSteps).to.have.callCount(1);
+                    expect(client._internalClient.findInstanceSteps).to.have.been.calledWith(WildcardId, {
                         customHeaders: expectedCustomHeaders,
                         pageSize: options.pageSize,
                         pageToken: undefined,
@@ -425,15 +425,15 @@ describe('InstanceClient', function() {
 
             it('should throw error when bad response code returned', function() {
                 sinon
-                    .stub(client.internalClient, 'findInstanceSteps')
+                    .stub(client._internalClient, 'findInstanceSteps')
                     .callsFake(() => Promise.resolve(createResponse({ detail: 'Intentional bad request error' }, 400)));
 
                 return executeTest(client.instanceClient, 'findInstanceSteps', [], (error, result) => {
                     expect(result).to.not.be.ok;
                     expect(error).to.be.ok;
                     expect(error.message).to.include('Intentional bad request error');
-                    expect(client.internalClient.findInstanceSteps).to.have.callCount(1);
-                    expect(client.internalClient.findInstanceSteps).to.have.been.calledWith(WildcardId, {
+                    expect(client._internalClient.findInstanceSteps).to.have.callCount(1);
+                    expect(client._internalClient.findInstanceSteps).to.have.been.calledWith(WildcardId, {
                         customHeaders: expectedCustomHeaders,
                         pageSize: undefined,
                         pageToken: undefined,
@@ -451,7 +451,7 @@ describe('InstanceClient', function() {
                 const mockInstanceStep = mock.mockInstanceStep();
                 const email = 'test@example.com';
                 sinon
-                    .stub(client.internalClient, 'reassignStep')
+                    .stub(client._internalClient, 'reassignStep')
                     .callsFake(() => Promise.resolve(createResponse(mockInstanceStep)));
 
                 return executeTest(
@@ -462,8 +462,8 @@ describe('InstanceClient', function() {
                         expect(err).to.not.be.ok;
 
                         expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockInstanceStep)));
-                        expect(client.internalClient.reassignStep).to.have.callCount(1);
-                        expect(client.internalClient.reassignStep).to.have.been.calledWith(
+                        expect(client._internalClient.reassignStep).to.have.callCount(1);
+                        expect(client._internalClient.reassignStep).to.have.been.calledWith(
                             mockInstanceStep.id,
                             WildcardId,
                             {
@@ -482,7 +482,7 @@ describe('InstanceClient', function() {
                 const mockInstanceStep = mock.mockInstanceStep();
                 const email = 'test@example.com';
                 sinon
-                    .stub(client.internalClient, 'reassignStep')
+                    .stub(client._internalClient, 'reassignStep')
                     .callsFake(() => Promise.resolve(createResponse({ detail: 'Intentional bad request error' }, 400)));
 
                 return executeTest(
@@ -493,8 +493,8 @@ describe('InstanceClient', function() {
                         expect(result).to.not.be.ok;
                         expect(err).to.be.ok;
                         expect(err.message).to.include('Intentional bad request error');
-                        expect(client.internalClient.reassignStep).to.have.callCount(1);
-                        expect(client.internalClient.reassignStep).to.have.been.calledWith(
+                        expect(client._internalClient.reassignStep).to.have.callCount(1);
+                        expect(client._internalClient.reassignStep).to.have.been.calledWith(
                             mockInstanceStep.id,
                             WildcardId,
                             {
@@ -514,7 +514,7 @@ describe('InstanceClient', function() {
             it('should complete an InstanceStep without output fields', function() {
                 const mockInstanceStep = mock.mockInstanceStep();
                 sinon
-                    .stub(client.internalClient, 'completeStep')
+                    .stub(client._internalClient, 'completeStep')
                     .callsFake(() => Promise.resolve(createResponse(mockInstanceStep)));
 
                 return executeTest(
@@ -525,8 +525,8 @@ describe('InstanceClient', function() {
                         expect(err).to.not.be.ok;
 
                         expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockInstanceStep)));
-                        expect(client.internalClient.completeStep).to.have.callCount(1);
-                        expect(client.internalClient.completeStep).to.have.been.calledWith(
+                        expect(client._internalClient.completeStep).to.have.callCount(1);
+                        expect(client._internalClient.completeStep).to.have.been.calledWith(
                             mockInstanceStep.id,
                             WildcardId,
                             {
@@ -548,7 +548,7 @@ describe('InstanceClient', function() {
                     { name: 'Another Field', value: 'second value' }
                 ];
                 sinon
-                    .stub(client.internalClient, 'completeStep')
+                    .stub(client._internalClient, 'completeStep')
                     .callsFake(() => Promise.resolve(createResponse(mockInstanceStep)));
 
                 return executeTest(
@@ -559,8 +559,8 @@ describe('InstanceClient', function() {
                         expect(err).to.not.be.ok;
 
                         expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockInstanceStep)));
-                        expect(client.internalClient.completeStep).to.have.callCount(1);
-                        expect(client.internalClient.completeStep).to.have.been.calledWith(
+                        expect(client._internalClient.completeStep).to.have.callCount(1);
+                        expect(client._internalClient.completeStep).to.have.been.calledWith(
                             mockInstanceStep.id,
                             WildcardId,
                             {
@@ -585,7 +585,7 @@ describe('InstanceClient', function() {
                     { name: 'Another Field', value: 'second value' }
                 ];
                 sinon
-                    .stub(client.internalClient, 'completeStep')
+                    .stub(client._internalClient, 'completeStep')
                     .callsFake(() => Promise.resolve(createResponse({ detail: 'Intentional bad request error' }, 400)));
 
                 return executeTest(
@@ -596,8 +596,8 @@ describe('InstanceClient', function() {
                         expect(result).to.not.be.ok;
                         expect(err).to.be.ok;
                         expect(err.message).to.include('Intentional bad request error');
-                        expect(client.internalClient.completeStep).to.have.callCount(1);
-                        expect(client.internalClient.completeStep).to.have.been.calledWith(
+                        expect(client._internalClient.completeStep).to.have.callCount(1);
+                        expect(client._internalClient.completeStep).to.have.been.calledWith(
                             mockInstanceStep.id,
                             WildcardId,
                             {

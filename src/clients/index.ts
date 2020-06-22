@@ -1,4 +1,4 @@
-export { default as CredentialsClient, CredentialsClientInterface } from './CredentialsClient';
+export { default as AccessTokenClient, AccessTokenClientInterface } from './AccessTokenClient';
 export { default as DataTableClient, DataTableClientInterface } from './DataTableClient';
 export { default as FileClient, FileClientInterface } from './FileClient';
 export { default as InstanceClient, InstanceClientInterface } from './InstanceClient';
