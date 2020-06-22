@@ -1,6 +1,6 @@
-export { default as CredentialsClient } from './CredentialsClient';
-export { default as DataTableClient } from './DataTableClient';
-export { default as FileClient } from './FileClient';
-export { default as InstanceClient } from './InstanceClient';
-export { default as UserClient } from './UserClient';
-export { default as WorkflowClient } from './WorkflowClient';
+export { default as CredentialsClient, CredentialsClientInterface } from './CredentialsClient';
+export { default as DataTableClient, DataTableClientInterface } from './DataTableClient';
+export { default as FileClient, FileClientInterface } from './FileClient';
+export { default as InstanceClient, InstanceClientInterface } from './InstanceClient';
+export { default as UserClient, UserClientInterface } from './UserClient';
+export { default as WorkflowClient, WorkflowClientInterface } from './WorkflowClient';

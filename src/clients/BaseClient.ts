@@ -1,4 +1,3 @@
-import * as msRest from '@azure/ms-rest-js';
 import axios from 'axios';
 import FormData from 'form-data';
 import { readFile, createWriteStream } from 'fs';
@@ -10,6 +9,7 @@ import { CatalyticSDKAPI } from '../internal/lib/catalyticSDKAPI';
 import { CredentialsProvider } from '../entities/Credentials';
 import { InvalidCredentialsError, UnauthorizedError, ResourceNotFoundError, InternalError } from '../errors';
 import { BaseUri, UserAgent } from '../constants';
+import { ClientMethodCallback, InternalAPIResponse } from '../types';
 
 export default abstract class BaseClient {
     static entity: string;
@@ -226,39 +226,4 @@ export default abstract class BaseClient {
 
         return callbackify(safeFn).bind(this);
     }
-}
-
-export interface FindOptions {
-    /**
-     * Free text query terms to search for
-     */
-    query?: string;
-    /**
-     * The token representing the result page to get
-     */
-    pageToken?: string;
-    /**
-     * The page size requested
-     */
-    pageSize?: number;
-}
-
-export interface ClientMethodCallback<TResult> {
-    /**
-     * A method that will be invoked as a callback to a service function.
-     * @param {Error | null} err The error occurred, if any; otherwise null.
-     * @param {TResult} [result] The result if an error did not occur.
-     */
-    (err: Error | null, result?: TResult): void;
-}
-
-export interface InternalAPIResponse {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    body: any;
-    // this is the type returned from all requests via generated methods
-    _response: msRest.HttpResponse & {
-        bodyAsText: string;
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        parsedBody: any;
-    };
 }

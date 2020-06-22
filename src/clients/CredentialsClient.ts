@@ -1,9 +1,65 @@
-import BaseClient, { FindOptions, ClientMethodCallback } from './BaseClient';
 import { Credentials, CredentialsPage } from '../entities';
+import { BaseFindOptions, ClientMethodCallback } from '../types';
 
-export default class CredentialsClient extends BaseClient {
+import BaseClient from './BaseClient';
+
+export default class CredentialsClient extends BaseClient implements CredentialsClientInterface {
     static entity = 'Credentials';
 
+    get(id: string): Promise<Credentials>;
+    get(id: string, callback: ClientMethodCallback<Credentials>): void;
+    get(id: string, callback?: ClientMethodCallback<Credentials>): Promise<Credentials> | void {
+        if (callback) {
+            return this.callbackifyBound(this._get)(id, callback);
+        }
+
+        return this._get(id);
+    }
+
+    private async _get(id: string): Promise<Credentials> {
+        console.log(`Getting Credentials with ID '${id}'`);
+        const headers = this.getRequestHeaders();
+        const result = await this.internalClient.getCredentials(id, { customHeaders: headers });
+        return this.parseResponse<Credentials>(result);
+    }
+
+    find(): Promise<CredentialsPage>;
+    find(options: FindCredentialsOptions): Promise<CredentialsPage>;
+    find(callback: ClientMethodCallback<CredentialsPage>): void;
+    find(options: FindCredentialsOptions, callback: ClientMethodCallback<CredentialsPage>): void;
+    find(
+        options?: FindCredentialsOptions | ClientMethodCallback<CredentialsPage>,
+        callback?: ClientMethodCallback<CredentialsPage>
+    ): Promise<CredentialsPage> | void {
+        if (typeof options === 'function') {
+            callback = options;
+            options = null;
+        }
+
+        if (callback) {
+            return this.callbackifyBound(this._find)(options as FindCredentialsOptions, callback);
+        }
+
+        return this._find(options as FindCredentialsOptions);
+    }
+
+    private async _find(options: FindCredentialsOptions): Promise<CredentialsPage> {
+        console.log('Finding Credentials');
+        const headers = this.getRequestHeaders();
+        const result = await this.internalClient.findCredentials(
+            Object.assign({}, options, { customHeaders: headers })
+        );
+        return this.parseResponse<CredentialsPage>(result);
+    }
+
+    // async create(domain: string): Promise<Credentials> {
+    //     console.log(`Creating Credentials on domain '${domain}'`);
+    //     const result = await this.internalClient.createCredentials({ domain });
+    //     return this.parseResponse<Credentials>(result);
+    // }
+}
+
+export interface CredentialsClientInterface {
     /**
      * @summary Gets a Credentials by ID
      *
@@ -25,20 +81,7 @@ export default class CredentialsClient extends BaseClient {
      * @param callback The optional callback
      * @returns The Credentials with the provided ID
      */
-    get(id: string, callback?: ClientMethodCallback<Credentials>): Promise<Credentials> | void {
-        if (callback) {
-            return this.callbackifyBound(this._get)(id, callback);
-        }
-
-        return this._get(id);
-    }
-
-    private async _get(id: string): Promise<Credentials> {
-        console.log(`Getting Credentials with ID '${id}'`);
-        const headers = this.getRequestHeaders();
-        const result = await this.internalClient.getCredentials(id, { customHeaders: headers });
-        return this.parseResponse<Credentials>(result);
-    }
+    get(id: string, callback?: ClientMethodCallback<Credentials>): Promise<Credentials> | void;
 
     /**
      * @summary Finds Credentials
@@ -76,36 +119,10 @@ export default class CredentialsClient extends BaseClient {
     find(
         options?: FindCredentialsOptions | ClientMethodCallback<CredentialsPage>,
         callback?: ClientMethodCallback<CredentialsPage>
-    ): Promise<CredentialsPage> | void {
-        if (typeof options === 'function') {
-            callback = options;
-            options = null;
-        }
-
-        if (callback) {
-            return this.callbackifyBound(this._find)(options as FindCredentialsOptions, callback);
-        }
-
-        return this._find(options as FindCredentialsOptions);
-    }
-
-    private async _find(options: FindCredentialsOptions): Promise<CredentialsPage> {
-        console.log('Finding Credentials');
-        const headers = this.getRequestHeaders();
-        const result = await this.internalClient.findCredentials(
-            Object.assign({}, options, { customHeaders: headers })
-        );
-        return this.parseResponse<CredentialsPage>(result);
-    }
-
-    // async create(domain: string): Promise<Credentials> {
-    //     console.log(`Creating Credentials on domain '${domain}'`);
-    //     const result = await this.internalClient.createCredentials({ domain });
-    //     return this.parseResponse<Credentials>(result);
-    // }
+    ): Promise<CredentialsPage> | void;
 }
 
-export interface FindCredentialsOptions extends FindOptions {
+export interface FindCredentialsOptions extends BaseFindOptions {
     /**
      * @summary The email address of the Credentials' owner
      */

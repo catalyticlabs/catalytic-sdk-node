@@ -8,6 +8,7 @@ export { default as FileMetadataPage } from './FileMetadataPage';
 export { default as Instance } from './Instance';
 export { default as InstancesPage } from './InstancesPage';
 export { default as InstanceStep } from './InstanceStep';
+export { default as InstanceStepsPage } from './InstanceStepsPage';
 export { default as User } from './User';
 export { default as UsersPage } from './UsersPage';
 export { default as Workflow } from './Workflow';
