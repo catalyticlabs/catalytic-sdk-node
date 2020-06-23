@@ -1,4 +1,6 @@
 export * from './src/entities';
-import CatalyticClient from './src/CatalyticClient';
+import _CatalyticClient from './src/CatalyticClient';
+
+export const CatalyticClient = _CatalyticClient;
 
 export default CatalyticClient;

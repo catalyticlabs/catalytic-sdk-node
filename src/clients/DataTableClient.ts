@@ -48,7 +48,9 @@ export default class DataTableClient extends BaseClient implements DataTableClie
     private async _find(options: FindDataTablesOptions): Promise<DataTablesPage> {
         console.log('Finding DataTables');
         const headers = this.getRequestHeaders();
-        const result = await this._internalClient.findDataTables(Object.assign({}, options, { customHeaders: headers }));
+        const result = await this._internalClient.findDataTables(
+            Object.assign({}, options, { customHeaders: headers })
+        );
         return this.parseResponse<DataTablesPage>(result);
     }
 

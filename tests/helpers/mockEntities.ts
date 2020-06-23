@@ -27,7 +27,7 @@ export const mockAccessToken = (): AccessToken => {
 
     const token = Buffer.from([id, secret, domain, environment].join(':')).toString('base64');
 
-    return { id, domain, environment, secret, token };
+    return new AccessToken(token);
 };
 
 export const mockAccessTokensPage = (): AccessTokensPage => {
