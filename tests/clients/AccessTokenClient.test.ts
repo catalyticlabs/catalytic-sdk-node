@@ -33,7 +33,7 @@ describe('AccessTokenClient', function() {
                 .stub(client._internalClient, 'getAccessToken')
                 .callsFake(() => Promise.resolve(createResponse(mockAccessToken)));
 
-            return executeTest(client.accessTokenClient, 'get', [mockAccessToken.id], (err, result) => {
+            return executeTest(client.accessTokens, 'get', [mockAccessToken.id], (err, result) => {
                 expect(err).to.not.be.ok;
 
                 expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockAccessToken)));
@@ -50,7 +50,7 @@ describe('AccessTokenClient', function() {
                 .stub(client._internalClient, 'getAccessToken')
                 .callsFake(() => Promise.resolve(createResponse({ detail: 'Intentional not found error' }, 404)));
 
-            return executeTest(client.accessTokenClient, 'get', [id], (error, result) => {
+            return executeTest(client.accessTokens, 'get', [id], (error, result) => {
                 expect(result).to.not.be.ok;
                 expect(error).to.be.ok;
                 expect(error.message).to.include('Intentional not found error');
@@ -69,7 +69,7 @@ describe('AccessTokenClient', function() {
                 .stub(client._internalClient, 'findAccessTokens')
                 .callsFake(() => Promise.resolve(createResponse(mockAccessTokensPage)));
 
-            return executeTest(client.accessTokenClient, 'find', [], (err, result) => {
+            return executeTest(client.accessTokens, 'find', [], (err, result) => {
                 expect(err).to.not.be.ok;
 
                 expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockAccessTokensPage)));
@@ -87,7 +87,7 @@ describe('AccessTokenClient', function() {
                 .stub(client._internalClient, 'findAccessTokens')
                 .callsFake(() => Promise.resolve(createResponse(mockAccessTokensPage)));
 
-            return executeTest(client.accessTokenClient, 'find', [options], (err, result) => {
+            return executeTest(client.accessTokens, 'find', [options], (err, result) => {
                 expect(err).to.not.be.ok;
 
                 expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockAccessTokensPage)));
@@ -104,7 +104,7 @@ describe('AccessTokenClient', function() {
                 .stub(client._internalClient, 'findAccessTokens')
                 .callsFake(() => Promise.resolve(createResponse({ detail: 'Intentional bad request error' }, 400)));
 
-            return executeTest(client.accessTokenClient, 'find', [], (error, result) => {
+            return executeTest(client.accessTokens, 'find', [], (error, result) => {
                 expect(result).to.not.be.ok;
                 expect(error).to.be.ok;
                 expect(error.message).to.include('Intentional bad request error');
@@ -127,7 +127,7 @@ describe('AccessTokenClient', function() {
                 .stub(client._internalClient, 'createAndApproveAccessToken')
                 .callsFake(() => Promise.resolve(createResponse(mockAccessToken)));
 
-            return executeTest(client.accessTokenClient, 'create', [teamName, email, password], (err, result) => {
+            return executeTest(client.accessTokens, 'create', [teamName, email, password], (err, result) => {
                 expect(err).to.not.be.ok;
 
                 expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockAccessToken)));
@@ -154,25 +154,20 @@ describe('AccessTokenClient', function() {
                 .stub(client._internalClient, 'createAndApproveAccessToken')
                 .callsFake(() => Promise.resolve(createResponse(mockAccessToken)));
 
-            return executeTest(
-                client.accessTokenClient,
-                'create',
-                [teamName, email, password, tokenName],
-                (err, result) => {
-                    expect(err).to.not.be.ok;
+            return executeTest(client.accessTokens, 'create', [teamName, email, password, tokenName], (err, result) => {
+                expect(err).to.not.be.ok;
 
-                    expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockAccessToken)));
-                    expect(client._internalClient.createAndApproveAccessToken).to.have.callCount(1);
-                    expect(client._internalClient.createAndApproveAccessToken).to.have.been.calledWith({
-                        body: {
-                            domain: utils.getDomainFromTeamName(teamName),
-                            email,
-                            password,
-                            name: tokenName
-                        }
-                    });
-                }
-            );
+                expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockAccessToken)));
+                expect(client._internalClient.createAndApproveAccessToken).to.have.callCount(1);
+                expect(client._internalClient.createAndApproveAccessToken).to.have.been.calledWith({
+                    body: {
+                        domain: utils.getDomainFromTeamName(teamName),
+                        email,
+                        password,
+                        name: tokenName
+                    }
+                });
+            });
         });
 
         it('should return proper exception when AccessToken fails to create', async function() {
@@ -184,7 +179,7 @@ describe('AccessTokenClient', function() {
                 .stub(client._internalClient, 'createAndApproveAccessToken')
                 .callsFake(() => Promise.resolve(createResponse({ detail: 'Intentional unauthorized error' }, 401)));
 
-            return executeTest(client.accessTokenClient, 'create', [teamName, email, password], (error, result) => {
+            return executeTest(client.accessTokens, 'create', [teamName, email, password], (error, result) => {
                 expect(result).to.not.be.ok;
                 expect(error).to.be.ok.and.to.be.instanceOf(UnauthorizedError);
                 expect(error.message).to.include('Intentional unauthorized error');
@@ -210,7 +205,7 @@ describe('AccessTokenClient', function() {
                 .stub(client._internalClient, 'createAccessToken')
                 .callsFake(() => Promise.resolve(createResponse(mockAccessToken)));
 
-            return executeTest(client.accessTokenClient, 'createWithWebApprovalFlow', [teamName], (err, result) => {
+            return executeTest(client.accessTokens, 'createWithWebApprovalFlow', [teamName], (err, result) => {
                 expect(err).to.not.be.ok;
 
                 expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockAccessToken)));
@@ -234,7 +229,7 @@ describe('AccessTokenClient', function() {
                 .callsFake(() => Promise.resolve(createResponse(mockAccessToken)));
 
             return executeTest(
-                client.accessTokenClient,
+                client.accessTokens,
                 'createWithWebApprovalFlow',
                 [teamName, tokenName],
                 (err, result) => {
@@ -259,7 +254,7 @@ describe('AccessTokenClient', function() {
                 .stub(client._internalClient, 'createAccessToken')
                 .callsFake(() => Promise.resolve(createResponse({ detail: 'Intentional unauthorized error' }, 401)));
 
-            return executeTest(client.accessTokenClient, 'createWithWebApprovalFlow', [teamName], (error, result) => {
+            return executeTest(client.accessTokens, 'createWithWebApprovalFlow', [teamName], (error, result) => {
                 expect(result).to.not.be.ok;
                 expect(error).to.be.ok.and.to.be.instanceOf(UnauthorizedError);
                 expect(error.message).to.include('Intentional unauthorized error');
@@ -281,7 +276,7 @@ describe('AccessTokenClient', function() {
                 .stub(client._internalClient, 'revokeAccessToken')
                 .callsFake(() => Promise.resolve(createResponse(mockAccessToken)));
 
-            return executeTest(client.accessTokenClient, 'revoke', [mockAccessToken.id], (err, result) => {
+            return executeTest(client.accessTokens, 'revoke', [mockAccessToken.id], (err, result) => {
                 expect(err).to.not.be.ok;
 
                 expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockAccessToken)));
@@ -298,7 +293,7 @@ describe('AccessTokenClient', function() {
                 .stub(client._internalClient, 'revokeAccessToken')
                 .callsFake(() => Promise.resolve(createResponse({ detail: 'Intentional not found error' }, 404)));
 
-            return executeTest(client.accessTokenClient, 'revoke', [id], (error, result) => {
+            return executeTest(client.accessTokens, 'revoke', [id], (error, result) => {
                 expect(result).to.not.be.ok;
                 expect(error).to.be.ok;
                 expect(error.message).to.include('Intentional not found error');
@@ -317,7 +312,7 @@ describe('AccessTokenClient', function() {
                 .stub(client._internalClient, 'waitForAccessTokenApproval')
                 .callsFake(() => Promise.resolve(createResponse(mockAccessToken)));
 
-            return executeTest(client.accessTokenClient, 'waitForApproval', [mockAccessToken], err => {
+            return executeTest(client.accessTokens, 'waitForApproval', [mockAccessToken], err => {
                 expect(err).to.not.be.ok;
 
                 expect(client._internalClient.waitForAccessTokenApproval).to.have.callCount(1);
@@ -337,7 +332,7 @@ describe('AccessTokenClient', function() {
                 .stub(client._internalClient, 'waitForAccessTokenApproval')
                 .callsFake(() => Promise.resolve(createResponse(mockAccessToken)));
 
-            return executeTest(client.accessTokenClient, 'waitForApproval', [mockAccessToken, waitTimeMillis], err => {
+            return executeTest(client.accessTokens, 'waitForApproval', [mockAccessToken, waitTimeMillis], err => {
                 expect(err).to.not.be.ok;
 
                 expect(client._internalClient.waitForAccessTokenApproval).to.have.callCount(1);
@@ -356,7 +351,7 @@ describe('AccessTokenClient', function() {
                 .stub(client._internalClient, 'waitForAccessTokenApproval')
                 .callsFake(() => Promise.resolve(createResponse({ detail: 'Intentional not found error' }, 404)));
 
-            return executeTest(client.accessTokenClient, 'waitForApproval', [mockAccessToken], (error, result) => {
+            return executeTest(client.accessTokens, 'waitForApproval', [mockAccessToken], (error, result) => {
                 expect(result).to.not.be.ok;
                 expect(error).to.be.ok.and.to.be.instanceOf(ResourceNotFoundError);
                 expect(error.message).to.include('Intentional not found error');
@@ -375,13 +370,13 @@ describe('AccessTokenClient', function() {
         it('should get correct approval url', function() {
             const mockAccessToken = mock.mockAccessToken();
             const appName = 'my custom app';
-            expect(client.accessTokenClient.getApprovalUrl(mockAccessToken)).to.equal(
+            expect(client.accessTokens.getApprovalUrl(mockAccessToken)).to.equal(
                 `https://${mockAccessToken.domain}/access-tokens/approve?userTokenID=${
                     mockAccessToken.id
                 }&application=${encodeURIComponent('Catalytic SDK')}`
             );
 
-            expect(client.accessTokenClient.getApprovalUrl(mockAccessToken, appName)).to.equal(
+            expect(client.accessTokens.getApprovalUrl(mockAccessToken, appName)).to.equal(
                 `https://${mockAccessToken.domain}/access-tokens/approve?userTokenID=${
                     mockAccessToken.id
                 }&application=${encodeURIComponent(appName)}`
@@ -393,7 +388,7 @@ describe('AccessTokenClient', function() {
         it('should open a URL', function() {
             const url = 'https://google.com';
             sinon.stub(utils, 'openUrl');
-            client.accessTokenClient.openUrl(url);
+            client.accessTokens.openUrl(url);
             expect(utils.openUrl).to.have.callCount(1);
             expect(utils.openUrl).to.have.been.calledWith(url);
         });

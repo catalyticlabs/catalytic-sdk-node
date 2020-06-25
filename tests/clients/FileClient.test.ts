@@ -35,7 +35,7 @@ describe('FileClient', function() {
                 .stub(client._internalClient, 'getFile')
                 .callsFake(() => Promise.resolve(createResponse(mockFileMetadata)));
 
-            return executeTest(client.fileClient, 'get', [mockFileMetadata.id], (err, result) => {
+            return executeTest(client.files, 'get', [mockFileMetadata.id], (err, result) => {
                 expect(err).to.not.be.ok;
 
                 expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockFileMetadata)));
@@ -52,7 +52,7 @@ describe('FileClient', function() {
                 .stub(client._internalClient, 'getFile')
                 .callsFake(() => Promise.resolve(createResponse({ detail: 'Intentional not found error' }, 404)));
 
-            return executeTest(client.fileClient, 'get', [id], (error, result) => {
+            return executeTest(client.files, 'get', [id], (error, result) => {
                 expect(result).to.not.be.ok;
                 expect(error).to.be.ok;
                 expect(error).to.be.instanceOf(ResourceNotFoundError);
@@ -72,13 +72,13 @@ describe('FileClient', function() {
             const filePath = join(__dirname, '../fixtures/test.txt');
             const mockFileMetadata = mock.mockFileMetadata();
             // stubbing protected method on BaseClient, which is called by FileClient.upload
-            const stub = sinon.stub(client.fileClient, 'uploadFile' as any).callsFake(() => {
+            const stub = sinon.stub(client.files, 'uploadFile' as any).callsFake(() => {
                 const result = new FileMetadataPage();
                 result.files = [mockFileMetadata];
                 return Promise.resolve(result);
             });
 
-            return executeTest(client.fileClient, 'upload', [filePath], (err, result) => {
+            return executeTest(client.files, 'upload', [filePath], (err, result) => {
                 expect(err).to.not.be.ok;
 
                 expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockFileMetadata)));
@@ -90,11 +90,11 @@ describe('FileClient', function() {
         it('should return expected error response when file fails to upload', function() {
             const filePath = join(__dirname, '../fixtures/test.txt');
             // stubbing protected method on BaseClient, which is called by FileClient.upload
-            const stub = sinon.stub(client.fileClient, 'uploadFile' as any).callsFake(() => {
+            const stub = sinon.stub(client.files, 'uploadFile' as any).callsFake(() => {
                 throw new InternalError('Intentional server error');
             });
 
-            return executeTest(client.fileClient, 'upload', [filePath], (err, result) => {
+            return executeTest(client.files, 'upload', [filePath], (err, result) => {
                 expect(result).to.not.be.ok;
                 expect(err).to.be.ok;
                 expect(err).to.be.instanceOf(InternalError);
@@ -108,10 +108,10 @@ describe('FileClient', function() {
             const filePath = join(__dirname, '../fixtures/test.txt');
             // stubbing protected method on BaseClient, which is called by FileClient.upload
             const stub = sinon
-                .stub(client.fileClient, 'uploadFile' as any)
+                .stub(client.files, 'uploadFile' as any)
                 .callsFake(() => Promise.resolve(new FileMetadataPage()));
 
-            return executeTest(client.fileClient, 'upload', [filePath], (err, result) => {
+            return executeTest(client.files, 'upload', [filePath], (err, result) => {
                 expect(result).to.not.be.ok;
                 expect(err).to.be.ok;
                 expect(err).to.be.instanceOf(FileUploadError);
@@ -129,10 +129,10 @@ describe('FileClient', function() {
             const stream = createReadStream(filePath);
             // stubbing protected method on BaseClient, which is called by FileClient.getDownloadStream
             const stub = sinon
-                .stub(client.fileClient, 'getFileDownloadStream' as any)
+                .stub(client.files, 'getFileDownloadStream' as any)
                 .callsFake(() => Promise.resolve(stream));
 
-            return executeTest(client.fileClient, 'getDownloadStream', [id], (err, result) => {
+            return executeTest(client.files, 'getDownloadStream', [id], (err, result) => {
                 expect(err).to.not.be.ok;
 
                 expect(result).to.deep.equal(stream);
@@ -144,11 +144,11 @@ describe('FileClient', function() {
         it('should return expected error response when error fetching download stream', function() {
             const id = v4();
             // stubbing protected method on BaseClient, which is called by FileClient.getDownloadStream
-            const stub = sinon.stub(client.fileClient, 'getFileDownloadStream' as any).callsFake(() => {
+            const stub = sinon.stub(client.files, 'getFileDownloadStream' as any).callsFake(() => {
                 throw new InternalError('Intentional server error');
             });
 
-            return executeTest(client.fileClient, 'getDownloadStream', [id], (err, result) => {
+            return executeTest(client.files, 'getDownloadStream', [id], (err, result) => {
                 expect(result).to.not.be.ok;
                 expect(err).to.be.ok;
                 expect(err).to.be.instanceOf(InternalError);
@@ -164,9 +164,9 @@ describe('FileClient', function() {
             const outputPath = '/fake/path/to/file';
             const id = v4();
             // stubbing protected method on BaseClient, which is called by FileClient.download
-            const stub = sinon.stub(client.fileClient, 'downloadFile' as any).callsFake(() => Promise.resolve());
+            const stub = sinon.stub(client.files, 'downloadFile' as any).callsFake(() => Promise.resolve());
 
-            return executeTest(client.fileClient, 'download', [id, outputPath], (err, result) => {
+            return executeTest(client.files, 'download', [id, outputPath], (err, result) => {
                 expect(err).to.not.be.ok;
                 // no result returned from method
                 expect(result).to.not.be.ok;
@@ -179,11 +179,11 @@ describe('FileClient', function() {
             const id = v4();
             const outputPath = '/fake/path/to/file';
             // stubbing protected method on BaseClient, which is called by FileClient.download
-            const stub = sinon.stub(client.fileClient, 'downloadFile' as any).callsFake(() => {
+            const stub = sinon.stub(client.files, 'downloadFile' as any).callsFake(() => {
                 throw new InternalError('Intentional server error');
             });
 
-            return executeTest(client.fileClient, 'download', [id, outputPath], (err, result) => {
+            return executeTest(client.files, 'download', [id, outputPath], (err, result) => {
                 expect(result).to.not.be.ok;
                 expect(err).to.be.ok;
                 expect(err).to.be.instanceOf(InternalError);

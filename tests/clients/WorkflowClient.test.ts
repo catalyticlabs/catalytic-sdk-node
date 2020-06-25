@@ -34,7 +34,7 @@ describe('WorkflowClient', function() {
                 .stub(client._internalClient, 'getWorkflow')
                 .callsFake(() => Promise.resolve(createResponse(mockWorkflow)));
 
-            return executeTest(client.workflowClient, 'get', [mockWorkflow.id], (err, result) => {
+            return executeTest(client.workflows, 'get', [mockWorkflow.id], (err, result) => {
                 expect(err).to.not.be.ok;
 
                 expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockWorkflow)));
@@ -51,7 +51,7 @@ describe('WorkflowClient', function() {
                 .stub(client._internalClient, 'getWorkflow')
                 .callsFake(() => Promise.resolve(createResponse({ detail: 'Intentional not found error' }, 404)));
 
-            return executeTest(client.workflowClient, 'get', [id], (error, result) => {
+            return executeTest(client.workflows, 'get', [id], (error, result) => {
                 expect(result).to.not.be.ok;
                 expect(error).to.be.ok;
                 expect(error.message).to.include('Intentional not found error');
@@ -70,7 +70,7 @@ describe('WorkflowClient', function() {
                 .stub(client._internalClient, 'findWorkflows')
                 .callsFake(() => Promise.resolve(createResponse(mockWorkflowsPage)));
 
-            return executeTest(client.workflowClient, 'find', [], (err, result) => {
+            return executeTest(client.workflows, 'find', [], (err, result) => {
                 expect(err).to.not.be.ok;
 
                 expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockWorkflowsPage)));
@@ -88,7 +88,7 @@ describe('WorkflowClient', function() {
                 .stub(client._internalClient, 'findWorkflows')
                 .callsFake(() => Promise.resolve(createResponse(mockWorkflowsPage)));
 
-            return executeTest(client.workflowClient, 'find', [options], (err, result) => {
+            return executeTest(client.workflows, 'find', [options], (err, result) => {
                 expect(err).to.not.be.ok;
 
                 expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockWorkflowsPage)));
@@ -105,7 +105,7 @@ describe('WorkflowClient', function() {
                 .stub(client._internalClient, 'findWorkflows')
                 .callsFake(() => Promise.resolve(createResponse({ detail: 'Intentional bad request error' }, 400)));
 
-            return executeTest(client.workflowClient, 'find', [], (error, result) => {
+            return executeTest(client.workflows, 'find', [], (error, result) => {
                 expect(result).to.not.be.ok;
                 expect(error).to.be.ok;
                 expect(error.message).to.include('Intentional bad request error');
@@ -127,7 +127,7 @@ describe('WorkflowClient', function() {
             const mockWorkflowImport = mock.mockWorkflowImport();
             mockWorkflowImport.workflowId = mockWorkflow.id;
             // stubbing protected method on BaseClient, which is called by WorkflowClient.import
-            const uploadFileStub = sinon.stub(client.workflowClient, 'uploadFile' as any).callsFake(() => {
+            const uploadFileStub = sinon.stub(client.workflows, 'uploadFile' as any).callsFake(() => {
                 const result = new FileMetadataPage();
                 result.files = [mockFileMetadata];
                 return Promise.resolve(result);
@@ -144,7 +144,7 @@ describe('WorkflowClient', function() {
                 .stub(client._internalClient, 'getWorkflow')
                 .callsFake(() => Promise.resolve(createResponse(mockWorkflow)));
 
-            return executeTest(client.workflowClient, 'import', [filePath, password], (err, result) => {
+            return executeTest(client.workflows, 'import', [filePath, password], (err, result) => {
                 expect(err).to.not.be.ok;
 
                 expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockWorkflow)));
@@ -181,7 +181,7 @@ describe('WorkflowClient', function() {
             const mockWorkflowImport = mock.mockWorkflowImport();
             mockWorkflowImport.workflowId = mockWorkflow.id;
             // stubbing protected method on BaseClient, which is called by WorkflowClient.import
-            const uploadFileStub = sinon.stub(client.workflowClient, 'uploadFile' as any).callsFake(() => {
+            const uploadFileStub = sinon.stub(client.workflows, 'uploadFile' as any).callsFake(() => {
                 const result = new FileMetadataPage();
                 result.files = [mockFileMetadata];
                 return Promise.resolve(result);
@@ -198,7 +198,7 @@ describe('WorkflowClient', function() {
                 .stub(client._internalClient, 'getWorkflow')
                 .callsFake(() => Promise.resolve(createResponse(mockWorkflow)));
 
-            return executeTest(client.workflowClient, 'import', [filePath], (err, result) => {
+            return executeTest(client.workflows, 'import', [filePath], (err, result) => {
                 expect(err).to.not.be.ok;
 
                 expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockWorkflow)));
@@ -237,7 +237,7 @@ describe('WorkflowClient', function() {
             mockWorkflowImport.workflowId = mockWorkflow.id;
             // stubbing protected method on BaseClient, which is called by FileClient.upload
             // stubbing protected method on BaseClient, which is called by WorkflowClient.import
-            const uploadFileStub = sinon.stub(client.workflowClient, 'uploadFile' as any).callsFake(() => {
+            const uploadFileStub = sinon.stub(client.workflows, 'uploadFile' as any).callsFake(() => {
                 const result = new FileMetadataPage();
                 result.files = [mockFileMetadata];
                 return Promise.resolve(result);
@@ -254,7 +254,7 @@ describe('WorkflowClient', function() {
                     )
                 );
 
-            return executeTest(client.workflowClient, 'import', [filePath, password], (err, result) => {
+            return executeTest(client.workflows, 'import', [filePath, password], (err, result) => {
                 expect(result).to.not.be.ok;
                 expect(err).to.be.ok;
                 expect(err).to.be.instanceOf(WorkflowImportError);
@@ -299,7 +299,7 @@ describe('WorkflowClient', function() {
                 .stub(client._internalClient, 'getFile')
                 .callsFake(() => Promise.resolve(createResponse(mockFileMetadata)));
 
-            return executeTest(client.workflowClient, 'export', [workflowId, password], (err, result) => {
+            return executeTest(client.workflows, 'export', [workflowId, password], (err, result) => {
                 expect(err).to.not.be.ok;
 
                 expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockFileMetadata)));
@@ -342,7 +342,7 @@ describe('WorkflowClient', function() {
                 .stub(client._internalClient, 'getFile')
                 .callsFake(() => Promise.resolve(createResponse(mockFileMetadata)));
 
-            return executeTest(client.workflowClient, 'export', [workflowId], (err, result) => {
+            return executeTest(client.workflows, 'export', [workflowId], (err, result) => {
                 expect(err).to.not.be.ok;
 
                 expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockFileMetadata)));
@@ -386,7 +386,7 @@ describe('WorkflowClient', function() {
                     )
                 );
 
-            return executeTest(client.workflowClient, 'export', [workflowId, password], (err, result) => {
+            return executeTest(client.workflows, 'export', [workflowId, password], (err, result) => {
                 expect(result).to.not.be.ok;
                 expect(err).to.be.ok;
                 expect(err).to.be.instanceOf(WorkflowExportError);
