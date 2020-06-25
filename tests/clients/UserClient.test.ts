@@ -29,7 +29,7 @@ describe('UserClient', function() {
             const mockUser = mock.mockUser();
             sinon.stub(client._internalClient, 'getUser').callsFake(() => Promise.resolve(createResponse(mockUser)));
 
-            return executeTest(client.userClient, 'get', [mockUser.id], (err, result) => {
+            return executeTest(client.users, 'get', [mockUser.id], (err, result) => {
                 expect(err).to.not.be.ok;
 
                 expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockUser)));
@@ -46,7 +46,7 @@ describe('UserClient', function() {
                 .stub(client._internalClient, 'getUser')
                 .callsFake(() => Promise.resolve(createResponse({ detail: 'Intentional not found error' }, 404)));
 
-            return executeTest(client.userClient, 'get', [id], (error, result) => {
+            return executeTest(client.users, 'get', [id], (error, result) => {
                 expect(result).to.not.be.ok;
                 expect(error).to.be.ok;
                 expect(error.message).to.include('Intentional not found error');
@@ -65,7 +65,7 @@ describe('UserClient', function() {
                 .stub(client._internalClient, 'findUsers')
                 .callsFake(() => Promise.resolve(createResponse(mockUsersPage)));
 
-            return executeTest(client.userClient, 'find', [], (err, result) => {
+            return executeTest(client.users, 'find', [], (err, result) => {
                 expect(err).to.not.be.ok;
 
                 expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockUsersPage)));
@@ -83,7 +83,7 @@ describe('UserClient', function() {
                 .stub(client._internalClient, 'findUsers')
                 .callsFake(() => Promise.resolve(createResponse(mockUsersPage)));
 
-            return executeTest(client.userClient, 'find', [options], (err, result) => {
+            return executeTest(client.users, 'find', [options], (err, result) => {
                 expect(err).to.not.be.ok;
 
                 expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockUsersPage)));
@@ -100,7 +100,7 @@ describe('UserClient', function() {
                 .stub(client._internalClient, 'findUsers')
                 .callsFake(() => Promise.resolve(createResponse({ detail: 'Intentional bad request error' }, 400)));
 
-            return executeTest(client.userClient, 'find', [], (error, result) => {
+            return executeTest(client.users, 'find', [], (error, result) => {
                 expect(result).to.not.be.ok;
                 expect(error).to.be.ok;
                 expect(error.message).to.include('Intentional bad request error');

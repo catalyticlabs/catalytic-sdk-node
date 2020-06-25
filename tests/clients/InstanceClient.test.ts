@@ -35,7 +35,7 @@ describe('InstanceClient', function() {
                 .stub(client._internalClient, 'getInstance')
                 .callsFake(() => Promise.resolve(createResponse(mockInstance)));
 
-            return executeTest(client.instanceClient, 'get', [mockInstance.id], (err, result) => {
+            return executeTest(client.instances, 'get', [mockInstance.id], (err, result) => {
                 expect(err).to.not.be.ok;
 
                 expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockInstance)));
@@ -52,7 +52,7 @@ describe('InstanceClient', function() {
                 .stub(client._internalClient, 'getInstance')
                 .callsFake(() => Promise.resolve(createResponse({ detail: 'Intentional not found error' }, 404)));
 
-            return executeTest(client.instanceClient, 'get', [id], (error, result) => {
+            return executeTest(client.instances, 'get', [id], (error, result) => {
                 expect(result).to.not.be.ok;
                 expect(error).to.be.ok;
                 expect(error.message).to.include('Intentional not found error');
@@ -71,7 +71,7 @@ describe('InstanceClient', function() {
                 .stub(client._internalClient, 'findInstances')
                 .callsFake(() => Promise.resolve(createResponse(mockInstancesPage)));
 
-            return executeTest(client.instanceClient, 'find', [], (err, result) => {
+            return executeTest(client.instances, 'find', [], (err, result) => {
                 expect(err).to.not.be.ok;
 
                 expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockInstancesPage)));
@@ -95,7 +95,7 @@ describe('InstanceClient', function() {
                 .stub(client._internalClient, 'findInstances')
                 .callsFake(() => Promise.resolve(createResponse(mockInstancesPage)));
 
-            return executeTest(client.instanceClient, 'find', [options], (err, result) => {
+            return executeTest(client.instances, 'find', [options], (err, result) => {
                 expect(err).to.not.be.ok;
 
                 expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockInstancesPage)));
@@ -117,7 +117,7 @@ describe('InstanceClient', function() {
                 .stub(client._internalClient, 'findInstances')
                 .callsFake(() => Promise.resolve(createResponse({ detail: 'Intentional bad request error' }, 400)));
 
-            return executeTest(client.instanceClient, 'find', [], (error, result) => {
+            return executeTest(client.instances, 'find', [], (error, result) => {
                 expect(result).to.not.be.ok;
                 expect(error).to.be.ok;
                 expect(error.message).to.include('Intentional bad request error');
@@ -142,7 +142,7 @@ describe('InstanceClient', function() {
                 .stub(client._internalClient, 'stopInstance')
                 .callsFake(() => Promise.resolve(createResponse(mockInstance)));
 
-            return executeTest(client.instanceClient, 'stop', [mockInstance.id], (err, result) => {
+            return executeTest(client.instances, 'stop', [mockInstance.id], (err, result) => {
                 expect(err).to.not.be.ok;
 
                 expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockInstance)));
@@ -159,7 +159,7 @@ describe('InstanceClient', function() {
                 .stub(client._internalClient, 'stopInstance')
                 .callsFake(() => Promise.resolve(createResponse({ detail: 'Intentional not found error' }, 404)));
 
-            return executeTest(client.instanceClient, 'stop', [id], (error, result) => {
+            return executeTest(client.instances, 'stop', [id], (error, result) => {
                 expect(result).to.not.be.ok;
                 expect(error).to.be.ok;
                 expect(error.message).to.include('Intentional not found error');
@@ -179,7 +179,7 @@ describe('InstanceClient', function() {
                 .stub(client._internalClient, 'startInstance')
                 .callsFake(() => Promise.resolve(createResponse(mockInstance)));
 
-            return executeTest(client.instanceClient, 'start', [workflowID], (err, result) => {
+            return executeTest(client.instances, 'start', [workflowID], (err, result) => {
                 expect(err).to.not.be.ok;
 
                 expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockInstance)));
@@ -203,7 +203,7 @@ describe('InstanceClient', function() {
                 .stub(client._internalClient, 'startInstance')
                 .callsFake(() => Promise.resolve(createResponse(mockInstance)));
 
-            return executeTest(client.instanceClient, 'start', [workflowID, name], (err, result) => {
+            return executeTest(client.instances, 'start', [workflowID, name], (err, result) => {
                 expect(err).to.not.be.ok;
 
                 expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockInstance)));
@@ -230,7 +230,7 @@ describe('InstanceClient', function() {
                 .stub(client._internalClient, 'startInstance')
                 .callsFake(() => Promise.resolve(createResponse(mockInstance)));
 
-            return executeTest(client.instanceClient, 'start', [workflowID, inputs], (err, result) => {
+            return executeTest(client.instances, 'start', [workflowID, inputs], (err, result) => {
                 expect(err).to.not.be.ok;
 
                 expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockInstance)));
@@ -258,7 +258,7 @@ describe('InstanceClient', function() {
                 .stub(client._internalClient, 'startInstance')
                 .callsFake(() => Promise.resolve(createResponse(mockInstance)));
 
-            return executeTest(client.instanceClient, 'start', [workflowID, name, inputs], (err, result) => {
+            return executeTest(client.instances, 'start', [workflowID, name, inputs], (err, result) => {
                 expect(err).to.not.be.ok;
 
                 expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockInstance)));
@@ -282,7 +282,7 @@ describe('InstanceClient', function() {
                 .callsFake(() => Promise.resolve(createResponse({ detail: 'Intentional bad request error' }, 400)));
 
             await executeTest(
-                client.instanceClient,
+                client.instances,
                 'start',
                 [workflowID, name, { name: 'My Field', value: 'some value' }],
                 (err, result) => {
@@ -294,7 +294,7 @@ describe('InstanceClient', function() {
             );
 
             await executeTest(
-                client.instanceClient,
+                client.instances,
                 'start',
                 [workflowID, name, [{ value: 'some value' }]],
                 (err, result) => {
@@ -317,7 +317,7 @@ describe('InstanceClient', function() {
                 .stub(client._internalClient, 'startInstance')
                 .callsFake(() => Promise.resolve(createResponse({ detail: 'Intentional bad request error' }, 400)));
 
-            return executeTest(client.instanceClient, 'start', [workflowID, name, inputs], (err, result) => {
+            return executeTest(client.instances, 'start', [workflowID, name, inputs], (err, result) => {
                 expect(result).to.not.be.ok;
                 expect(err).to.be.ok;
                 expect(err.message).to.include('Intentional bad request error');
@@ -342,7 +342,7 @@ describe('InstanceClient', function() {
                     .stub(client._internalClient, 'getInstanceStep')
                     .callsFake(() => Promise.resolve(createResponse(mockInstanceStep)));
 
-                return executeTest(client.instanceClient, 'getInstanceStep', [mockInstanceStep.id], (err, result) => {
+                return executeTest(client.instances, 'getInstanceStep', [mockInstanceStep.id], (err, result) => {
                     expect(err).to.not.be.ok;
 
                     expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockInstanceStep)));
@@ -363,7 +363,7 @@ describe('InstanceClient', function() {
                     .stub(client._internalClient, 'getInstanceStep')
                     .callsFake(() => Promise.resolve(createResponse({ detail: 'Intentional not found error' }, 404)));
 
-                return executeTest(client.instanceClient, 'getInstanceStep', [id], (error, result) => {
+                return executeTest(client.instances, 'getInstanceStep', [id], (error, result) => {
                     expect(result).to.not.be.ok;
                     expect(error).to.be.ok;
                     expect(error.message).to.include('Intentional not found error');
@@ -382,7 +382,7 @@ describe('InstanceClient', function() {
                     .stub(client._internalClient, 'findInstanceSteps')
                     .callsFake(() => Promise.resolve(createResponse(mockInstanceStepsPage)));
 
-                return executeTest(client.instanceClient, 'findInstanceSteps', [], (err, result) => {
+                return executeTest(client.instances, 'findInstanceSteps', [], (err, result) => {
                     expect(err).to.not.be.ok;
 
                     expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockInstanceStepsPage)));
@@ -406,7 +406,7 @@ describe('InstanceClient', function() {
                     .stub(client._internalClient, 'findInstanceSteps')
                     .callsFake(() => Promise.resolve(createResponse(mockInstanceStepsPage)));
 
-                return executeTest(client.instanceClient, 'findInstanceSteps', [options], (err, result) => {
+                return executeTest(client.instances, 'findInstanceSteps', [options], (err, result) => {
                     expect(err).to.not.be.ok;
 
                     expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockInstanceStepsPage)));
@@ -428,7 +428,7 @@ describe('InstanceClient', function() {
                     .stub(client._internalClient, 'findInstanceSteps')
                     .callsFake(() => Promise.resolve(createResponse({ detail: 'Intentional bad request error' }, 400)));
 
-                return executeTest(client.instanceClient, 'findInstanceSteps', [], (error, result) => {
+                return executeTest(client.instances, 'findInstanceSteps', [], (error, result) => {
                     expect(result).to.not.be.ok;
                     expect(error).to.be.ok;
                     expect(error.message).to.include('Intentional bad request error');
@@ -455,7 +455,7 @@ describe('InstanceClient', function() {
                     .callsFake(() => Promise.resolve(createResponse(mockInstanceStep)));
 
                 return executeTest(
-                    client.instanceClient,
+                    client.instances,
                     'reassignInstanceStep',
                     [mockInstanceStep.id, email],
                     (err, result) => {
@@ -486,7 +486,7 @@ describe('InstanceClient', function() {
                     .callsFake(() => Promise.resolve(createResponse({ detail: 'Intentional bad request error' }, 400)));
 
                 return executeTest(
-                    client.instanceClient,
+                    client.instances,
                     'reassignInstanceStep',
                     [mockInstanceStep.id, email],
                     (err, result) => {
@@ -517,28 +517,23 @@ describe('InstanceClient', function() {
                     .stub(client._internalClient, 'completeStep')
                     .callsFake(() => Promise.resolve(createResponse(mockInstanceStep)));
 
-                return executeTest(
-                    client.instanceClient,
-                    'completeInstanceStep',
-                    [mockInstanceStep.id],
-                    (err, result) => {
-                        expect(err).to.not.be.ok;
+                return executeTest(client.instances, 'completeInstanceStep', [mockInstanceStep.id], (err, result) => {
+                    expect(err).to.not.be.ok;
 
-                        expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockInstanceStep)));
-                        expect(client._internalClient.completeStep).to.have.callCount(1);
-                        expect(client._internalClient.completeStep).to.have.been.calledWith(
-                            mockInstanceStep.id,
-                            WildcardId,
-                            {
-                                customHeaders: expectedCustomHeaders,
-                                body: {
-                                    id: mockInstanceStep.id,
-                                    stepOutputFields: null
-                                }
+                    expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockInstanceStep)));
+                    expect(client._internalClient.completeStep).to.have.callCount(1);
+                    expect(client._internalClient.completeStep).to.have.been.calledWith(
+                        mockInstanceStep.id,
+                        WildcardId,
+                        {
+                            customHeaders: expectedCustomHeaders,
+                            body: {
+                                id: mockInstanceStep.id,
+                                stepOutputFields: null
                             }
-                        );
-                    }
-                );
+                        }
+                    );
+                });
             });
 
             it('should complete an InstanceStep with output fields', function() {
@@ -552,7 +547,7 @@ describe('InstanceClient', function() {
                     .callsFake(() => Promise.resolve(createResponse(mockInstanceStep)));
 
                 return executeTest(
-                    client.instanceClient,
+                    client.instances,
                     'completeInstanceStep',
                     [mockInstanceStep.id, fields],
                     (err, result) => {
@@ -589,7 +584,7 @@ describe('InstanceClient', function() {
                     .callsFake(() => Promise.resolve(createResponse({ detail: 'Intentional bad request error' }, 400)));
 
                 return executeTest(
-                    client.instanceClient,
+                    client.instances,
                     'completeInstanceStep',
                     [mockInstanceStep.id, fields],
                     (err, result) => {

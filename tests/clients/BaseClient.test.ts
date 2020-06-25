@@ -26,7 +26,7 @@ describe('BaseClient', function() {
 
     describe('GetRequestHeaders', function() {
         it('should attach Token via Bearer auth header', function() {
-            const headers = client.fileClient['getRequestHeaders']();
+            const headers = client.files['getRequestHeaders']();
             expect(headers).to.have.property('Authorization', `Bearer ${client.accessToken.token}`);
         });
 
@@ -36,7 +36,7 @@ describe('BaseClient', function() {
 
             let err;
             try {
-                client.fileClient['getRequestHeaders']();
+                client.files['getRequestHeaders']();
             } catch (e) {
                 err = e;
             }
@@ -64,7 +64,7 @@ describe('BaseClient', function() {
             const filePath = join(__dirname, '../fixtures/test.txt');
 
             // this directly calls `BaseClient.prototype.uploadFile`
-            const result = await client.fileClient['uploadFile'](filePath);
+            const result = await client.files['uploadFile'](filePath);
 
             expect(result).to.deep.equal(response);
 
@@ -110,8 +110,8 @@ describe('BaseClient', function() {
             }
 
             // this directly calls `BaseClient.prototype.uploadFile`
-            verify(await client.fileClient['uploadFile'](filePath, '/custom/endpoint'));
-            verify(await client.fileClient['uploadFile'](filePath, 'custom/endpoint'));
+            verify(await client.files['uploadFile'](filePath, '/custom/endpoint'));
+            verify(await client.files['uploadFile'](filePath, 'custom/endpoint'));
         });
 
         it('should return expected error response when file fails to upload', async function() {
@@ -125,7 +125,7 @@ describe('BaseClient', function() {
             let result;
             try {
                 // this directly calls `BaseClient.prototype.uploadFile`
-                result = await client.fileClient['uploadFile'](filePath);
+                result = await client.files['uploadFile'](filePath);
             } catch (e) {
                 err = e;
             }
@@ -147,7 +147,7 @@ describe('BaseClient', function() {
             let result;
             try {
                 // this directly calls `BaseClient.prototype.uploadFile`
-                result = await client.fileClient['uploadFile'](filePath);
+                result = await client.files['uploadFile'](filePath);
             } catch (e) {
                 err = e;
             }
@@ -175,7 +175,7 @@ describe('BaseClient', function() {
                 });
 
             // this directly calls `BaseClient.prototype.getFileDownloadStream`
-            const result = await client.fileClient['getFileDownloadStream'](endpoint);
+            const result = await client.files['getFileDownloadStream'](endpoint);
 
             const chunks = [];
             await new Promise((resolve, reject) => {
@@ -201,7 +201,7 @@ describe('BaseClient', function() {
             let err;
             try {
                 // this directly calls `BaseClient.prototype.getFileDownloadStream`
-                await client.fileClient['getFileDownloadStream'](endpoint);
+                await client.files['getFileDownloadStream'](endpoint);
             } catch (e) {
                 err = e;
             }
@@ -221,7 +221,7 @@ describe('BaseClient', function() {
             let err;
             try {
                 // this directly calls `BaseClient.prototype.getFileDownloadStream`
-                await client.fileClient['getFileDownloadStream'](endpoint);
+                await client.files['getFileDownloadStream'](endpoint);
             } catch (e) {
                 err = e;
             }
@@ -249,7 +249,7 @@ describe('BaseClient', function() {
                 });
 
             // this directly calls `BaseClient.prototype.downloadFile`
-            await client.fileClient['downloadFile'](endpoint, writePath);
+            await client.files['downloadFile'](endpoint, writePath);
 
             expect(readFileSync(writePath).toString()).to.deep.equal(readFileSync(filePath).toString());
 
@@ -269,7 +269,7 @@ describe('BaseClient', function() {
             let err;
             try {
                 // this directly calls `BaseClient.prototype.downloadFile`
-                await client.fileClient['downloadFile'](endpoint, writePath);
+                await client.files['downloadFile'](endpoint, writePath);
             } catch (e) {
                 err = e;
             }
@@ -290,7 +290,7 @@ describe('BaseClient', function() {
             let err;
             try {
                 // this directly calls `BaseClient.prototype.downloadFile`
-                await client.fileClient['downloadFile'](endpoint, writePath);
+                await client.files['downloadFile'](endpoint, writePath);
             } catch (e) {
                 err = e;
             }
