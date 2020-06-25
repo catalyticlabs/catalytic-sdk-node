@@ -1,6 +1,6 @@
 {
   "name": "@catalytic/sdk",
-  "version": "0.0.1",
+  "version": "1.0.0-pre-1",
   "description": "Catalytic SDK for Node.js",
   "author": "Catalytic, Inc.",
   "repository": {
