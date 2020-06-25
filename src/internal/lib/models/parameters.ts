@@ -18,6 +18,30 @@ export const category: msRest.OperationQueryParameter = {
     }
   }
 };
+export const endedAfter: msRest.OperationQueryParameter = {
+  parameterPath: [
+    "options",
+    "endedAfter"
+  ],
+  mapper: {
+    serializedName: "ended_after",
+    type: {
+      name: "String"
+    }
+  }
+};
+export const endedBefore: msRest.OperationQueryParameter = {
+  parameterPath: [
+    "options",
+    "endedBefore"
+  ],
+  mapper: {
+    serializedName: "ended_before",
+    type: {
+      name: "String"
+    }
+  }
+};
 export const files: msRest.OperationParameter = {
   parameterPath: [
     "options",
@@ -174,6 +198,30 @@ export const sheetNumber: msRest.OperationQueryParameter = {
     defaultValue: 1,
     type: {
       name: "Number"
+    }
+  }
+};
+export const startedAfter: msRest.OperationQueryParameter = {
+  parameterPath: [
+    "options",
+    "startedAfter"
+  ],
+  mapper: {
+    serializedName: "started_after",
+    type: {
+      name: "String"
+    }
+  }
+};
+export const startedBefore: msRest.OperationQueryParameter = {
+  parameterPath: [
+    "options",
+    "startedBefore"
+  ],
+  mapper: {
+    serializedName: "started_before",
+    type: {
+      name: "String"
     }
   }
 };

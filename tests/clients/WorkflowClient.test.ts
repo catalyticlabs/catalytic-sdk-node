@@ -19,8 +19,8 @@ describe('WorkflowClient', function() {
 
     before(function() {
         client = new CatalyticClient();
-        client.credentials = mock.mockCredentials();
-        expectedCustomHeaders = { Authorization: `Bearer ${client.credentials.token}` };
+        client.accessToken = mock.mockAccessToken();
+        expectedCustomHeaders = { Authorization: `Bearer ${client.accessToken.token}` };
     });
 
     afterEach(function() {
@@ -31,15 +31,15 @@ describe('WorkflowClient', function() {
         it('should get a Workflow by ID', function() {
             const mockWorkflow = mock.mockWorkflow();
             sinon
-                .stub(client.internalClient, 'getWorkflow')
+                .stub(client._internalClient, 'getWorkflow')
                 .callsFake(() => Promise.resolve(createResponse(mockWorkflow)));
 
             return executeTest(client.workflowClient, 'get', [mockWorkflow.id], (err, result) => {
                 expect(err).to.not.be.ok;
 
                 expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockWorkflow)));
-                expect(client.internalClient.getWorkflow).to.have.callCount(1);
-                expect(client.internalClient.getWorkflow).to.have.been.calledWith(mockWorkflow.id, {
+                expect(client._internalClient.getWorkflow).to.have.callCount(1);
+                expect(client._internalClient.getWorkflow).to.have.been.calledWith(mockWorkflow.id, {
                     customHeaders: expectedCustomHeaders
                 });
             });
@@ -48,15 +48,15 @@ describe('WorkflowClient', function() {
         it('should return proper exception when Workflow not found', function() {
             const id = v4();
             sinon
-                .stub(client.internalClient, 'getWorkflow')
+                .stub(client._internalClient, 'getWorkflow')
                 .callsFake(() => Promise.resolve(createResponse({ detail: 'Intentional not found error' }, 404)));
 
             return executeTest(client.workflowClient, 'get', [id], (error, result) => {
                 expect(result).to.not.be.ok;
                 expect(error).to.be.ok;
                 expect(error.message).to.include('Intentional not found error');
-                expect(client.internalClient.getWorkflow).to.have.callCount(1);
-                expect(client.internalClient.getWorkflow).to.have.been.calledWith(id, {
+                expect(client._internalClient.getWorkflow).to.have.callCount(1);
+                expect(client._internalClient.getWorkflow).to.have.been.calledWith(id, {
                     customHeaders: expectedCustomHeaders
                 });
             });
@@ -67,15 +67,15 @@ describe('WorkflowClient', function() {
         it('should find Instances with no filter options', function() {
             const mockWorkflowsPage = mock.mockWorkflowsPage();
             sinon
-                .stub(client.internalClient, 'findWorkflows')
+                .stub(client._internalClient, 'findWorkflows')
                 .callsFake(() => Promise.resolve(createResponse(mockWorkflowsPage)));
 
             return executeTest(client.workflowClient, 'find', [], (err, result) => {
                 expect(err).to.not.be.ok;
 
                 expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockWorkflowsPage)));
-                expect(client.internalClient.findWorkflows).to.have.callCount(1);
-                expect(client.internalClient.findWorkflows).to.have.been.calledWith({
+                expect(client._internalClient.findWorkflows).to.have.callCount(1);
+                expect(client._internalClient.findWorkflows).to.have.been.calledWith({
                     customHeaders: expectedCustomHeaders
                 });
             });
@@ -85,15 +85,15 @@ describe('WorkflowClient', function() {
             const mockWorkflowsPage = mock.mockWorkflowsPage();
             const options = { pageSize: 3, query: 'some workflow', owner: 'test@example.com' };
             sinon
-                .stub(client.internalClient, 'findWorkflows')
+                .stub(client._internalClient, 'findWorkflows')
                 .callsFake(() => Promise.resolve(createResponse(mockWorkflowsPage)));
 
             return executeTest(client.workflowClient, 'find', [options], (err, result) => {
                 expect(err).to.not.be.ok;
 
                 expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockWorkflowsPage)));
-                expect(client.internalClient.findWorkflows).to.have.callCount(1);
-                expect(client.internalClient.findWorkflows).to.have.been.calledWith({
+                expect(client._internalClient.findWorkflows).to.have.callCount(1);
+                expect(client._internalClient.findWorkflows).to.have.been.calledWith({
                     customHeaders: expectedCustomHeaders,
                     ...options
                 });
@@ -102,15 +102,15 @@ describe('WorkflowClient', function() {
 
         it('should return exception when bad response code returned', function() {
             sinon
-                .stub(client.internalClient, 'findWorkflows')
+                .stub(client._internalClient, 'findWorkflows')
                 .callsFake(() => Promise.resolve(createResponse({ detail: 'Intentional bad request error' }, 400)));
 
             return executeTest(client.workflowClient, 'find', [], (error, result) => {
                 expect(result).to.not.be.ok;
                 expect(error).to.be.ok;
                 expect(error.message).to.include('Intentional bad request error');
-                expect(client.internalClient.findWorkflows).to.have.callCount(1);
-                expect(client.internalClient.findWorkflows).to.have.been.calledWith({
+                expect(client._internalClient.findWorkflows).to.have.callCount(1);
+                expect(client._internalClient.findWorkflows).to.have.been.calledWith({
                     customHeaders: expectedCustomHeaders
                 });
             });
@@ -133,15 +133,15 @@ describe('WorkflowClient', function() {
                 return Promise.resolve(result);
             });
             sinon
-                .stub(client.internalClient, 'importWorkflow')
+                .stub(client._internalClient, 'importWorkflow')
                 .callsFake(() => Promise.resolve(createResponse({ ...mockWorkflowImport, workflowId: null })));
 
             sinon
-                .stub(client.internalClient, 'getWorkflowImport')
+                .stub(client._internalClient, 'getWorkflowImport')
                 .callsFake(() => Promise.resolve(createResponse(mockWorkflowImport)));
 
             sinon
-                .stub(client.internalClient, 'getWorkflow')
+                .stub(client._internalClient, 'getWorkflow')
                 .callsFake(() => Promise.resolve(createResponse(mockWorkflow)));
 
             return executeTest(client.workflowClient, 'import', [filePath, password], (err, result) => {
@@ -152,8 +152,8 @@ describe('WorkflowClient', function() {
                 expect(uploadFileStub).to.have.callCount(1);
                 expect(uploadFileStub).to.have.been.calledWith(filePath);
 
-                expect(client.internalClient.importWorkflow).to.have.callCount(1);
-                expect(client.internalClient.importWorkflow).to.have.been.calledWith({
+                expect(client._internalClient.importWorkflow).to.have.callCount(1);
+                expect(client._internalClient.importWorkflow).to.have.been.calledWith({
                     body: {
                         fileId: mockFileMetadata.id,
                         password
@@ -161,13 +161,13 @@ describe('WorkflowClient', function() {
                     customHeaders: expectedCustomHeaders
                 });
 
-                expect(client.internalClient.getWorkflowImport).to.have.callCount(1);
-                expect(client.internalClient.getWorkflowImport).to.have.been.calledWith(mockWorkflowImport.id, {
+                expect(client._internalClient.getWorkflowImport).to.have.callCount(1);
+                expect(client._internalClient.getWorkflowImport).to.have.been.calledWith(mockWorkflowImport.id, {
                     customHeaders: expectedCustomHeaders
                 });
 
-                expect(client.internalClient.getWorkflow).to.have.callCount(1);
-                expect(client.internalClient.getWorkflow).to.have.been.calledWith(mockWorkflowImport.workflowId, {
+                expect(client._internalClient.getWorkflow).to.have.callCount(1);
+                expect(client._internalClient.getWorkflow).to.have.been.calledWith(mockWorkflowImport.workflowId, {
                     customHeaders: expectedCustomHeaders
                 });
             });
@@ -187,15 +187,15 @@ describe('WorkflowClient', function() {
                 return Promise.resolve(result);
             });
             sinon
-                .stub(client.internalClient, 'importWorkflow')
+                .stub(client._internalClient, 'importWorkflow')
                 .callsFake(() => Promise.resolve(createResponse({ ...mockWorkflowImport, workflowId: null })));
 
             sinon
-                .stub(client.internalClient, 'getWorkflowImport')
+                .stub(client._internalClient, 'getWorkflowImport')
                 .callsFake(() => Promise.resolve(createResponse(mockWorkflowImport)));
 
             sinon
-                .stub(client.internalClient, 'getWorkflow')
+                .stub(client._internalClient, 'getWorkflow')
                 .callsFake(() => Promise.resolve(createResponse(mockWorkflow)));
 
             return executeTest(client.workflowClient, 'import', [filePath], (err, result) => {
@@ -206,8 +206,8 @@ describe('WorkflowClient', function() {
                 expect(uploadFileStub).to.have.callCount(1);
                 expect(uploadFileStub).to.have.been.calledWith(filePath);
 
-                expect(client.internalClient.importWorkflow).to.have.callCount(1);
-                expect(client.internalClient.importWorkflow).to.have.been.calledWith({
+                expect(client._internalClient.importWorkflow).to.have.callCount(1);
+                expect(client._internalClient.importWorkflow).to.have.been.calledWith({
                     body: {
                         fileId: mockFileMetadata.id,
                         password: null
@@ -215,13 +215,13 @@ describe('WorkflowClient', function() {
                     customHeaders: expectedCustomHeaders
                 });
 
-                expect(client.internalClient.getWorkflowImport).to.have.callCount(1);
-                expect(client.internalClient.getWorkflowImport).to.have.been.calledWith(mockWorkflowImport.id, {
+                expect(client._internalClient.getWorkflowImport).to.have.callCount(1);
+                expect(client._internalClient.getWorkflowImport).to.have.been.calledWith(mockWorkflowImport.id, {
                     customHeaders: expectedCustomHeaders
                 });
 
-                expect(client.internalClient.getWorkflow).to.have.callCount(1);
-                expect(client.internalClient.getWorkflow).to.have.been.calledWith(mockWorkflowImport.workflowId, {
+                expect(client._internalClient.getWorkflow).to.have.callCount(1);
+                expect(client._internalClient.getWorkflow).to.have.been.calledWith(mockWorkflowImport.workflowId, {
                     customHeaders: expectedCustomHeaders
                 });
             });
@@ -243,11 +243,11 @@ describe('WorkflowClient', function() {
                 return Promise.resolve(result);
             });
             sinon
-                .stub(client.internalClient, 'importWorkflow')
+                .stub(client._internalClient, 'importWorkflow')
                 .callsFake(() => Promise.resolve(createResponse({ ...mockWorkflowImport, workflowId: null })));
 
             sinon
-                .stub(client.internalClient, 'getWorkflowImport')
+                .stub(client._internalClient, 'getWorkflowImport')
                 .callsFake(() =>
                     Promise.resolve(
                         createResponse({ ...mockWorkflowImport, errorMessage: 'Intentional Workflow import failure' })
@@ -263,8 +263,8 @@ describe('WorkflowClient', function() {
                 expect(uploadFileStub).to.have.callCount(1);
                 expect(uploadFileStub).to.have.been.calledWith(filePath);
 
-                expect(client.internalClient.importWorkflow).to.have.callCount(1);
-                expect(client.internalClient.importWorkflow).to.have.been.calledWith({
+                expect(client._internalClient.importWorkflow).to.have.callCount(1);
+                expect(client._internalClient.importWorkflow).to.have.been.calledWith({
                     body: {
                         fileId: mockFileMetadata.id,
                         password
@@ -272,8 +272,8 @@ describe('WorkflowClient', function() {
                     customHeaders: expectedCustomHeaders
                 });
 
-                expect(client.internalClient.getWorkflowImport).to.have.callCount(1);
-                expect(client.internalClient.getWorkflowImport).to.have.been.calledWith(mockWorkflowImport.id, {
+                expect(client._internalClient.getWorkflowImport).to.have.callCount(1);
+                expect(client._internalClient.getWorkflowImport).to.have.been.calledWith(mockWorkflowImport.id, {
                     customHeaders: expectedCustomHeaders
                 });
             });
@@ -288,15 +288,15 @@ describe('WorkflowClient', function() {
             const mockWorkflowExport = { fileId: mockFileMetadata.id, id: v4() };
 
             sinon
-                .stub(client.internalClient, 'exportWorkflow')
+                .stub(client._internalClient, 'exportWorkflow')
                 .callsFake(() => Promise.resolve(createResponse({ ...mockWorkflowExport, fileId: null })));
 
             sinon
-                .stub(client.internalClient, 'getWorkflowExport')
+                .stub(client._internalClient, 'getWorkflowExport')
                 .callsFake(() => Promise.resolve(createResponse(mockWorkflowExport)));
 
             sinon
-                .stub(client.internalClient, 'getFile')
+                .stub(client._internalClient, 'getFile')
                 .callsFake(() => Promise.resolve(createResponse(mockFileMetadata)));
 
             return executeTest(client.workflowClient, 'export', [workflowId, password], (err, result) => {
@@ -304,8 +304,8 @@ describe('WorkflowClient', function() {
 
                 expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockFileMetadata)));
 
-                expect(client.internalClient.exportWorkflow).to.have.callCount(1);
-                expect(client.internalClient.exportWorkflow).to.have.been.calledWith(workflowId, {
+                expect(client._internalClient.exportWorkflow).to.have.callCount(1);
+                expect(client._internalClient.exportWorkflow).to.have.been.calledWith(workflowId, {
                     body: {
                         workflowId,
                         password
@@ -313,13 +313,13 @@ describe('WorkflowClient', function() {
                     customHeaders: expectedCustomHeaders
                 });
 
-                expect(client.internalClient.getWorkflowExport).to.have.callCount(1);
-                expect(client.internalClient.getWorkflowExport).to.have.been.calledWith(mockWorkflowExport.id, {
+                expect(client._internalClient.getWorkflowExport).to.have.callCount(1);
+                expect(client._internalClient.getWorkflowExport).to.have.been.calledWith(mockWorkflowExport.id, {
                     customHeaders: expectedCustomHeaders
                 });
 
-                expect(client.internalClient.getFile).to.have.callCount(1);
-                expect(client.internalClient.getFile).to.have.been.calledWith(mockWorkflowExport.fileId, {
+                expect(client._internalClient.getFile).to.have.callCount(1);
+                expect(client._internalClient.getFile).to.have.been.calledWith(mockWorkflowExport.fileId, {
                     customHeaders: expectedCustomHeaders
                 });
             });
@@ -331,15 +331,15 @@ describe('WorkflowClient', function() {
             const mockWorkflowExport = { fileId: mockFileMetadata.id, id: v4() };
 
             sinon
-                .stub(client.internalClient, 'exportWorkflow')
+                .stub(client._internalClient, 'exportWorkflow')
                 .callsFake(() => Promise.resolve(createResponse({ ...mockWorkflowExport, fileId: null })));
 
             sinon
-                .stub(client.internalClient, 'getWorkflowExport')
+                .stub(client._internalClient, 'getWorkflowExport')
                 .callsFake(() => Promise.resolve(createResponse(mockWorkflowExport)));
 
             sinon
-                .stub(client.internalClient, 'getFile')
+                .stub(client._internalClient, 'getFile')
                 .callsFake(() => Promise.resolve(createResponse(mockFileMetadata)));
 
             return executeTest(client.workflowClient, 'export', [workflowId], (err, result) => {
@@ -347,8 +347,8 @@ describe('WorkflowClient', function() {
 
                 expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockFileMetadata)));
 
-                expect(client.internalClient.exportWorkflow).to.have.callCount(1);
-                expect(client.internalClient.exportWorkflow).to.have.been.calledWith(workflowId, {
+                expect(client._internalClient.exportWorkflow).to.have.callCount(1);
+                expect(client._internalClient.exportWorkflow).to.have.been.calledWith(workflowId, {
                     body: {
                         workflowId,
                         password: null
@@ -356,13 +356,13 @@ describe('WorkflowClient', function() {
                     customHeaders: expectedCustomHeaders
                 });
 
-                expect(client.internalClient.getWorkflowExport).to.have.callCount(1);
-                expect(client.internalClient.getWorkflowExport).to.have.been.calledWith(mockWorkflowExport.id, {
+                expect(client._internalClient.getWorkflowExport).to.have.callCount(1);
+                expect(client._internalClient.getWorkflowExport).to.have.been.calledWith(mockWorkflowExport.id, {
                     customHeaders: expectedCustomHeaders
                 });
 
-                expect(client.internalClient.getFile).to.have.callCount(1);
-                expect(client.internalClient.getFile).to.have.been.calledWith(mockWorkflowExport.fileId, {
+                expect(client._internalClient.getFile).to.have.callCount(1);
+                expect(client._internalClient.getFile).to.have.been.calledWith(mockWorkflowExport.fileId, {
                     customHeaders: expectedCustomHeaders
                 });
             });
@@ -375,11 +375,11 @@ describe('WorkflowClient', function() {
             const mockWorkflowExport = { fileId: mockFileMetadata.id, id: v4() };
 
             sinon
-                .stub(client.internalClient, 'exportWorkflow')
+                .stub(client._internalClient, 'exportWorkflow')
                 .callsFake(() => Promise.resolve(createResponse({ ...mockWorkflowExport, fileId: null })));
 
             sinon
-                .stub(client.internalClient, 'getWorkflowExport')
+                .stub(client._internalClient, 'getWorkflowExport')
                 .callsFake(() =>
                     Promise.resolve(
                         createResponse({ ...mockWorkflowExport, errorMessage: 'Intentional Workflow export failure' })
@@ -392,8 +392,8 @@ describe('WorkflowClient', function() {
                 expect(err).to.be.instanceOf(WorkflowExportError);
                 expect(err.message).to.include('Intentional Workflow export failure');
 
-                expect(client.internalClient.exportWorkflow).to.have.callCount(1);
-                expect(client.internalClient.exportWorkflow).to.have.been.calledWith(workflowId, {
+                expect(client._internalClient.exportWorkflow).to.have.callCount(1);
+                expect(client._internalClient.exportWorkflow).to.have.been.calledWith(workflowId, {
                     body: {
                         workflowId,
                         password
@@ -401,8 +401,8 @@ describe('WorkflowClient', function() {
                     customHeaders: expectedCustomHeaders
                 });
 
-                expect(client.internalClient.getWorkflowExport).to.have.callCount(1);
-                expect(client.internalClient.getWorkflowExport).to.have.been.calledWith(mockWorkflowExport.id, {
+                expect(client._internalClient.getWorkflowExport).to.have.callCount(1);
+                expect(client._internalClient.getWorkflowExport).to.have.been.calledWith(mockWorkflowExport.id, {
                     customHeaders: expectedCustomHeaders
                 });
             });

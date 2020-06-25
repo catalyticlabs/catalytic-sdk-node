@@ -19,7 +19,7 @@ export default class UserClient extends BaseClient implements UserClientInterfac
     private async _get(id: string): Promise<User> {
         console.log(`Getting User with ID '${id}'`);
         const headers = this.getRequestHeaders();
-        const result = await this.internalClient.getUser(id, { customHeaders: headers });
+        const result = await this._internalClient.getUser(id, { customHeaders: headers });
         return this.parseResponse<User>(result);
     }
 
@@ -45,7 +45,7 @@ export default class UserClient extends BaseClient implements UserClientInterfac
     private async _find(options: FindUserOptions): Promise<UsersPage> {
         console.log('Finding Users');
         const headers = this.getRequestHeaders();
-        const result = await this.internalClient.findUsers(Object.assign({}, options, { customHeaders: headers }));
+        const result = await this._internalClient.findUsers(Object.assign({}, options, { customHeaders: headers }));
         return this.parseResponse<UsersPage>(result);
     }
 }

@@ -21,7 +21,7 @@ export default class DataTableClient extends BaseClient implements DataTableClie
     private async _get(id: string): Promise<DataTable> {
         console.log(`Getting DataTable with ID '${id}'`);
         const headers = this.getRequestHeaders();
-        const result = await this.internalClient.getDataTable(id, { customHeaders: headers });
+        const result = await this._internalClient.getDataTable(id, { customHeaders: headers });
         return this.parseResponse<DataTable>(result);
     }
 
@@ -48,7 +48,9 @@ export default class DataTableClient extends BaseClient implements DataTableClie
     private async _find(options: FindDataTablesOptions): Promise<DataTablesPage> {
         console.log('Finding DataTables');
         const headers = this.getRequestHeaders();
-        const result = await this.internalClient.findDataTables(Object.assign({}, options, { customHeaders: headers }));
+        const result = await this._internalClient.findDataTables(
+            Object.assign({}, options, { customHeaders: headers })
+        );
         return this.parseResponse<DataTablesPage>(result);
     }
 

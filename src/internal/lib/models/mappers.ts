@@ -7,29 +7,6 @@
 import * as msRest from "@azure/ms-rest-js";
 
 
-export const CredentialsCreationRequest: msRest.CompositeMapper = {
-  serializedName: "CredentialsCreationRequest",
-  type: {
-    name: "Composite",
-    className: "CredentialsCreationRequest",
-    modelProperties: {
-      domain: {
-        required: true,
-        serializedName: "domain",
-        type: {
-          name: "String"
-        }
-      },
-      name: {
-        serializedName: "name",
-        type: {
-          name: "String"
-        }
-      }
-    }
-  }
-};
-
 export const ProblemDetails: msRest.CompositeMapper = {
   serializedName: "ProblemDetails",
   type: {
@@ -82,11 +59,11 @@ export const ProblemDetails: msRest.CompositeMapper = {
   }
 };
 
-export const Credentials: msRest.CompositeMapper = {
-  serializedName: "Credentials",
+export const AccessToken: msRest.CompositeMapper = {
+  serializedName: "AccessToken",
   type: {
     name: "Composite",
-    className: "Credentials",
+    className: "AccessToken",
     modelProperties: {
       id: {
         required: true,
@@ -142,11 +119,103 @@ export const Credentials: msRest.CompositeMapper = {
   }
 };
 
-export const CredentialsCreationWithEmailAndPasswordRequest: msRest.CompositeMapper = {
-  serializedName: "CredentialsCreationWithEmailAndPasswordRequest",
+export const PagingOptions: msRest.CompositeMapper = {
+  serializedName: "PagingOptions",
   type: {
     name: "Composite",
-    className: "CredentialsCreationWithEmailAndPasswordRequest",
+    className: "PagingOptions",
+    modelProperties: {
+      size: {
+        serializedName: "size",
+        type: {
+          name: "Number"
+        }
+      },
+      pageToken: {
+        serializedName: "pageToken",
+        type: {
+          name: "String"
+        }
+      },
+      getAllResults: {
+        serializedName: "getAllResults",
+        type: {
+          name: "Boolean"
+        }
+      }
+    }
+  }
+};
+
+export const AccessTokensPage: msRest.CompositeMapper = {
+  serializedName: "AccessTokensPage",
+  type: {
+    name: "Composite",
+    className: "AccessTokensPage",
+    modelProperties: {
+      accessTokens: {
+        serializedName: "accessTokens",
+        type: {
+          name: "Sequence",
+          element: {
+            type: {
+              name: "Composite",
+              className: "AccessToken"
+            }
+          }
+        }
+      },
+      nextPageOptions: {
+        serializedName: "nextPageOptions",
+        type: {
+          name: "Composite",
+          className: "PagingOptions"
+        }
+      },
+      nextPageToken: {
+        serializedName: "nextPageToken",
+        type: {
+          name: "String"
+        }
+      },
+      count: {
+        serializedName: "count",
+        type: {
+          name: "Number"
+        }
+      }
+    }
+  }
+};
+
+export const AccessTokenCreationRequest: msRest.CompositeMapper = {
+  serializedName: "AccessTokenCreationRequest",
+  type: {
+    name: "Composite",
+    className: "AccessTokenCreationRequest",
+    modelProperties: {
+      domain: {
+        required: true,
+        serializedName: "domain",
+        type: {
+          name: "String"
+        }
+      },
+      name: {
+        serializedName: "name",
+        type: {
+          name: "String"
+        }
+      }
+    }
+  }
+};
+
+export const AccessTokenCreationWithEmailAndPasswordRequest: msRest.CompositeMapper = {
+  serializedName: "AccessTokenCreationWithEmailAndPasswordRequest",
+  type: {
+    name: "Composite",
+    className: "AccessTokenCreationWithEmailAndPasswordRequest",
     modelProperties: {
       email: {
         required: true,
@@ -179,11 +248,11 @@ export const CredentialsCreationWithEmailAndPasswordRequest: msRest.CompositeMap
   }
 };
 
-export const WaitForCredentialsApprovalRequest: msRest.CompositeMapper = {
-  serializedName: "WaitForCredentialsApprovalRequest",
+export const WaitForAccessTokenApprovalRequest: msRest.CompositeMapper = {
+  serializedName: "WaitForAccessTokenApprovalRequest",
   type: {
     name: "Composite",
-    className: "WaitForCredentialsApprovalRequest",
+    className: "WaitForAccessTokenApprovalRequest",
     modelProperties: {
       token: {
         required: true,
@@ -367,34 +436,6 @@ export const DataTable: msRest.CompositeMapper = {
         serializedName: "cellLimit",
         type: {
           name: "Number"
-        }
-      }
-    }
-  }
-};
-
-export const PagingOptions: msRest.CompositeMapper = {
-  serializedName: "PagingOptions",
-  type: {
-    name: "Composite",
-    className: "PagingOptions",
-    modelProperties: {
-      size: {
-        serializedName: "size",
-        type: {
-          name: "Number"
-        }
-      },
-      pageToken: {
-        serializedName: "pageToken",
-        type: {
-          name: "String"
-        }
-      },
-      getAllResults: {
-        serializedName: "getAllResults",
-        type: {
-          name: "Boolean"
         }
       }
     }
@@ -677,6 +718,36 @@ export const InstanceStep: msRest.CompositeMapper = {
           name: "String"
         }
       },
+      actionTypeId: {
+        serializedName: "actionTypeId",
+        type: {
+          name: "String"
+        }
+      },
+      isAutomated: {
+        serializedName: "isAutomated",
+        type: {
+          name: "Boolean"
+        }
+      },
+      isManual: {
+        serializedName: "isManual",
+        type: {
+          name: "Boolean"
+        }
+      },
+      startDate: {
+        serializedName: "startDate",
+        type: {
+          name: "DateTime"
+        }
+      },
+      endDate: {
+        serializedName: "endDate",
+        type: {
+          name: "DateTime"
+        }
+      },
       outputFields: {
         serializedName: "outputFields",
         type: {
@@ -778,6 +849,18 @@ export const Instance: msRest.CompositeMapper = {
         serializedName: "status",
         type: {
           name: "String"
+        }
+      },
+      startDate: {
+        serializedName: "startDate",
+        type: {
+          name: "DateTime"
+        }
+      },
+      endDate: {
+        serializedName: "endDate",
+        type: {
+          name: "DateTime"
         }
       },
       fieldVisibility: {
@@ -1001,47 +1084,6 @@ export const ReassignStepRequest: msRest.CompositeMapper = {
         serializedName: "assignTo",
         type: {
           name: "String"
-        }
-      }
-    }
-  }
-};
-
-export const CredentialsPage: msRest.CompositeMapper = {
-  serializedName: "CredentialsPage",
-  type: {
-    name: "Composite",
-    className: "CredentialsPage",
-    modelProperties: {
-      credentials: {
-        serializedName: "credentials",
-        type: {
-          name: "Sequence",
-          element: {
-            type: {
-              name: "Composite",
-              className: "Credentials"
-            }
-          }
-        }
-      },
-      nextPageOptions: {
-        serializedName: "nextPageOptions",
-        type: {
-          name: "Composite",
-          className: "PagingOptions"
-        }
-      },
-      nextPageToken: {
-        serializedName: "nextPageToken",
-        type: {
-          name: "String"
-        }
-      },
-      count: {
-        serializedName: "count",
-        type: {
-          name: "Number"
         }
       }
     }

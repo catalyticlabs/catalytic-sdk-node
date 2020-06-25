@@ -22,7 +22,7 @@ export default class FileClient extends BaseClient implements FileClientInterfac
     private async _get(id: string): Promise<FileMetadata> {
         console.log(`Getting FileMetadata for File with ID '${id}'`);
         const headers = this.getRequestHeaders();
-        const result = await this.internalClient.getFile(id, { customHeaders: headers });
+        const result = await this._internalClient.getFile(id, { customHeaders: headers });
         return this.parseResponse<FileMetadata>(result);
     }
 

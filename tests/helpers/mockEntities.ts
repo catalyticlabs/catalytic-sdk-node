@@ -2,7 +2,7 @@ import faker from 'faker';
 import { v4 } from 'uuid';
 
 import {
-    Credentials,
+    AccessToken,
     DataTable,
     Instance,
     InstanceStep,
@@ -13,13 +13,13 @@ import {
     WorkflowsPage,
     InstancesPage,
     InstanceStepsPage,
-    CredentialsPage,
+    AccessTokensPage,
     DataTablesPage,
     FileMetadataPage
 } from '../../src/entities';
 import { WorkflowImport } from '../../src/internal/lib/models';
 
-export const mockCredentials = (): Credentials => {
+export const mockAccessToken = (): AccessToken => {
     const domain = faker.company.companyName().toLowerCase() + '.pushbot.com';
     const environment = 'v1';
     const id = v4();
@@ -27,13 +27,13 @@ export const mockCredentials = (): Credentials => {
 
     const token = Buffer.from([id, secret, domain, environment].join(':')).toString('base64');
 
-    return { id, domain, environment, secret, token };
+    return new AccessToken(token);
 };
 
-export const mockCredentialsPage = (): CredentialsPage => {
-    const credentials = [mockCredentials(), mockCredentials()];
+export const mockAccessTokensPage = (): AccessTokensPage => {
+    const accessTokens = [mockAccessToken(), mockAccessToken()];
 
-    return { credentials };
+    return { accessTokens };
 };
 
 export const mockDataTable = (): DataTable => {
@@ -151,8 +151,8 @@ export const mockWorkflowsPage = (): WorkflowsPage => {
 };
 
 export default {
-    mockCredentials,
-    mockCredentialsPage,
+    mockAccessToken,
+    mockAccessTokensPage,
     mockDataTable,
     mockDataTablesPage,
     mockFileMetadata,

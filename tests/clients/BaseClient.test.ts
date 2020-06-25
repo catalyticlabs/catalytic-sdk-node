@@ -8,7 +8,7 @@ import { v4 } from 'uuid';
 import mock from '../helpers/mockEntities';
 import CatalyticClient from '../../src/CatalyticClient';
 import { BaseUri } from '../../src/constants';
-import { InternalError, UnauthorizedError, InvalidCredentialsError } from '../../src/errors';
+import { InternalError, UnauthorizedError, InvalidAccessTokenError } from '../../src/errors';
 
 describe('BaseClient', function() {
     let client: CatalyticClient;
@@ -16,8 +16,8 @@ describe('BaseClient', function() {
 
     before(function() {
         client = new CatalyticClient();
-        client.credentials = mock.mockCredentials();
-        expectedCustomHeaders = { authorization: `Bearer ${client.credentials.token}` };
+        client.accessToken = mock.mockAccessToken();
+        expectedCustomHeaders = { authorization: `Bearer ${client.accessToken.token}` };
     });
 
     after(function() {
@@ -27,12 +27,12 @@ describe('BaseClient', function() {
     describe('GetRequestHeaders', function() {
         it('should attach Token via Bearer auth header', function() {
             const headers = client.fileClient['getRequestHeaders']();
-            expect(headers).to.have.property('Authorization', `Bearer ${client.credentials.token}`);
+            expect(headers).to.have.property('Authorization', `Bearer ${client.accessToken.token}`);
         });
 
-        it('should throw InvalidCredentialsError if no Credentials attached to client', function() {
-            const originalCredentials = client.credentials;
-            client.credentials = null;
+        it('should throw InvalidAccessTokenError if no AccessToken attached to client', function() {
+            const originalAccessToken = client.accessToken;
+            client.accessToken = null;
 
             let err;
             try {
@@ -40,10 +40,10 @@ describe('BaseClient', function() {
             } catch (e) {
                 err = e;
             }
-            expect(err).to.be.ok.and.to.be.instanceOf(InvalidCredentialsError);
-            expect(err.message).to.equal('No Credentials provided');
+            expect(err).to.be.ok.and.to.be.instanceOf(InvalidAccessTokenError);
+            expect(err.message).to.equal('No Access Token provided');
 
-            client.credentials = originalCredentials;
+            client.accessToken = originalAccessToken;
         });
     });
 

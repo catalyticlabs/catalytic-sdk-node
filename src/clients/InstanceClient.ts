@@ -29,7 +29,7 @@ export default class InstanceClient extends BaseClient implements InstanceClient
     private async _get(id: string): Promise<Instance> {
         console.log(`Getting Instance with ID '${id}'`);
         const headers = this.getRequestHeaders();
-        const result = await this.internalClient.getInstance(id, { customHeaders: headers });
+        const result = await this._internalClient.getInstance(id, { customHeaders: headers });
         return this.parseResponse<Instance>(result);
     }
 
@@ -56,7 +56,7 @@ export default class InstanceClient extends BaseClient implements InstanceClient
     private async _find(options: FindInstancesOptions): Promise<InstancesPage> {
         console.log('Finding Instances');
         const headers = this.getRequestHeaders();
-        const result = await this.internalClient.findInstances(
+        const result = await this._internalClient.findInstances(
             Object.assign(this.formatFindInstanceOptions(options), { customHeaders: headers })
         );
         return this.parseResponse<InstancesPage>(result);
@@ -121,7 +121,7 @@ export default class InstanceClient extends BaseClient implements InstanceClient
             inputFields: this.formatFields(inputs)
         };
 
-        const result = await this.internalClient.startInstance({ body, customHeaders: this.getRequestHeaders() });
+        const result = await this._internalClient.startInstance({ body, customHeaders: this.getRequestHeaders() });
         return this.parseResponse<Instance>(result);
     }
 
@@ -137,7 +137,7 @@ export default class InstanceClient extends BaseClient implements InstanceClient
     private async _stop(id: string): Promise<Instance> {
         console.log(`Stopping Instance '${id}'`);
 
-        const result = await this.internalClient.stopInstance(id, { customHeaders: this.getRequestHeaders() });
+        const result = await this._internalClient.stopInstance(id, { customHeaders: this.getRequestHeaders() });
         return this.parseResponse<Instance>(result);
     }
 
@@ -153,7 +153,7 @@ export default class InstanceClient extends BaseClient implements InstanceClient
 
     private async _getStep(id: string): Promise<InstanceStep> {
         console.log(`Getting InstanceStep '${id}'`);
-        const result = await this.internalClient.getInstanceStep(id, WildcardId, {
+        const result = await this._internalClient.getInstanceStep(id, WildcardId, {
             customHeaders: this.getRequestHeaders()
         });
 
@@ -183,7 +183,7 @@ export default class InstanceClient extends BaseClient implements InstanceClient
     private async _findInstanceSteps(options: FindInstanceStepsOptions): Promise<InstancesPage> {
         console.log('Finding InstanceSteps');
         const headers = this.getRequestHeaders();
-        const result = await this.internalClient.findInstanceSteps(
+        const result = await this._internalClient.findInstanceSteps(
             WildcardId,
             Object.assign(this.formatFindInstanceStepOptions(options), { customHeaders: headers })
         );
@@ -229,7 +229,7 @@ export default class InstanceClient extends BaseClient implements InstanceClient
             id,
             assignTo: newAssigneeEmailAddress
         };
-        const result = await this.internalClient.reassignStep(id, WildcardId, {
+        const result = await this._internalClient.reassignStep(id, WildcardId, {
             customHeaders: this.getRequestHeaders(),
             body
         });
@@ -265,7 +265,7 @@ export default class InstanceClient extends BaseClient implements InstanceClient
             stepOutputFields: this.formatFields(fields)
         };
 
-        const result = await this.internalClient.completeStep(id, WildcardId, {
+        const result = await this._internalClient.completeStep(id, WildcardId, {
             body,
             customHeaders: this.getRequestHeaders()
         });

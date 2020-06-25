@@ -10,26 +10,6 @@ import * as msRest from "@azure/ms-rest-js";
 
 /**
  * @interface
- * An interface representing CredentialsCreationRequest.
- * Represents a request to generate new Credentials for authentication into a
- * Catalytic team
- *
- */
-export interface CredentialsCreationRequest {
-  /**
-   * @member {string} domain Catalytic team domain to authenticate in to (ex:
-   * "myteam.pushbot.com")
-   */
-  domain: string;
-  /**
-   * @member {string} [name] Optional Name to assign to Credentials; visible in
-   * Catalytic UI
-   */
-  name?: string;
-}
-
-/**
- * @interface
  * An interface representing ProblemDetails.
  */
 export interface ProblemDetails {
@@ -61,22 +41,22 @@ export interface ProblemDetails {
 
 /**
  * @interface
- * An interface representing Credentials.
- * A set of Credentials used for authentication via the SDK
+ * An interface representing AccessToken.
+ * An AccessToken used for authentication via the SDK
  *
  */
-export interface Credentials {
+export interface AccessToken {
   /**
-   * @member {string} id The public Id of the Credentials
+   * @member {string} id The public Id of the AccessToken
    */
   id: string;
   /**
    * @member {string} domain The Domain of the Catalytic team with which these
-   * Credentials are associated
+   * AccessToken are associated
    */
   domain: string;
   /**
-   * @member {string} [name] The name associated with the Credentials
+   * @member {string} [name] The name associated with the AccessToken
    */
   name?: string;
   /**
@@ -84,42 +64,111 @@ export interface Credentials {
    */
   type?: Type;
   /**
-   * @member {string} [token] The serialized Credentials Token
+   * @member {string} [token] The serialized AccessToken Token
    */
   token?: string;
   /**
-   * @member {string} [secret] The confidential Secret of the Credentials
+   * @member {string} [secret] The confidential Secret of the AccessToken
    */
   secret?: string;
   /**
    * @member {string} [environment] The environment of the Catalytic team
-   * associated with the Credentials
+   * associated with the AccessToken
    */
   environment?: string;
   /**
    * @member {string} [owner] The email address of the user who these
-   * Credentials belong to
+   * AccessToken belong to
    */
   owner?: string;
 }
 
 /**
  * @interface
- * An interface representing CredentialsCreationWithEmailAndPasswordRequest.
- * Represents a request to create and approve new Credentials for
+ * An interface representing PagingOptions.
+ * Properties required for executing a search request
+ *
+ */
+export interface PagingOptions {
+  /**
+   * @member {number} [size] The page size of search results
+   */
+  size?: number;
+  /**
+   * @member {string} [pageToken] A token used to retrieve the next page of
+   * results
+   */
+  pageToken?: string;
+  /**
+   * @member {boolean} [getAllResults] Indicates whether all results should be
+   * retrieved
+   */
+  getAllResults?: boolean;
+}
+
+/**
+ * @interface
+ * An interface representing AccessTokensPage.
+ * Represents a page of AccessTokens
+ *
+ */
+export interface AccessTokensPage {
+  /**
+   * @member {AccessToken[]} [accessTokens] The Collection of AccessTokens in
+   * the page
+   */
+  accessTokens?: AccessToken[];
+  /**
+   * @member {PagingOptions} [nextPageOptions]
+   */
+  nextPageOptions?: PagingOptions;
+  /**
+   * @member {string} [nextPageToken]
+   */
+  nextPageToken?: string;
+  /**
+   * @member {number} [count]
+   */
+  count?: number;
+}
+
+/**
+ * @interface
+ * An interface representing AccessTokenCreationRequest.
+ * Represents a request to generate new AccessToken for authentication into a
+ * Catalytic team
+ *
+ */
+export interface AccessTokenCreationRequest {
+  /**
+   * @member {string} domain Catalytic team domain to authenticate in to (ex:
+   * "myteam.pushbot.com")
+   */
+  domain: string;
+  /**
+   * @member {string} [name] Optional Name to assign to AccessToken; visible in
+   * Catalytic UI
+   */
+  name?: string;
+}
+
+/**
+ * @interface
+ * An interface representing AccessTokenCreationWithEmailAndPasswordRequest.
+ * Represents a request to create and approve new AccessToken for
  * authentication into a Catalytic team
  * with passed username and password
  *
  */
-export interface CredentialsCreationWithEmailAndPasswordRequest {
+export interface AccessTokenCreationWithEmailAndPasswordRequest {
   /**
    * @member {string} email Optional email address of the Catalytic user for
-   * whom the Credentials should be created
+   * whom the AccessToken should be created
    */
   email: string;
   /**
    * @member {string} password Optional password of the Catalytic user for whom
-   * the Credentials should be created
+   * the AccessToken should be created
    */
   password: string;
   /**
@@ -128,7 +177,7 @@ export interface CredentialsCreationWithEmailAndPasswordRequest {
    */
   domain: string;
   /**
-   * @member {string} [name] Optional Name to assign to Credentials; visible in
+   * @member {string} [name] Optional Name to assign to AccessToken; visible in
    * Catalytic UI
    */
   name?: string;
@@ -136,17 +185,17 @@ export interface CredentialsCreationWithEmailAndPasswordRequest {
 
 /**
  * @interface
- * An interface representing WaitForCredentialsApprovalRequest.
- * A request to activate Credentials
+ * An interface representing WaitForAccessTokenApprovalRequest.
+ * A request to activate AccessToken
  *
  */
-export interface WaitForCredentialsApprovalRequest {
+export interface WaitForAccessTokenApprovalRequest {
   /**
-   * @member {string} token Credentials Token
+   * @member {string} token AccessToken string
    */
   token: string;
   /**
-   * @member {number} [waitTimeMillis] Optional timeout to wait for Credentials
+   * @member {number} [waitTimeMillis] Optional timeout to wait for AccessToken
    * to be approved via UI (milliseconds)
    * Defaults to 300000ms (5 minutes)
    */
@@ -270,29 +319,6 @@ export interface DataTable {
    * Table
    */
   cellLimit?: number;
-}
-
-/**
- * @interface
- * An interface representing PagingOptions.
- * Properties required for executing a search request
- *
- */
-export interface PagingOptions {
-  /**
-   * @member {number} [size] The page size of search results
-   */
-  size?: number;
-  /**
-   * @member {string} [pageToken] A token used to retrieve the next page of
-   * results
-   */
-  pageToken?: string;
-  /**
-   * @member {boolean} [getAllResults] Indicates whether all results should be
-   * retrieved
-   */
-  getAllResults?: boolean;
 }
 
 /**
@@ -496,6 +522,32 @@ export interface InstanceStep {
    */
   assignedTo?: string;
   /**
+   * @member {string} [actionTypeId] The ID of this action type of this step
+   */
+  actionTypeId?: string;
+  /**
+   * @member {boolean} [isAutomated] Indicates whether or not this step is an
+   * automated action that will be completed without manual intervention.
+   */
+  isAutomated?: boolean;
+  /**
+   * @member {boolean} [isManual] Indicates whether or not this step is manual,
+   * to be completed by a person.
+   * This is a convinience property that gets/sets the inverse of
+   * Catalytic.Sdk.Entities.InstanceStep.IsAutomated.
+   */
+  isManual?: boolean;
+  /**
+   * @member {Date} [startDate] The start date of the step, or null if the step
+   * has not started
+   */
+  startDate?: Date;
+  /**
+   * @member {Date} [endDate] The end date of the step, or null if the step has
+   * not started
+   */
+  endDate?: Date;
+  /**
    * @member {Field[]} [outputFields] A collection of the required and optional
    * output fields
    * that can be set by this InstanceStep when completing it.
@@ -561,6 +613,15 @@ export interface Instance {
    * 'completed', 'cancelled'
    */
   status?: Status1;
+  /**
+   * @member {Date} [startDate] The start date of the instance
+   */
+  startDate?: Date;
+  /**
+   * @member {Date} [endDate] The end date of the instance, or null if the step
+   * has not started
+   */
+  endDate?: Date;
   /**
    * @member {FieldVisibility} [fieldVisibility] Possible values include:
    * 'public', 'internal', 'confidential', 'highlyConfidential'
@@ -705,32 +766,6 @@ export interface ReassignStepRequest {
    * task to
    */
   assignTo?: string;
-}
-
-/**
- * @interface
- * An interface representing CredentialsPage.
- * Represents a page of Credentials
- *
- */
-export interface CredentialsPage {
-  /**
-   * @member {Credentials[]} [credentials] The Collection of Credentials in the
-   * page
-   */
-  credentials?: Credentials[];
-  /**
-   * @member {PagingOptions} [nextPageOptions]
-   */
-  nextPageOptions?: PagingOptions;
-  /**
-   * @member {string} [nextPageToken]
-   */
-  nextPageToken?: string;
-  /**
-   * @member {number} [count]
-   */
-  count?: number;
 }
 
 /**
@@ -1029,47 +1064,115 @@ export interface CatalyticSDKAPIOptions extends ServiceClientOptions {
 
 /**
  * @interface
- * An interface representing CatalyticSDKAPICreateCredentialsOptionalParams.
+ * An interface representing CatalyticSDKAPIFindAccessTokensOptionalParams.
  * Optional Parameters.
  *
  * @extends RequestOptionsBase
  */
-export interface CatalyticSDKAPICreateCredentialsOptionalParams extends msRest.RequestOptionsBase {
+export interface CatalyticSDKAPIFindAccessTokensOptionalParams extends msRest.RequestOptionsBase {
   /**
-   * @member {CredentialsCreationRequest} [body] Params required to create new
-   * Credentials
+   * @member {string} [query] Free text query terms to search all attributes
+   * for
    */
-  body?: CredentialsCreationRequest;
+  query?: string;
+  /**
+   * @member {string} [status] Run or task status to search for
+   */
+  status?: string;
+  /**
+   * @member {string} [processId] Process ID (aka Pushbot ID or Workflow ID) to
+   * search for
+   */
+  processId?: string;
+  /**
+   * @member {string} [runId] RunID (aka Instance ID) to search for
+   */
+  runId?: string;
+  /**
+   * @member {string} [owner] Run or task owner to search for
+   */
+  owner?: string;
+  /**
+   * @member {string} [category] Category of process or run to search for
+   */
+  category?: string;
+  /**
+   * @member {string} [participatingUsers] Task assignee to search for
+   */
+  participatingUsers?: string;
+  /**
+   * @member {string} [startedBefore] Latest start date of the task or run to
+   * search for
+   */
+  startedBefore?: string;
+  /**
+   * @member {string} [startedAfter] Earliest start date of the task or run to
+   * search for
+   */
+  startedAfter?: string;
+  /**
+   * @member {string} [endedBefore] Latest end date of the task or run to
+   * search for
+   */
+  endedBefore?: string;
+  /**
+   * @member {string} [endedAfter] Earliest end date of the task or run to
+   * search for
+   */
+  endedAfter?: string;
+  /**
+   * @member {string} [pageToken] The token representing the result page to get
+   */
+  pageToken?: string;
+  /**
+   * @member {number} [pageSize] The page size requested
+   */
+  pageSize?: number;
 }
 
 /**
  * @interface
- * An interface representing CatalyticSDKAPICreateAndApproveCredentialsOptionalParams.
+ * An interface representing CatalyticSDKAPICreateAccessTokenOptionalParams.
  * Optional Parameters.
  *
  * @extends RequestOptionsBase
  */
-export interface CatalyticSDKAPICreateAndApproveCredentialsOptionalParams extends msRest.RequestOptionsBase {
+export interface CatalyticSDKAPICreateAccessTokenOptionalParams extends msRest.RequestOptionsBase {
   /**
-   * @member {CredentialsCreationWithEmailAndPasswordRequest} [body] Params
-   * required to create and approve new Credentials
+   * @member {AccessTokenCreationRequest} [body] Params required to create new
+   * AccessToken
    */
-  body?: CredentialsCreationWithEmailAndPasswordRequest;
+  body?: AccessTokenCreationRequest;
 }
 
 /**
  * @interface
- * An interface representing CatalyticSDKAPIWaitForCredentialsApprovalOptionalParams.
+ * An interface representing CatalyticSDKAPICreateAndApproveAccessTokenOptionalParams.
  * Optional Parameters.
  *
  * @extends RequestOptionsBase
  */
-export interface CatalyticSDKAPIWaitForCredentialsApprovalOptionalParams extends msRest.RequestOptionsBase {
+export interface CatalyticSDKAPICreateAndApproveAccessTokenOptionalParams extends msRest.RequestOptionsBase {
   /**
-   * @member {WaitForCredentialsApprovalRequest} [body] Params required to poll
-   * approved Credentials
+   * @member {AccessTokenCreationWithEmailAndPasswordRequest} [body] Params
+   * required to create and approve new AccessToken
    */
-  body?: WaitForCredentialsApprovalRequest;
+  body?: AccessTokenCreationWithEmailAndPasswordRequest;
+}
+
+/**
+ * @interface
+ * An interface representing CatalyticSDKAPIWaitForAccessTokenApprovalOptionalParams.
+ * Optional Parameters.
+ *
+ * @extends RequestOptionsBase
+ */
+export interface CatalyticSDKAPIWaitForAccessTokenApprovalOptionalParams extends msRest.RequestOptionsBase {
+  /**
+   * @member {WaitForAccessTokenApprovalRequest} [body] Params required to poll
+   * approved AccessToken
+   */
+  body?: WaitForAccessTokenApprovalRequest;
 }
 
 /**
@@ -1181,6 +1284,26 @@ export interface CatalyticSDKAPIFindDataTablesOptionalParams extends msRest.Requ
    */
   participatingUsers?: string;
   /**
+   * @member {string} [startedBefore] Latest start date of the task or run to
+   * search for
+   */
+  startedBefore?: string;
+  /**
+   * @member {string} [startedAfter] Earliest start date of the task or run to
+   * search for
+   */
+  startedAfter?: string;
+  /**
+   * @member {string} [endedBefore] Latest end date of the task or run to
+   * search for
+   */
+  endedBefore?: string;
+  /**
+   * @member {string} [endedAfter] Earliest end date of the task or run to
+   * search for
+   */
+  endedAfter?: string;
+  /**
    * @member {string} [pageToken] The token representing the result page to get
    */
   pageToken?: string;
@@ -1242,6 +1365,26 @@ export interface CatalyticSDKAPIFindInstancesOptionalParams extends msRest.Reque
    * @member {string} [participatingUsers] Task assignee to search for
    */
   participatingUsers?: string;
+  /**
+   * @member {string} [startedBefore] Latest start date of the task or run to
+   * search for
+   */
+  startedBefore?: string;
+  /**
+   * @member {string} [startedAfter] Earliest start date of the task or run to
+   * search for
+   */
+  startedAfter?: string;
+  /**
+   * @member {string} [endedBefore] Latest end date of the task or run to
+   * search for
+   */
+  endedBefore?: string;
+  /**
+   * @member {string} [endedAfter] Earliest end date of the task or run to
+   * search for
+   */
+  endedAfter?: string;
   /**
    * @member {string} [pageToken] The token representing the result page to get
    */
@@ -1305,6 +1448,26 @@ export interface CatalyticSDKAPIFindInstanceStepsOptionalParams extends msRest.R
    */
   participatingUsers?: string;
   /**
+   * @member {string} [startedBefore] Latest start date of the task or run to
+   * search for
+   */
+  startedBefore?: string;
+  /**
+   * @member {string} [startedAfter] Earliest start date of the task or run to
+   * search for
+   */
+  startedAfter?: string;
+  /**
+   * @member {string} [endedBefore] Latest end date of the task or run to
+   * search for
+   */
+  endedBefore?: string;
+  /**
+   * @member {string} [endedAfter] Earliest end date of the task or run to
+   * search for
+   */
+  endedAfter?: string;
+  /**
    * @member {string} [pageToken] The token representing the result page to get
    */
   pageToken?: string;
@@ -1346,54 +1509,6 @@ export interface CatalyticSDKAPIReassignStepOptionalParams extends msRest.Reques
 
 /**
  * @interface
- * An interface representing CatalyticSDKAPIFindCredentialsOptionalParams.
- * Optional Parameters.
- *
- * @extends RequestOptionsBase
- */
-export interface CatalyticSDKAPIFindCredentialsOptionalParams extends msRest.RequestOptionsBase {
-  /**
-   * @member {string} [query] Free text query terms to search all attributes
-   * for
-   */
-  query?: string;
-  /**
-   * @member {string} [status] Run or task status to search for
-   */
-  status?: string;
-  /**
-   * @member {string} [processId] Process ID (aka Pushbot ID or Workflow ID) to
-   * search for
-   */
-  processId?: string;
-  /**
-   * @member {string} [runId] RunID (aka Instance ID) to search for
-   */
-  runId?: string;
-  /**
-   * @member {string} [owner] Run or task owner to search for
-   */
-  owner?: string;
-  /**
-   * @member {string} [category] Category of process or run to search for
-   */
-  category?: string;
-  /**
-   * @member {string} [participatingUsers] Task assignee to search for
-   */
-  participatingUsers?: string;
-  /**
-   * @member {string} [pageToken] The token representing the result page to get
-   */
-  pageToken?: string;
-  /**
-   * @member {number} [pageSize] The page size requested
-   */
-  pageSize?: number;
-}
-
-/**
- * @interface
  * An interface representing CatalyticSDKAPIFindUsersOptionalParams.
  * Optional Parameters.
  *
@@ -1430,6 +1545,26 @@ export interface CatalyticSDKAPIFindUsersOptionalParams extends msRest.RequestOp
    * @member {string} [participatingUsers] Task assignee to search for
    */
   participatingUsers?: string;
+  /**
+   * @member {string} [startedBefore] Latest start date of the task or run to
+   * search for
+   */
+  startedBefore?: string;
+  /**
+   * @member {string} [startedAfter] Earliest start date of the task or run to
+   * search for
+   */
+  startedAfter?: string;
+  /**
+   * @member {string} [endedBefore] Latest end date of the task or run to
+   * search for
+   */
+  endedBefore?: string;
+  /**
+   * @member {string} [endedAfter] Earliest end date of the task or run to
+   * search for
+   */
+  endedAfter?: string;
   /**
    * @member {string} [pageToken] The token representing the result page to get
    */
@@ -1478,6 +1613,26 @@ export interface CatalyticSDKAPIFindWorkflowsOptionalParams extends msRest.Reque
    * @member {string} [participatingUsers] Task assignee to search for
    */
   participatingUsers?: string;
+  /**
+   * @member {string} [startedBefore] Latest start date of the task or run to
+   * search for
+   */
+  startedBefore?: string;
+  /**
+   * @member {string} [startedAfter] Earliest start date of the task or run to
+   * search for
+   */
+  startedAfter?: string;
+  /**
+   * @member {string} [endedBefore] Latest end date of the task or run to
+   * search for
+   */
+  endedBefore?: string;
+  /**
+   * @member {string} [endedAfter] Earliest end date of the task or run to
+   * search for
+   */
+  endedAfter?: string;
   /**
    * @member {string} [pageToken] The token representing the result page to get
    */
@@ -1618,9 +1773,9 @@ export type InstanceVisibility = 'open' | 'restricted';
 export type Format = 'csv' | 'xlsx';
 
 /**
- * Contains response data for the createCredentials operation.
+ * Contains response data for the findAccessTokens operation.
  */
-export type CreateCredentialsResponse = {
+export type FindAccessTokensResponse = {
   /**
    * The parsed response body.
    */
@@ -1641,9 +1796,9 @@ export type CreateCredentialsResponse = {
 };
 
 /**
- * Contains response data for the createAndApproveCredentials operation.
+ * Contains response data for the getAccessToken operation.
  */
-export type CreateAndApproveCredentialsResponse = {
+export type GetAccessTokenResponse = {
   /**
    * The parsed response body.
    */
@@ -1664,9 +1819,78 @@ export type CreateAndApproveCredentialsResponse = {
 };
 
 /**
- * Contains response data for the waitForCredentialsApproval operation.
+ * Contains response data for the revokeAccessToken operation.
  */
-export type WaitForCredentialsApprovalResponse = {
+export type RevokeAccessTokenResponse = {
+  /**
+   * The parsed response body.
+   */
+  body: any;
+  /**
+   * The underlying HTTP response.
+   */
+  _response: msRest.HttpResponse & {
+      /**
+       * The response body as text (string format)
+       */
+      bodyAsText: string;
+      /**
+       * The response body as parsed JSON or XML
+       */
+      parsedBody: any;
+    };
+};
+
+/**
+ * Contains response data for the createAccessToken operation.
+ */
+export type CreateAccessTokenResponse = {
+  /**
+   * The parsed response body.
+   */
+  body: any;
+  /**
+   * The underlying HTTP response.
+   */
+  _response: msRest.HttpResponse & {
+      /**
+       * The response body as text (string format)
+       */
+      bodyAsText: string;
+      /**
+       * The response body as parsed JSON or XML
+       */
+      parsedBody: any;
+    };
+};
+
+/**
+ * Contains response data for the createAndApproveAccessToken operation.
+ */
+export type CreateAndApproveAccessTokenResponse = {
+  /**
+   * The parsed response body.
+   */
+  body: any;
+  /**
+   * The underlying HTTP response.
+   */
+  _response: msRest.HttpResponse & {
+      /**
+       * The response body as text (string format)
+       */
+      bodyAsText: string;
+      /**
+       * The response body as parsed JSON or XML
+       */
+      parsedBody: any;
+    };
+};
+
+/**
+ * Contains response data for the waitForAccessTokenApproval operation.
+ */
+export type WaitForAccessTokenApprovalResponse = {
   /**
    * The parsed response body.
    */
@@ -2081,75 +2305,6 @@ export type SnoozeStepResponse = {
  * Contains response data for the reassignStep operation.
  */
 export type ReassignStepResponse = {
-  /**
-   * The parsed response body.
-   */
-  body: any;
-  /**
-   * The underlying HTTP response.
-   */
-  _response: msRest.HttpResponse & {
-      /**
-       * The response body as text (string format)
-       */
-      bodyAsText: string;
-      /**
-       * The response body as parsed JSON or XML
-       */
-      parsedBody: any;
-    };
-};
-
-/**
- * Contains response data for the findCredentials operation.
- */
-export type FindCredentialsResponse = {
-  /**
-   * The parsed response body.
-   */
-  body: any;
-  /**
-   * The underlying HTTP response.
-   */
-  _response: msRest.HttpResponse & {
-      /**
-       * The response body as text (string format)
-       */
-      bodyAsText: string;
-      /**
-       * The response body as parsed JSON or XML
-       */
-      parsedBody: any;
-    };
-};
-
-/**
- * Contains response data for the getCredentials operation.
- */
-export type GetCredentialsResponse = {
-  /**
-   * The parsed response body.
-   */
-  body: any;
-  /**
-   * The underlying HTTP response.
-   */
-  _response: msRest.HttpResponse & {
-      /**
-       * The response body as text (string format)
-       */
-      bodyAsText: string;
-      /**
-       * The response body as parsed JSON or XML
-       */
-      parsedBody: any;
-    };
-};
-
-/**
- * Contains response data for the revokeCredentials operation.
- */
-export type RevokeCredentialsResponse = {
   /**
    * The parsed response body.
    */
