@@ -1,6 +1,6 @@
 > 🚧 Preview Release
 >
-> The .NET SDK is currently a preview release and is not yet generally available. While in preview, functionality may be changed or deprecated without notice. Please contact [sdk@catalytic.com](mailto:sdk@catalytic.com) (opens in new tab) if you would like early access.
+> The Node.js is currently a preview release and is not yet generally available. While in preview, functionality may be changed or deprecated without notice. Please contact [sdk@catalytic.com](mailto:sdk@catalytic.com) (opens in new tab) if you would like early access.
 
 ## Benefits and Key Features
 
