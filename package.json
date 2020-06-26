@@ -11,10 +11,10 @@
     "url": "https://github.com/catalyticlabs/catalytic-sdk-node/issues",
     "email": "sdk@catalytic.com"
   },
-  "main": "built/index.js",
-  "types": "built/index.d.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "files": [
-    "built/**/*"
+    "dist/**/*"
   ],
   "scripts": {
     "autorest": "autorest",
@@ -62,7 +62,7 @@
   "keywords": [],
   "license": "SEE LICENSE IN license.txt",
   "eslintIgnore": [
-    "built/*",
+    "dist/*",
     "src/internal/*"
   ]
 }
