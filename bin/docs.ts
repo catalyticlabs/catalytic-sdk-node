@@ -33,7 +33,7 @@ async function pullContent(filename: string): Promise<string> {
         return response.data.body;
     } catch (err) {
         console.log(filename);
-        // console.error(err);
+        console.error(err.response.data);
     }
 }
 
