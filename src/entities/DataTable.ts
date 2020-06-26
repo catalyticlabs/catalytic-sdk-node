@@ -12,10 +12,6 @@ export default class DataTable implements CatalyticSDKAPIModels.DataTable {
      */
     dataTableId?: string;
     /**
-     * Gets a unique reference name for this Data Table
-     */
-    referenceName?: string;
-    /**
      * The descriptive name of the Data Table
      */
     name: string;

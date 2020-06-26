@@ -49,7 +49,7 @@ const instance = await catalytic.instances.start(workflowId.id, 'My new Instance
 const tableId = instance.fields.find(field => field.name === 'table').value;
 
 // Download the Data Table as a CSV
-const localFilePath = './data-table.csv'
+const localFilePath = './data-table.csv';
 await catalytic.dataTables.download(tableId, 'csv', localFilePath);
 const content = fs.readFileSync(localFilePath).toString();
 
@@ -63,8 +63,10 @@ const steps = (await catalytic.instances.findInstanceSteps({ instanceID: instanc
 const uploadStep = steps.find(step => step.name === 'Upload Updated Spreadsheet and Set Email');
 
 // Complete the "Upload Updated Spreadsheet and Set Email" with the ID of the uploaded File
-const stepFields = [{ name: 'Updated CSV', value: uploadedFile.id, "Email Address": "YOUR_EMAIL" }];
+const stepFields = [{ name: 'Updated CSV', value: uploadedFile.id, 'Email Address': 'YOUR_EMAIL' }];
 catalytic.instances.completeInstanceStep(uploadStep.id, stepFields);
 
-console.log(`You should have an email waiting for you at ${YOUR_EMAIL} now with the updated CSV converted to an Excel attachment`);
+console.log(
+    `You should have an email waiting for you at ${YOUR_EMAIL} now with the updated CSV converted to an Excel attachment`
+);
 ```

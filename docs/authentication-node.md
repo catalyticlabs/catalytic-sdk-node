@@ -24,13 +24,25 @@ You now have a few options for configuring the SDK to use that token.
 
 ### Environment Variable
 
+> 🚧 Not yet implemented
+>
+> Setting the default Access Token via Environment Variable not yet implemented
+
 First, copy your token string by clicking on the `Copy` button, then save the copied value as the `CATALYTIC_TOKEN` environment variable.
 
 ### Default Access Token File
 
+> 🚧 Not yet implemented
+>
+> Accessing an Access Token via file not yet implemented
+
 First, download your token by clicking on the `Download` button, then save the file as `$HOME/.catalytic/tokens/default`
 
 ### Using your Default Access Token
+
+> 🚧 Not yet implemented
+>
+> `AccessToken.default` not yet implemented
 
 You can use an Access Token set in the environment or the default Access Token file by passing `AccessToken.Default` into the `SDK.Client` constructor. `AccessToken.Default` will first try to load the Access Token from the `CATALYTIC_TOKEN` environment variable. If that is not set, it will try to read them from `$HOME/.catalytic/tokens/default`
 
@@ -39,6 +51,10 @@ const catalytic = new CatalyticClient(AccessToken.default);
 ```
 
 ### Named Access Token File
+
+> 🚧 Not yet implemented
+>
+> Accessing an Access Token via file not yet implemented
 
 If you want to use multiple Access Tokens from within the same application, or use different Access Tokens with different applications running under the same user account on your machine, you can name your saved Access Tokens and load them dynamically.
 
@@ -65,6 +81,12 @@ You can also store your tokens anywhere you like as long as you can load them in
 ```js
 const token = 'YOUR_SERIALIZED_ACCESS_TOKEN_STRING';
 const catalytic = new CatalyticClient(token);
+```
+
+```js
+const token = 'YOUR_SERIALIZED_ACCESS_TOKEN_STRING';
+const catalytic = new CatalyticClient();
+catalytic.setAccessToken(token);
 ```
 
 ## Access Token Lifecycles
