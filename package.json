@@ -1,6 +1,6 @@
 {
   "name": "@catalytic/sdk",
-  "version": "1.0.0-pre-1",
+  "version": "1.0.0-pre-2",
   "description": "Catalytic SDK for Node.js",
   "author": "Catalytic, Inc.",
   "repository": {
@@ -22,7 +22,10 @@
     "lint": "eslint ./src/*.ts ./src/**/*.ts ./tests/*.ts ./tests/**/*.ts",
     "test": "mocha -r ts-node/register tests/*.test.ts tests/**/*.test.ts",
     "cover": "nyc yarn test",
-    "prepublish": "yarn build && yarn test"
+    "prepublish": "yarn build && yarn test",
+    "docs:compare": "ts-node ./bin/docs compare",
+    "docs:pull": "ts-node ./bin/docs pull",
+    "docs:push": "ts-node ./bin/docs push"
   },
   "dependencies": {
     "@azure/ms-rest-js": "^2.0.4",

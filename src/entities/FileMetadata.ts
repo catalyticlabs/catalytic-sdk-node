@@ -35,9 +35,4 @@ export default class FileMetadata implements CatalyticSDKAPIModels.FileMetadata 
      * The MD5 hash of the File
      */
     md5Hash?: string;
-    /**
-     * The stringified ID of the File, used for
-     * reference in a !:FilesPage
-     */
-    referenceName?: string;
 }

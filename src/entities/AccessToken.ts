@@ -39,6 +39,10 @@ export default class AccessToken implements CatalyticSDKAPIModels.AccessToken {
      */
     type?: AccessTokenType;
 
+    /**
+     * Construct an AccessToken class instance for an already created Access Token
+     * @param token The serialized Access Token string, available on creation of new Access Token via UI or SDK
+     */
     constructor(token: string) {
         this.token = token;
     }

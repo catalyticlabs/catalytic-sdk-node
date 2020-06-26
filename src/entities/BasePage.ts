@@ -6,11 +6,11 @@ export default class BasePage {
      */
     nextPageOptions?: PagingOptions;
     /**
-     *
+     * The `pageToken` to use for fetching the next page of items
      */
     nextPageToken?: string;
     /**
-     *
+     * The number of items returned
      */
     count?: number;
 }
