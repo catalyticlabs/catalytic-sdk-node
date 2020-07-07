@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 
-import _ from 'lodash';
+import { transform, Dictionary } from 'lodash';
 import axios from 'axios';
 import Bluebird from 'bluebird';
 import { exec } from 'child_process';
@@ -23,14 +23,14 @@ getSwagger(SWAGGER_URL)
     .tap(() => console.log('done'))
     .catch(err => console.error(err));
 
-function getSwagger(swaggerUrl): Bluebird<any> {
+function getSwagger(swaggerUrl): Bluebird<object> {
     return Bluebird.resolve(axios.get(swaggerUrl).then(response => response.data));
 }
 
 function autorest(swaggerPath: string): Bluebird<string> {
     return Bluebird.fromCallback(callback => {
         exec(
-            `npm run autorest -- README.md --input-file="${swaggerPath}"`,
+            `npm run autorest -- autorest.yaml --input-file="${swaggerPath}"`,
             {
                 maxBuffer: 10000 * 1024
             },
@@ -48,15 +48,15 @@ function autorest(swaggerPath: string): Bluebird<string> {
     });
 }
 
-function clean(obj: any): any {
-    return _.transform(
+function clean(obj: Dictionary<object>): object {
+    return transform(
         obj,
         (result, value, key) => {
-            if (key === 'additionalProperties' && value == false) {
+            if (key === 'additionalProperties' && !value) {
                 return result;
             }
             if (!Array.isArray(value) && typeof value == 'object') {
-                result[key] = clean(value);
+                result[key] = clean(value as Dictionary<object>);
             } else {
                 result[key] = value;
             }

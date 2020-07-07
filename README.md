@@ -1,3 +1,6 @@
+[![codecov](https://codecov.io/gh/catalyticlabs/catalytic-sdk-node/branch/master/graph/badge.svg)](https://codecov.io/gh/catalyticlabs/catalytic-sdk-node)
+[![Build Status](https://github.com/catalyticlabs/catalytic-sdk-node/workflows/CI/badge.svg)](https://github.com/catalyticlabs/catalytic-sdk-node/actions)
+
 # Catalytic SDK for Node.js
 
 ## Overview
@@ -24,13 +27,3 @@ $ npm install @catalytic/sdk
 ## Documentation
 
 Visit https://sdk.catalytic.com or https://github.com/catalyticlabs/catalytic-sdk-node/tree/master/docs for further help and documentation.
-
-## AutoRest Configuration
-
-The default configuration expects the input to be on `stdin`.
-
-```yaml
----
-typescript:
-    - output-folder: ./src/internal
-```
