@@ -17,13 +17,13 @@ find(options: FindAccessTokensOptions, callback: (err?: Error, accessToken: Acce
 
 | Parameter           | Type                                                                | Description                                                                             | Default |
 | ------------------- | ------------------------------------------------------------------- | --------------------------------------------------------------------------------------- | ------- |
-| `options`           | `object`                                                            | The paging options filter criteria to search by, or null to fetch all Access Tokens.    | `null`  |
-| `options.owner`     | `PagingOptions`                                                     | The email, username, or ID of the user whose Access Tokens should be fetched.           | `null`  |
-| `options.query`     | `string`                                                            | A query string to search by. Applies to the `name` property of Access Tokens            | `null`  |
-| `options.pageSize`  | `number`                                                            | The number of Access Tokens to fetch in a single `AccessTokensPage` response            | `       |
-| `options.pageToken` | `string`                                                            | The `nextPageToken` of a previous `find` request, used to fetch the next set of results |
-| `callback`          | `(err?: Error, accessToken: AccessToken) => any`                    | The callback                                                                            | `null`  |
-| _returns_           | [`Promise<AccessTokensPage>`](doc:the-accesstokenspage-entity-node) | The requested page of Access Tokens                                                     |
+| `options`           | `object`                                                            | The paging options filter criteria to search by, or null to fetch all Access Tokens.    |         |
+| `options.owner`     | `PagingOptions`                                                     | The email, username, or ID of the user whose Access Tokens should be fetched.           |         |
+| `options.query`     | `string`                                                            | A query string to search by. Applies to the `name` property of Access Tokens            |         |
+| `options.pageSize`  | `number`                                                            | The number of Access Tokens to fetch in a single `AccessTokensPage` response            | `25`    |
+| `options.pageToken` | `string`                                                            | The `nextPageToken` of a previous `find` request, used to fetch the next set of results |         |
+| `callback`          | `(err?: Error, accessToken: AccessToken) => any`                    | The callback                                                                            |         |
+| _returns_           | [`Promise<AccessTokensPage>`](doc:the-accesstokenspage-entity-node) | The requested page of Access Tokens                                                     |         |
 
 You can search for matches among the following attributes of the `Where` class.
 
