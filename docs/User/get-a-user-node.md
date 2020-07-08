@@ -13,7 +13,7 @@ get(id: string, callback: (err?: Error, user: User) => any): void;
 | Parameter  | Type                               | Description                                   |
 | ---------- | ---------------------------------- | --------------------------------------------- |
 | `id`       | `string`                           | The id, email, or username of the User to get |
-| `callback` | `(err?: Error, user: User) => any` | The callback                                  |
+| `callback` | `(err?: Error, user: User) => any` | _Optional_ The callback                                  |
 | _returns_  | [`User`](doc:the-user-entity-node) | The requested User                            |
 
 ## Example

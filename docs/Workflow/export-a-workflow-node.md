@@ -19,6 +19,7 @@ export(id: string, password: string, callback: (err?: Error, file: FileMetadata)
 | ---------- | --------------------------------------------------- | ----------------------------------------------------------------- |
 | `id`       | `string`                                            | The string `id` of the Workflow to export                         |
 | `password` | `string`                                            | _Optional_ Password used to secure the exported file              |
+| `callback` | `(err?: Error, file: FileMetadata) => any`          | _Optional_ The callback                                           |
 | _returns_  | [`FileMetadata`](doc:the-file-metadata-entity-node) | The exported file, ready for [download](doc:download-a-file-node) |
 
 ## Example

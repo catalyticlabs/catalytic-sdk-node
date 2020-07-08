@@ -16,7 +16,7 @@ get(id: string, callback: (err?: Error, workflow: Workflow) => any): void;
 | Parameter  | Type                                       | Description                   |
 | ---------- | ------------------------------------------ | ----------------------------- |
 | `id`       | `Guid`                                     | The id of the Workflow to get |
-| `callback` | `(err?: Error, workflow: Workflow) => any` | The callback                  |
+| `callback` | `(err?: Error, workflow: Workflow) => any` | _Optional_ The callback       |
 | _returns_  | [`Workflow`](doc:the-workflows-entity-net) | The requested Workflow        |
 
 ## Example

@@ -15,7 +15,7 @@ import(filePath: string, password: string, callback: (err?: Error, workflow: Wor
 | ---------- | ------------------------------------------- | ------------------------------------------------------------------ |
 | `filePath` | `string`                                    | The path to the Workflow Export File to use to create the Workflow |
 | `password` | `string`                                    | _Optional_ Password used to secure the export file                 |
-| `callback` | `(err?: Error, workflow: Workflow) => any`  | The callback                                                       |
+| `callback` | `(err?: Error, workflow: Workflow) => any`  | _Optional_ The callback                                            |
 | _returns_  | [`Workflow`](doc:the-workflows-entity-node) | The imported Workflow                                              |
 
 ## Example

@@ -15,16 +15,16 @@ find(callback: (err?: Error, workflowsPage: WorkflowsPage) => any): void;
 find(options: FindWorkflowOptions, callback: (err?: Error, workflowsPage: WorkflowsPage) => any): void;
 ```
 
-| Parameter           | Type                                                 | Description                                                                                                                                     | Default |
-| ------------------- | ---------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | ------- |
-| `options`           | `object`                                             | The paging options filter criteria to search by, or null to fetch all Workflows.                                                                |         |
-| `options.owner`     | `string`                                             | Search for Workflows owned by a specific team member. The email <br>address of the owner of the Workflow must match exactly, apart from casing. |         |
-| `options.category`  | `string`                                             | Search for Workflows in a specific category                                                                                                     |         |
-| `options.query`     | `string`                                             | A query string to search by. Applies to the `name` and `description`<br>properties of Workflows                                                 |         |
-| `options.pageSize`  | `number`                                             | The number of Workflows to fetch in a single `WorkflowsPage` response                                                                           | `25`    |
-| `options.pageToken` | `string`                                             | The `nextPageToken` of a previous `find` request, used to fetch the next set of results                                                         |         |
-| `callback`          | `(err?: Error, workflowsPage: WorkflowsPage) => any` | The callback                                                                                                                                    |         |
-| _returns_           | [`WorkflowsPage`](doc:the-workflowspage-entity-node) | The requested page of Workflows                                                                                                                 |         |
+| Parameter           | Type                                                 | Description                                                                                                                                                | Default |
+| ------------------- | ---------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- |
+| `options`           | `object`                                             | _Optional_ The options options filter criteria to search by, or null to fetch all Workflows.                                                               |         |
+| `options.owner`     | `string`                                             | _Optional_ Search for Workflows owned by a specific team member. The email <br>address of the owner of the Workflow must match exactly, apart from casing. |         |
+| `options.category`  | `string`                                             | _Optional_ Search for Workflows in a specific category                                                                                                     |         |
+| `options.query`     | `string`                                             | _Optional_ A query string to search by. Applies to the `name` and `description`<br>properties of Workflows                                                 |         |
+| `options.pageSize`  | `number`                                             | _Optional_ The number of Workflows to fetch in a single `WorkflowsPage` response                                                                           | `25`    |
+| `options.pageToken` | `string`                                             | _Optional_ The `nextPageToken` of a previous `find` request, used to fetch the next set of results                                                         |         |
+| `callback`          | `(err?: Error, workflowsPage: WorkflowsPage) => any` | _Optional_ The callback                                                                                                                                    |         |
+| _returns_           | [`WorkflowsPage`](doc:the-workflowspage-entity-node) | The requested page of Workflows                                                                                                                            |         |
 
 ## Example
 
@@ -38,15 +38,15 @@ const catalytic = new CatalyticClient('YOUR_SERIALIZED_ACCESS_TOKEN_STRING');
 
 const workflows = [];
 
-let paging = { pageSize: 25 };
+let options = { pageSize: 25 };
 
-while (paging) {
-    const workflowsPage = await catalytic.workflows.find(paging);
+while (options) {
+    const workflowsPage = await catalytic.workflows.find(options);
     workflows.push(...workflowsPage.workflows);
     if (workflowsPage.nextPageToken) {
-        paging.pageToken = workflowsPage.nextPageToken;
+        options.pageToken = workflowsPage.nextPageToken;
     } else {
-        paging = null;
+        options = null;
     }
 }
 

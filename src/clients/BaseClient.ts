@@ -63,27 +63,36 @@ export default abstract class BaseClient {
 
     protected async getFileDownloadStream(endpoint: string): Promise<Stream> {
         const url = `${BaseUri}api${endpoint.startsWith('/') ? endpoint : `/${endpoint}`}`;
+        const headers = { ...this.getRequestHeaders(), 'User-Agent': UserAgent };
 
         try {
             const response = await axios({
                 url,
                 method: 'GET',
                 responseType: 'stream',
-                headers: { ...this.getRequestHeaders(), 'User-Agent': UserAgent }
+                headers
             });
 
             return response.data as Stream;
         } catch (err) {
             if (err.response?.status) {
                 const status = err.response.status;
-                const chunks = [];
-                const stream = err.response.data;
-                await new Promise((resolve, reject) => {
-                    stream.on('data', chunk => chunks.push(chunk));
-                    stream.on('error', reject);
-                    stream.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')));
-                });
-                const message = chunks.join('') || 'Failed to get download stream';
+
+                let message = 'Failed to get download stream';
+
+                try {
+                    const stream = err.response.data;
+                    const chunks = [];
+                    await new Promise((resolve, reject) => {
+                        stream.on('data', chunk => chunks.push(chunk));
+                        stream.on('error', reject);
+                        stream.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')));
+                    });
+                    const data = JSON.parse(chunks.join(''));
+                    if (data) {
+                        message = data?.detail || data.Detail || data;
+                    }
+                } catch (e) {}
 
                 this.throwError(message, status);
             }
