@@ -13,11 +13,11 @@ download(id: string, path: string): Promise<void>;
 download(id: string, path: string, callback: (err?: Error) => any): void;
 ```
 
-| Parameter  | Type                   | Description                                                                                                                        |
-| ---------- | ---------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| `id`       | `string`               | The id of the File to download                                                                                                     |
-| `path`     | `string`               | The path on disk to save the download to. The file's <br>original name will be preserved. Defaults to a local temporary directory. |
-| `callback` | `(err?: Error) => any` | _Optional_ The callback                                                                                                            |
+| Parameter  | Type                   | Description                               |
+| ---------- | ---------------------- | ----------------------------------------- |
+| `id`       | `string`               | The id of the File to download            |
+| `path`     | `string`               | The path on disk to save the download to. |
+| `callback` | `(err?: Error) => any` | _Optional_ The callback                   |
 
 ## Example
 
