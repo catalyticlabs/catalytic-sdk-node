@@ -16,7 +16,7 @@ get(id: string, callback: (err?: Error, accessToken: AccessToken) => any): void;
 | Parameter  | Type                                                       | Description                       |
 | ---------- | ---------------------------------------------------------- | --------------------------------- |
 | `id`       | `string`                                                   | The id of the Access Token to get |
-| `callback` | `(err?: Error, accessToken: AccessToken) => any`           | The callback                      |
+| `callback` | `(err?: Error, accessToken: AccessToken) => any`           | _Optional_ The callback           |
 | _returns_  | [`Promise<AccessToken>`](doc:the-access-token-entity-node) | The requested Access Token        |
 
 ## Example

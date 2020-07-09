@@ -54,30 +54,8 @@ export default class WorkflowClient extends BaseClient implements WorkflowClient
 
     import(filePath: string): Promise<Workflow>;
     import(filePath: string, callback: ClientMethodCallback<Workflow>): void;
-    /**
-     * @summary Import a Catalytic Workflow from an exported .catalytic file
-     *
-     * @param filePath The path to the .catalytic file on disk
-     * @param password [Optional] The password used to secure the .catalytic export file, if applicable
-     * @returns The imported Workflow
-     */
     import(filePath: string, password: string): Promise<Workflow>;
-    /**
-     * @summary Import a Catalytic Workflow from an exported .catalytic file
-     *
-     * @param filePath The path to the .catalytic file on disk
-     * @param password [Optional] The password used to secure the .catalytic export file, if applicable
-     * @param callback The callback
-     */
     import(filePath: string, password: string, callback: ClientMethodCallback<Workflow>): void;
-    /**
-     * @summary Import a Catalytic Workflow from an exported .catalytic file
-     *
-     * @param filePath The path to the .catalytic file on disk
-     * @param password [Optional] The password used to secure the .catalytic export file, if applicable
-     * @param callback The callback
-     * @returns The imported Workflow
-     */
     import(
         filePath: string,
         password: string | ClientMethodCallback<Workflow> = null,
@@ -138,30 +116,8 @@ export default class WorkflowClient extends BaseClient implements WorkflowClient
 
     export(id: string): Promise<FileMetadata>;
     export(id: string, callback: ClientMethodCallback<FileMetadata>): void;
-    /**
-     * @summary Export a Catalytic Workflow to a .catalytic file
-     *
-     * @param id The ID of the Workflow to export
-     * @param password [Optional] The password used to secure the .catalytic export file
-     * @returns The FileMetadata corresponding to the .catalytic Workflow export file
-     */
     export(id: string, password: string): Promise<FileMetadata>;
-    /**
-     * @summary Export a Catalytic Workflow to a .catalytic file
-     *
-     * @param id The ID of the Workflow to export
-     * @param password [Optional] The password used to secure the .catalytic export file
-     * @param callback The callback
-     */
     export(id: string, password: string, callback: ClientMethodCallback<FileMetadata>): void;
-    /**
-     * @summary Export a Catalytic Workflow to a .catalytic file
-     *
-     * @param id The ID of the Workflow to export
-     * @param password [Optional] The password used to secure the .catalytic export file
-     * @param callback The callback
-     * @returns The FileMetadata corresponding to the .catalytic Workflow export file
-     */
     export(
         id: string,
         password: string | ClientMethodCallback<FileMetadata> = null,

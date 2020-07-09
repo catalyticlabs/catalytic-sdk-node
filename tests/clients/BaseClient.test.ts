@@ -157,6 +157,72 @@ describe('BaseClient', function() {
             expect(err).to.be.instanceOf(UnauthorizedError);
             expect(err.message).to.include('Intentional auth error');
         });
+
+        it('should handle formatted error messages', async function() {
+            nock(BaseUri)
+                .post('/api/files:upload')
+                .reply(500, { detail: 'Intentional 500 error' });
+
+            const filePath = join(__dirname, '../fixtures/test.txt');
+
+            let err;
+            let result;
+            try {
+                // this directly calls `BaseClient.prototype.uploadFile`
+                result = await client.files['uploadFile'](filePath);
+            } catch (e) {
+                err = e;
+            }
+
+            expect(result).to.not.be.ok;
+            expect(err).to.be.ok;
+            expect(err).to.be.instanceOf(InternalError);
+            expect(err.message).to.include('Intentional 500 error');
+        });
+
+        it('should handle formatted error messages in PascalCase', async function() {
+            nock(BaseUri)
+                .post('/api/files:upload')
+                .reply(500, { Detail: 'Intentional 500 error' });
+
+            const filePath = join(__dirname, '../fixtures/test.txt');
+
+            let err;
+            let result;
+            try {
+                // this directly calls `BaseClient.prototype.uploadFile`
+                result = await client.files['uploadFile'](filePath);
+            } catch (e) {
+                err = e;
+            }
+
+            expect(result).to.not.be.ok;
+            expect(err).to.be.ok;
+            expect(err).to.be.instanceOf(InternalError);
+            expect(err.message).to.include('Intentional 500 error');
+        });
+
+        it('should respond with default error message when no message provided', async function() {
+            nock(BaseUri)
+                .post('/api/files:upload')
+                .reply(401);
+
+            const filePath = join(__dirname, '../fixtures/test.txt');
+
+            let err;
+            let result;
+            try {
+                // this directly calls `BaseClient.prototype.uploadFile`
+                result = await client.files['uploadFile'](filePath);
+            } catch (e) {
+                err = e;
+            }
+
+            expect(result).to.not.be.ok;
+            expect(err).to.be.ok;
+            expect(err).to.be.instanceOf(UnauthorizedError);
+            expect(err.message).to.include('Failed to upload file');
+        });
     });
 
     describe('Get File Download Stream', function() {
@@ -298,6 +364,69 @@ describe('BaseClient', function() {
             expect(err).to.be.ok;
             expect(err).to.be.instanceOf(UnauthorizedError);
             expect(err.message).to.include('Intentional auth error');
+        });
+
+        it('should handle formatted error messages', async function() {
+            const endpoint = 'download/something';
+            const writePath = join(tmpdir(), v4());
+
+            nock(BaseUri)
+                .get('/api/' + endpoint)
+                .reply(500, { detail: 'Intentional 500 error' });
+
+            let err;
+            try {
+                // this directly calls `BaseClient.prototype.downloadFile`
+                await client.files['downloadFile'](endpoint, writePath);
+            } catch (e) {
+                err = e;
+            }
+
+            expect(err).to.be.ok;
+            expect(err).to.be.instanceOf(InternalError);
+            expect(err.message).to.include('Intentional 500 error');
+        });
+
+        it('should handle formatted error messages in PascalCase', async function() {
+            const endpoint = 'download/something';
+            const writePath = join(tmpdir(), v4());
+
+            nock(BaseUri)
+                .get('/api/' + endpoint)
+                .reply(500, { Detail: 'Intentional 500 error' });
+
+            let err;
+            try {
+                // this directly calls `BaseClient.prototype.downloadFile`
+                await client.files['downloadFile'](endpoint, writePath);
+            } catch (e) {
+                err = e;
+            }
+
+            expect(err).to.be.ok;
+            expect(err).to.be.instanceOf(InternalError);
+            expect(err.message).to.include('Intentional 500 error');
+        });
+
+        it('should respond with default error message when no message provided', async function() {
+            const endpoint = '/download/something';
+            const writePath = join(tmpdir(), v4());
+
+            nock(BaseUri)
+                .get('/api' + endpoint)
+                .reply(401);
+
+            let err;
+            try {
+                // this directly calls `BaseClient.prototype.downloadFile`
+                await client.files['downloadFile'](endpoint, writePath);
+            } catch (e) {
+                err = e;
+            }
+
+            expect(err).to.be.ok;
+            expect(err).to.be.instanceOf(UnauthorizedError);
+            expect(err.message).to.include('Failed to get download stream');
         });
     });
 });
