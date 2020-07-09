@@ -39,8 +39,6 @@ export default abstract class BaseClient {
         const fileContents = await promisify(readFile)(filePath);
         const form = new FormData();
         form.append('files', fileContents, basename(filePath));
-        let errorMessage = 'Failed to upload file';
-        let status;
 
         try {
             const result = await axios.post(url, form, {
@@ -48,16 +46,11 @@ export default abstract class BaseClient {
             });
             return result.data;
         } catch (err) {
-            if (err.response?.status) {
-                status = err.response.status;
-                const data = err.response.data;
-                // clean this up after https://github.com/catalyticlabs/catalytic-sdk-node/issues/3 is closed
-                if (data) {
-                    errorMessage = data.Detail || data.detail || data;
-                }
-            }
+            const status = err.response?.status;
+            const data = err.response?.data;
+            const message = data?.Detail || data?.detail || data || 'Failed to upload file';
+            this.throwError(message, status);
         }
-        this.throwError(errorMessage, status);
     }
 
     protected async getFileDownloadStream(endpoint: string): Promise<Stream> {
@@ -74,11 +67,10 @@ export default abstract class BaseClient {
 
             return response.data as Stream;
         } catch (err) {
-            if (err.response?.status) {
-                const status = err.response.status;
+            const status = err.response?.status;
+            let message;
 
-                let message = 'Failed to get download stream';
-
+            if (err.response?.data) {
                 const stream = err.response.data;
                 const chunks = [];
                 await new Promise((resolve, reject) => {
@@ -87,23 +79,16 @@ export default abstract class BaseClient {
                     stream.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')));
                 });
                 const raw = chunks.join('');
-
-                if (raw) {
-                    try {
-                        const data = JSON.parse(raw);
-                        if (data) {
-                            message = data?.detail || data?.Detail || raw;
-                        }
-                    } catch (e) {
-                        message = raw;
-                    }
+                try {
+                    const data = JSON.parse(raw);
+                    message = data.detail || data.Detail || raw;
+                } catch (e) {
+                    message = raw;
                 }
-
-                this.throwError(message, status);
             }
-        }
 
-        throw new InternalError('Failed to get download stream');
+            this.throwError(message || 'Failed to get download stream', status);
+        }
     }
 
     protected async downloadFile(endpoint: string, path: string): Promise<void> {
@@ -130,11 +115,9 @@ export default abstract class BaseClient {
             // ProblemDetails responses can come back with Pascal cased JSON, so casting may drop properties
             const problemDetails = JSON.parse(response._response.bodyAsText);
             // clean this up after https://github.com/catalyticlabs/catalytic-sdk-node/issues/3 is closed
-            detail = problemDetails.detail || problemDetails.Detail || response._response.bodyAsText;
-        } catch (e) {
-            detail = response._response.bodyAsText;
-        }
-        this.throwError(detail, response._response.status);
+            detail = problemDetails.detail || problemDetails.Detail;
+        } catch (e) {}
+        this.throwError(detail || response._response.bodyAsText, response._response.status);
     }
 
     private throwError(message: string, status: number): void {

@@ -42,20 +42,21 @@ const catalytic = new CatalyticClient('YOUR_SERIALIZED_ACCESS_TOKEN_STRING');
 
 const instances = [];
 
-let options = {
+const options = {
     pageSize: 25,
     workflowID: 'c9f2beec-10c0-4f2f-b4e0-1d884c7e053c',
     owner: 'alice@example.com',
     status: 'running'
- };
+};
+let hasNextPage = true;
 
-while (options) {
+while (hasNextPage) {
     const instancesPage = await catalytic.instances.find(options);
     instances.push(...instancesPage.instances);
     if (instancesPage.nextPageToken) {
         options.pageToken = instancesPage.nextPageToken;
     } else {
-        options = null;
+        hasNextPage = false;
     }
 }
 

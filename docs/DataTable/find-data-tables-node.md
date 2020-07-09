@@ -22,7 +22,7 @@ find(options: FindDataTablesOptions, callback: (err?: Error, dataTablesPage: Dat
 | `options.pageSize`  | `number`                                               | _Optional_ The number of Users to fetch in a single `DataTablesPage` response                      | `25`    |
 | `options.pageToken` | `string`                                               | _Optional_ The `nextPageToken` of a previous `find` request, used to fetch the next set of results |         |
 | `callback`          | `(err?: Error, dataTablesPage: DataTablesPage) => any` | _Optional_ The callback                                                                            |         |
-| _returns_           | [`DataTablesPage`](doc:the-datatablespage-entity-)     | The requested page of Data Tables                                                                  |
+| _returns_           | [`DataTablesPage`](doc:the-datatablespage-entity-node)     | The requested page of Data Tables                                                                  |
 
 ## Example
 
@@ -37,15 +37,16 @@ const catalytic = new CatalyticClient('YOUR_SERIALIZED_ACCESS_TOKEN_STRING');
 
 const dataTables = [];
 
-let options = { pageSize: 25 };
+const options = { pageSize: 25 };
+let hasNextPage = true;
 
-while (options) {
+while (hasNextPage) {
     const dataTablesPage = await catalytic.dataTables.find(options);
     dataTables.push(...dataTablesPage.dataTables);
     if (dataTablesPage.nextPageToken) {
         options.pageToken = dataTablesPage.nextPageToken;
     } else {
-        options = null;
+        hasNextPage = false;
     }
 }
 

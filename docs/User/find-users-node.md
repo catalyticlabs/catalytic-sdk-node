@@ -32,15 +32,16 @@ const catalytic = new CatalyticClient('YOUR_SERIALIZED_ACCESS_TOKEN_STRING');
 
 const users = [];
 
-let options = { pageSize: 25 };
+const options = { pageSize: 25 };
+let hasNextPage = true;
 
-while (options) {
+while (hasNextPage) {
     const usersPage = await catalytic.users.find(options);
     users.push(...usersPage.users);
     if (usersPage.nextPageToken) {
         options.pageToken = usersPage.nextPageToken;
     } else {
-        options = null;
+        hasNextPage = false;
     }
 }
 
