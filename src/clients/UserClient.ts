@@ -24,11 +24,11 @@ export default class UserClient extends BaseClient implements UserClientInterfac
     }
 
     find(): Promise<UsersPage>;
-    find(options: FindUserOptions): Promise<UsersPage>;
+    find(options: FindUsersOptions): Promise<UsersPage>;
     find(callback: ClientMethodCallback<UsersPage>): void;
-    find(options: FindUserOptions, callback: ClientMethodCallback<UsersPage>): void;
+    find(options: FindUsersOptions, callback: ClientMethodCallback<UsersPage>): void;
     find(
-        options?: FindUserOptions | ClientMethodCallback<UsersPage>,
+        options?: FindUsersOptions | ClientMethodCallback<UsersPage>,
         callback?: ClientMethodCallback<UsersPage>
     ): Promise<UsersPage> | void {
         if (typeof options === 'function') {
@@ -37,12 +37,12 @@ export default class UserClient extends BaseClient implements UserClientInterfac
         }
 
         if (callback) {
-            return this.callbackifyBound(this._find)(options as FindUserOptions, callback);
+            return this.callbackifyBound(this._find)(options as FindUsersOptions, callback);
         }
 
-        return this._find(options as FindUserOptions);
+        return this._find(options as FindUsersOptions);
     }
-    private async _find(options: FindUserOptions): Promise<UsersPage> {
+    private async _find(options: FindUsersOptions): Promise<UsersPage> {
         console.log('Finding Users');
         const headers = this.getRequestHeaders();
         const result = await this._internalClient.findUsers(Object.assign({}, options, { customHeaders: headers }));
@@ -86,7 +86,7 @@ export interface UserClientInterface {
      * @param options Filter criteria to narrow Users returned
      * @returns A page of Users
      */
-    find(options: FindUserOptions): Promise<UsersPage>;
+    find(options: FindUsersOptions): Promise<UsersPage>;
     /**
      * @summary Finds Users
      *
@@ -99,7 +99,7 @@ export interface UserClientInterface {
      * @param options Filter criteria to narrow Users returned
      * @param callback The callback
      */
-    find(options: FindUserOptions, callback: ClientMethodCallback<UsersPage>): void;
+    find(options: FindUsersOptions, callback: ClientMethodCallback<UsersPage>): void;
     /**
      * @summary Finds Users
      *
@@ -108,10 +108,10 @@ export interface UserClientInterface {
      * @returns A page of Users
      */
     find(
-        options?: FindUserOptions | ClientMethodCallback<UsersPage>,
+        options?: FindUsersOptions | ClientMethodCallback<UsersPage>,
         callback?: ClientMethodCallback<UsersPage>
     ): Promise<UsersPage> | void;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface FindUserOptions extends BaseFindOptions {}
+export interface FindUsersOptions extends BaseFindOptions {}

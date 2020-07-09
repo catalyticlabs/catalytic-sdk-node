@@ -39,26 +39,25 @@ export default abstract class BaseClient {
         const fileContents = await promisify(readFile)(filePath);
         const form = new FormData();
         form.append('files', fileContents, basename(filePath));
+        let errorMessage = 'Failed to upload file';
+        let status;
 
         try {
             const result = await axios.post(url, form, {
                 headers: { ...headers, ...form.getHeaders(), 'User-Agent': UserAgent }
             });
-            if (result.data) {
-                return result.data;
-            }
+            return result.data;
         } catch (err) {
             if (err.response?.status) {
-                const status = err.response.status;
+                status = err.response.status;
                 const data = err.response.data;
                 // clean this up after https://github.com/catalyticlabs/catalytic-sdk-node/issues/3 is closed
-                const message = data ? data.Detail || data.detail || data : 'Failed to upload file';
-
-                this.throwError(message, status);
+                if (data) {
+                    errorMessage = data.Detail || data.detail || data;
+                }
             }
         }
-
-        throw new InternalError('Failed to upload file');
+        this.throwError(errorMessage, status);
     }
 
     protected async getFileDownloadStream(endpoint: string): Promise<Stream> {
@@ -80,19 +79,25 @@ export default abstract class BaseClient {
 
                 let message = 'Failed to get download stream';
 
-                try {
-                    const stream = err.response.data;
-                    const chunks = [];
-                    await new Promise((resolve, reject) => {
-                        stream.on('data', chunk => chunks.push(chunk));
-                        stream.on('error', reject);
-                        stream.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')));
-                    });
-                    const data = JSON.parse(chunks.join(''));
-                    if (data) {
-                        message = data?.detail || data.Detail || data;
+                const stream = err.response.data;
+                const chunks = [];
+                await new Promise((resolve, reject) => {
+                    stream.on('data', chunk => chunks.push(chunk));
+                    stream.on('error', reject);
+                    stream.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')));
+                });
+                const raw = chunks.join('');
+
+                if (raw) {
+                    try {
+                        const data = JSON.parse(raw);
+                        if (data) {
+                            message = data?.detail || data?.Detail || raw;
+                        }
+                    } catch (e) {
+                        message = raw;
                     }
-                } catch (e) {}
+                }
 
                 this.throwError(message, status);
             }

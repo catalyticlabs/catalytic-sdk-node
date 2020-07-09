@@ -17,14 +17,14 @@ replace(id: string, filePath: string, headerRow: number, callback: ClientMethodC
 replace(id: string, filePath: string, headerRow: number, sheetNumber: number, callback: ClientMethodCallback<DataTable>): void;
 ```
 
-| Parameter     | Type                                                   | Description                                                                          |
-| ------------- | ------------------------------------------------------ | ------------------------------------------------------------------------------------ |
-| `id`          | `string`                                               | The `id` of the Data Table whose contents will be replaced                           |
-| `filePath`    | `string`                                               | The local path of the CSV, XLS or XLSX file<br>to upload as a Data Table             |
-| `tableName`   | `string`                                               | _Optional_ The name of the table to create. Defaults to <br>the uploaded file name.  |
-| `headerRow`   | `number`                                               | _Optional_ The index of row containing column headers. <br>Row counting starts at 1. |
-| `sheetNumber` | `number`                                               | _Optional_ The index of the worksheet to import for Excel files. <br>Defaults to 1.  |
-| _returns_     | [`DataTable`](doc:the-data-table-metadata-entity-node) | The newly created Data Table                                                         |
+| Parameter     | Type                                                   | Description                                                                                        |
+| ------------- | ------------------------------------------------------ | -------------------------------------------------------------------------------------------------- |
+| `id`          | `string`                                               | The `id` of the Data Table whose contents will be replaced                                         |
+| `filePath`    | `string`                                               | The local path of the CSV, XLS or XLSX file<br>whose contents will replace the existing Data Table |
+| `tableName`   | `string`                                               | _Optional_ The name of the table to create. Defaults to <br>the uploaded file name.                |
+| `headerRow`   | `number`                                               | _Optional_ The index of row containing column headers. <br>Row counting starts at 1.               |
+| `sheetNumber` | `number`                                               | _Optional_ The index of the worksheet to import for Excel files. <br>Defaults to 1.                |
+| _returns_     | [`DataTable`](doc:the-data-table-metadata-entity-node) | The newly created Data Table                                                                       |
 
 ## Example
 

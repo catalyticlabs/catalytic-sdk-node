@@ -8,7 +8,7 @@ Get metadata for a Data Table by ID.
 
 ## Method Signature
 
-```csharp
+```typescript
 get(id: string): Promise<DataTable>;
 get(id: string, callback: (err?: Error, dataTable: DataTable) => any): void;
 ```

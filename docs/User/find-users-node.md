@@ -6,14 +6,14 @@ Finds Users matching your criteria. The `Users.Find` method supports a fluent st
 
 ```typescript
 find(): Promise<UsersPage>;
-find(options: FindUserOptions): Promise<UsersPage>;
+find(options: FindUsersOptions): Promise<UsersPage>;
 find(callback: (err?: Error, usersPage: UsersPage) => any): void;
-find(options: FindUserOptions, callback: (err?: Error, usersPage: UsersPage) => any): void;
+find(options: FindUsersOptions, callback: (err?: Error, usersPage: UsersPage) => any): void;
 ```
 
 | Parameter           | Type                                         | Description                                                                                        | Default |
 | ------------------- | -------------------------------------------- | -------------------------------------------------------------------------------------------------- | ------- |
-| `options`           | `object`                                     | _Optional_ The paging options filter criteria to search by, or null to fetch all Users.            |         |
+| `options`           | `FindUsersOptions`                           | _Optional_ The paging options filter criteria to search by, or null to fetch all Users.            |         |
 | `options.query`     | `string`                                     | _Optional_ A query string to search by. Applies to the `name` property of Users                    |         |
 | `options.pageSize`  | `number`                                     | _Optional_ The number of Users to fetch in a single `UsersPage` response                           | `25`    |
 | `options.pageToken` | `string`                                     | _Optional_ The `nextPageToken` of a previous `find` request, used to fetch the next set of results |         |
