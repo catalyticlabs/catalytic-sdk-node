@@ -107,7 +107,7 @@ listAccessTokens(accessTokensDirectory?: string): { [accessTokenName: string]: A
 
 # The `deleteAccessTokenFile` Static Method
 
-Deletes saved Access Token.
+Deletes saved Access Token. Note that this does not permanently revoke the Access Token. To permanently revoke an Access Token, use the Catalytic Web App
 
 ## Method Signature
 

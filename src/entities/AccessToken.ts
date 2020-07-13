@@ -184,7 +184,7 @@ export enum AccessTokenType {
     user = 'user'
 }
 
-function getDefaultAccessTokensDirectory(subDirectory: string): string {
+export function getDefaultAccessTokensDirectory(subDirectory: string): string {
     const path = join(homedir(), '.catalytic', subDirectory);
     if (!existsSync(path)) {
         mkdirSync(path, { recursive: true });

@@ -1,9 +1,11 @@
 import { expect } from 'chai';
 import { mkdirSync, readFileSync, existsSync, rmdirSync, readdirSync, unlinkSync } from 'fs';
-import { tmpdir } from 'os';
+import { homedir, tmpdir } from 'os';
 import { join } from 'path';
+import { v4 } from 'uuid';
 
 import { AccessToken } from '../../src/entities';
+import { getDefaultAccessTokensDirectory } from '../../src/entities/AccessToken';
 import { InvalidAccessTokenError, AccessTokenNameConflictError } from '../../src/errors';
 
 import mock from '../helpers/mockEntities';
@@ -223,6 +225,21 @@ describe('AccessToken', function() {
                     InvalidAccessTokenError
                 );
             });
+        });
+    });
+
+    describe('getDefaultAccessTokensDirectory', function() {
+        it('should create directory if does not exist', function() {
+            const subDirectoryName = v4();
+            const expectedFullPath = join(homedir(), '.catalytic', subDirectoryName);
+            expect(existsSync(expectedFullPath)).to.be.false;
+
+            const path = getDefaultAccessTokensDirectory(subDirectoryName);
+
+            expect(path).to.equal(expectedFullPath);
+            expect(existsSync(expectedFullPath)).to.be.true;
+
+            deleteDirectory(path);
         });
     });
 });
