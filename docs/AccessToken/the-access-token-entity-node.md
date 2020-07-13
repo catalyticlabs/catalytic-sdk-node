@@ -4,17 +4,12 @@ The `AccessToken` class represents authorization to use the SDK as a specific, a
 
 ## Static Properties
 
-> 🚧 Static properties not yet implemented
-
-| Name                          | Type          | Description                                                                                             |
-| ----------------------------- | ------------- | ------------------------------------------------------------------------------------------------------- |
-| `default`                     | `AccessToken` | Attempt to load and return an Access Token from the default env var or file location                    |
-| `hasDefault`                  | `bool`        | Check whether or not default a Access Token is configured                                               |
-| `defaultAccessTokenDirectory` | `string`      | Gets the default path for saved Access Token files. Resolves to `$HOME/.catalytic/tokens` or equivalent |
+| Name                       | Type          | Description                                                                                             |
+| -------------------------- | ------------- | ------------------------------------------------------------------------------------------------------- |
+| `default`                  | `AccessToken` | Attempt to load and return an Access Token from the default env var or file location                    |
+| `DEFAULT_ACCESS_TOKEN_DIR` | `string`      | Gets the default path for saved Access Token files. Resolves to `$HOME/.catalytic/tokens` or equivalent |
 
 ## Static Methods
-
-> 🚧 Static methods not yet implemented
 
 | Name                                                                | Return Type                             | Description                                                                         |
 | ------------------------------------------------------------------- | --------------------------------------- | ----------------------------------------------------------------------------------- |
@@ -50,57 +45,36 @@ const accessToken = new AccessToken('YOUR_SERIALIZED_ACCESS_TOKEN_STRING');
 
 ## Instance Methods
 
-> 🚧 Instance methods not yet implemented
-
-| Name                                | Return Type | Description                     |
-| ----------------------------------- | ----------- | ------------------------------- |
-| [`save`](#the-save-instance-method) | `void`      | Saves the AccessToken to a file |
+| Name                                            | Return Type | Description                                                                         |
+| ----------------------------------------------- | ----------- | ----------------------------------------------------------------------------------- |
+| [`saveToFile`](#the-savetofile-instance-method) | `void`      | Saves the serialized AccessToken to a file, allowing for easy loading in the future |
 
 # Constructors
 
-`AccessToken` instances should not be created directly via the constructor. Instead they should be deserialized with one of the [`fromFile`](#fromFile), [`fromString`](#fromString) or [`fromEnv`](#fromEnv) static methods, or from one of the [Create an Access Token](doc:create-an-access-token-node) methods on the [`AccessTokens`](doc:access-tokens-node) service client.
+AccessTokens can be constructed by passing the serialized AccessToken string to the `AccessToken` constructor. See [Authentication](doc:authentication-node) for more details on accessing the serialized AccessToken string.
+
+```typescript
+AccessToken(token: string)
+```
+
+```js
+const accessToken = new AccessToken('YOUR_SERIALIZED_ACCESS_TOKEN_STRING');
+```
 
 # The `fromFile` Static Method
 
-Load an Access Token by name from the default Access Token directory, a given directory or a specific file location. The default directory is `AccessToken.defaultAccessTokensDirectory`, which will be `$HOME/.catalytic/tokens` or the equivalent depending on the OS.
+Load an Access Token by name from the default Access Token directory, a given directory or a specific file location. The default directory is `AccessToken.DEFAULT_ACCESS_TOKEN_DIR`, which will be `$HOME/.catalytic/tokens` or the equivalent depending on the OS.
 
 ## Method Signature
 
 ```typescript
-fromFile(accessTokenName: string, accessTokenDirectory?: string): AccessToken;
+fromFile(fileNameOrPath: string): AccessToken;
 ```
 
-| Parameter              | Type          | Description                                                                                            |
-| ---------------------- | ------------- | ------------------------------------------------------------------------------------------------------ |
-| `accessTokenName`      | `string`      | The name of the Access Token file to load                                                              |
-| `accessTokenDirectory` | `string`      | _Optional_ Path to Access Tokens directory, defaults to<br> `AccessToken.defaultAccessTokensDirectory` |
-| _returns_              | `AccessToken` | The deserialized Access Token                                                                          |
-
-```typescript
-fromFile(accessTokenPath: string): AccessToken;
-```
-
-| Parameter         | Type          | Description                                |
-| ----------------- | ------------- | ------------------------------------------ |
-| `accessTokenFile` | `string`      | Path to the file to load Access Token from |
-| _returns_         | `AccessToken` | The deserialized AccessToken               |
-
-# The `fromToken` Static Method
-
-Deserializes an Access Token from a token string. Token strings can be copied when a new User Access Token is first created in the Catalytic Web App. See [Authentication](doc:authentication-2) for details.
-
-This method can be used to instantiate an Access Token from a token string you have stored somewhere like Azure Key Vault, Hashicorp Vault or AWS Secrets Manager.
-
-## Method Signature
-
-```typescript
-fromString(serializedAccessToken: string): AccessToken;
-```
-
-| Parameter               | Type          | Description                   |
-| ----------------------- | ------------- | ----------------------------- |
-| `serializedAccessToken` | `string`      | The serialized Access Token   |
-| _returns_               | `AccessToken` | The deserialized Access Token |
+| Parameter        | Type          | Description                                                                                                                                                                                                                              |
+| ---------------- | ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `fileNameOrPath` | `string`      | The file name or file path of the Access Token on disk. If provided value<br /> does not resolve to a file on disk, the value will interpreted as a filename within the<br /> default AccessTokens directory (`$HOME/.catalytic/tokens`) |
+| _returns_        | `AccessToken` | The deserialized Access Token                                                                                                                                                                                                            |
 
 # The `fromEnv` Static Method
 
@@ -118,7 +92,7 @@ static AccessToken fromEnv()
 
 # The `listAccessTokens` Static Method
 
-Gets all Access Tokens stored in a given directory, or in the default Access Token directory if none is specified. The default directory is `AccessToken.defaultAccessTokensDirectory`, which will be `$HOME/.catalytic/tokens` or the equivalent depending on the OS.
+Gets all Access Tokens stored in a given directory, or in the default Access Token directory if none is specified. The default directory is `AccessToken.DEFAULT_ACCESS_TOKEN_DIR`, which will be `$HOME/.catalytic/tokens` or the equivalent depending on the OS.
 
 ## Method Signature
 
@@ -126,10 +100,10 @@ Gets all Access Tokens stored in a given directory, or in the default Access Tok
 listAccessTokens(accessTokensDirectory?: string): { [accessTokenName: string]: AccessToken }
 ```
 
-| Parameter               | Type                              | Description                                                                                   |
-| ----------------------- | --------------------------------- | --------------------------------------------------------------------------------------------- |
-| `accessTokensDirectory` | `DirectoryInfo`                   | _Optional_ Access Token directory, defaults to<br> `AccessToken.defaultAccessTokensDirectory` |
-| _returns_               | `Dictionary<string, AccessToken>` | All the deserialized Access Tokens in the given (or default) directory, by name.              |
+| Parameter               | Type                          | Description                                                                                                  |
+| ----------------------- | ----------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| `accessTokensDirectory` | `DirectoryInfo`               | _Optional_ Access Token directory, defaults to<br> `AccessToken.DEFAULT_ACCESS_TOKEN_DIR`                    |
+| _returns_               | `Object<string, AccessToken>` | An object containing the deserialized Access Tokens in the given (or default) directory, keyed by file name. |
 
 # The `deleteAccessTokenFile` Static Method
 
@@ -138,33 +112,23 @@ Deletes saved Access Token.
 ## Method Signature
 
 ```typescript
-deleteAccessTokenFile(accessTokenName: string, accessTokensDirectory?: string): void;
+deleteAccessTokenFile(fileNameOrPath: string): void;
 ```
 
-| Parameter               | Type            | Description                                                                                    |
-| ----------------------- | --------------- | ---------------------------------------------------------------------------------------------- |
-| `accessTokenName`       | `string`        | The name of the Access Token file to delete                                                    |
-| `accessTokensDirectory` | `DirectoryInfo` | _Optional_ Access Tokens directory, defaults to<br> `AccessToken.defaultAccessTokensDirectory` |
+| Parameter        | Type     | Description                                                                                                                                                                                                                              |
+| ---------------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `fileNameOrPath` | `string` | The file name or file path of the Access Token on disk. If provided value<br /> does not resolve to a file on disk, the value will interpreted as a filename within the<br /> default AccessTokens directory (`$HOME/.catalytic/tokens`) |
 
-# The `save` Instance Method
+# The `saveToFile` Instance Method
 
-Saves an Access Token to a file. Throws `AccessTokenNameConflictException` if the file already exists.
-
-## Method Signature
+Saves an Access Token to a file, allowing for load via `AccessToken.fromFile`. Throws `AccessTokenNameConflictException` if the file already exists.
 
 ```typescript
-save(accessTokenName: string = "default", accessTokensDirectory?: string): void;
+public saveToFile(fileName: string): void;
+public saveToFile(fileName: string, directoryPath: string): void;
 ```
 
-| Parameter               | Type     | Description                                                                                    |
-| ----------------------- | -------- | ---------------------------------------------------------------------------------------------- |
-| `accessTokenName`       | `string` | The name of the file in which the serialized Access Token will be saved                        |
-| `accessTokensDirectory` | `string` | _Optional_ Access Tokens directory, defaults to<br> `AccessToken.defaultAccessTokensDirectory` |
-
-```typescript
-save(accessTokenFile: string): void;
-```
-
-| Parameter         | Type     | Description                                                         |
-| ----------------- | -------- | ------------------------------------------------------------------- |
-| `accessTokenFile` | `string` | Path to the file in which the serialized Access Token will be saved |
+| Parameter       | Type     | Description                                                                                        |
+| --------------- | -------- | -------------------------------------------------------------------------------------------------- |
+| `fileName`      | `string` | The name of the Access Token file                                                                  |
+| `directoryPath` | `string` | _Optional_ Path to Access Tokens directory, defaults to<br> `AccessToken.DEFAULT_ACCESS_TOKEN_DIR` |

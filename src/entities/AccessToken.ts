@@ -3,7 +3,7 @@ import { homedir } from 'os';
 import { join } from 'path';
 
 import { CatalyticSDKAPIModels } from '../internal/lib/catalyticSDKAPI';
-import { InvalidAccessTokenError } from '../errors';
+import { InvalidAccessTokenError, AccessTokenNameConflictError } from '../errors';
 
 const TOKEN_DELIMITER = ':';
 const ENV_VAR_NAME = 'CATALYTIC_TOKEN';
@@ -66,14 +66,14 @@ export default class AccessToken implements CatalyticSDKAPIModels.AccessToken {
      * default AccessTokens directory (`~/.catalytic/tokens)
      * @param fileName The name of the file to which the Access Token should be saved
      */
-    public saveToFile(fileName: string);
+    public saveToFile(fileName: string): void;
     /**
      * Save the serialized token string of an AccessToken to a local file in the
      * provided directory
      * @param fileName The name of the file to which the Access Token should be saved
      * @param directoryPath The path to the directory on disk in which the file will be created
      */
-    public saveToFile(fileName: string, directoryPath: string);
+    public saveToFile(fileName: string, directoryPath: string): void;
     public saveToFile(fileName: string, directoryPath?: string): void {
         if (!directoryPath) {
             directoryPath = AccessToken.DEFAULT_ACCESS_TOKEN_DIR;
@@ -83,7 +83,7 @@ export default class AccessToken implements CatalyticSDKAPIModels.AccessToken {
         }
         const path = join(directoryPath, fileName);
         if (existsSync(path)) {
-            throw new InvalidAccessTokenError(`AccessToken at path '${path}' already exists`);
+            throw new AccessTokenNameConflictError(`AccessToken at path '${path}' already exists`);
         }
         writeFileSync(path, this.token);
     }

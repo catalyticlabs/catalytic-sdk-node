@@ -1,3 +1,4 @@
+export { default as AccessTokenNameConflictError } from './AccessTokenNameConflictError';
 export { default as FieldInputError } from './FieldInputError';
 export { default as FileUploadError } from './FileUploadError';
 export { default as InternalError } from './InternalError';

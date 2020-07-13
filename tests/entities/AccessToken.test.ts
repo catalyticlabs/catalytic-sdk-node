@@ -4,7 +4,7 @@ import { tmpdir } from 'os';
 import { join } from 'path';
 
 import { AccessToken } from '../../src/entities';
-import { InvalidAccessTokenError } from '../../src/errors';
+import { InvalidAccessTokenError, AccessTokenNameConflictError } from '../../src/errors';
 
 import mock from '../helpers/mockEntities';
 
@@ -84,7 +84,7 @@ describe('AccessToken', function() {
                 );
 
                 const token2 = new AccessToken(mock.mockAccessToken().token);
-                expect(() => token2.saveToFile('my-token')).to.throw(InvalidAccessTokenError);
+                expect(() => token2.saveToFile('my-token')).to.throw(AccessTokenNameConflictError);
             });
         });
     });
