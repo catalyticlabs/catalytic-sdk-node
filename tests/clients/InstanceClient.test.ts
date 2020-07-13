@@ -411,7 +411,7 @@ describe('InstanceClient', function() {
 
                     expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockInstanceStepsPage)));
                     expect(client._internalClient.findInstanceSteps).to.have.callCount(1);
-                    expect(client._internalClient.findInstanceSteps).to.have.been.calledWith(WildcardId, {
+                    expect(client._internalClient.findInstanceSteps).to.have.been.calledWith(options.instanceID, {
                         customHeaders: expectedCustomHeaders,
                         pageSize: options.pageSize,
                         pageToken: undefined,
@@ -441,6 +441,87 @@ describe('InstanceClient', function() {
                         processId: undefined,
                         query: undefined,
                         runId: undefined
+                    });
+                });
+            });
+        });
+
+        describe('Get InstanceSteps for Instance', function() {
+            it('should get all InstanceSteps for Instance', function() {
+                const instanceId = v4();
+                const mockInstanceStepsPage1 = mock.mockInstanceStepsPage();
+                const pageToken = 'test-page-token';
+                mockInstanceStepsPage1.nextPageToken = pageToken;
+                const mockInstanceStepsPage2 = mock.mockInstanceStepsPage();
+                sinon
+                    .stub(client._internalClient, 'findInstanceSteps')
+                    .onFirstCall()
+                    .callsFake(() => Promise.resolve(createResponse(mockInstanceStepsPage1)))
+                    .onSecondCall()
+                    .callsFake(() => Promise.resolve(createResponse(mockInstanceStepsPage2)));
+
+                return executeTest(client.instances, 'getInstanceSteps', [instanceId], (err, result) => {
+                    expect(err).to.not.be.ok;
+
+                    expect(result).to.deep.equal(
+                        JSON.parse(JSON.stringify(mockInstanceStepsPage1.steps.concat(mockInstanceStepsPage2.steps)))
+                    );
+                    expect(client._internalClient.findInstanceSteps).to.have.callCount(2);
+                    expect(client._internalClient.findInstanceSteps).to.have.been.calledWith(instanceId, {
+                        customHeaders: expectedCustomHeaders,
+                        pageSize: undefined,
+                        pageToken: undefined,
+                        participatingUsers: undefined,
+                        processId: undefined,
+                        query: undefined,
+                        runId: instanceId
+                    });
+                    expect(client._internalClient.findInstanceSteps).to.have.been.calledWith(instanceId, {
+                        customHeaders: expectedCustomHeaders,
+                        pageSize: undefined,
+                        pageToken,
+                        participatingUsers: undefined,
+                        processId: undefined,
+                        query: undefined,
+                        runId: instanceId
+                    });
+                });
+            });
+
+            it('should throw error when bad response code returned', function() {
+                const instanceId = v4();
+                const mockInstanceStepsPage1 = mock.mockInstanceStepsPage();
+                const pageToken = 'test-page-token';
+                mockInstanceStepsPage1.nextPageToken = pageToken;
+                sinon
+                    .stub(client._internalClient, 'findInstanceSteps')
+                    .onFirstCall()
+                    .callsFake(() => Promise.resolve(createResponse(mockInstanceStepsPage1)))
+                    .onSecondCall()
+                    .callsFake(() => Promise.resolve(createResponse({ detail: 'Intentional bad request error' }, 400)));
+
+                return executeTest(client.instances, 'getInstanceSteps', [instanceId], (error, result) => {
+                    expect(result).to.not.be.ok;
+                    expect(error).to.be.ok;
+                    expect(error.message).to.include('Intentional bad request error');
+                    expect(client._internalClient.findInstanceSteps).to.have.callCount(2);
+                    expect(client._internalClient.findInstanceSteps).to.have.been.calledWith(instanceId, {
+                        customHeaders: expectedCustomHeaders,
+                        pageSize: undefined,
+                        pageToken: undefined,
+                        participatingUsers: undefined,
+                        processId: undefined,
+                        query: undefined,
+                        runId: instanceId
+                    });
+                    expect(client._internalClient.findInstanceSteps).to.have.been.calledWith(instanceId, {
+                        customHeaders: expectedCustomHeaders,
+                        pageSize: undefined,
+                        pageToken,
+                        participatingUsers: undefined,
+                        processId: undefined,
+                        query: undefined,
+                        runId: instanceId
                     });
                 });
             });

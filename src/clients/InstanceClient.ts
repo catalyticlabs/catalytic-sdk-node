@@ -157,7 +157,7 @@ export default class InstanceClient extends BaseClient implements InstanceClient
             customHeaders: this.getRequestHeaders()
         });
 
-        return this.parseResponse<InstanceStep>(result);
+        return this.parseResponse<InstanceStep>(result, 'InstanceStep');
     }
 
     findInstanceSteps(): Promise<InstancesPage>;
@@ -168,6 +168,7 @@ export default class InstanceClient extends BaseClient implements InstanceClient
         options?: FindInstanceStepsOptions | ClientMethodCallback<InstancesPage>,
         callback?: ClientMethodCallback<InstancesPage>
     ): Promise<InstancesPage> | void {
+        console.log('Finding InstanceSteps');
         if (typeof options === 'function') {
             callback = options;
             options = null;
@@ -180,15 +181,45 @@ export default class InstanceClient extends BaseClient implements InstanceClient
         return this._findInstanceSteps(options as FindInstanceStepsOptions);
     }
 
-    private async _findInstanceSteps(options: FindInstanceStepsOptions): Promise<InstancesPage> {
-        console.log('Finding InstanceSteps');
+    private async _findInstanceSteps(options: FindInstanceStepsOptions): Promise<InstanceStepsPage> {
         const headers = this.getRequestHeaders();
         const result = await this._internalClient.findInstanceSteps(
-            WildcardId,
+            options?.instanceID || WildcardId,
             Object.assign(this.formatFindInstanceStepOptions(options), { customHeaders: headers })
         );
 
-        return this.parseResponse<InstanceStepsPage>(result);
+        return this.parseResponse<InstanceStepsPage>(result, 'InstanceSteps');
+    }
+
+    getInstanceSteps(id: string): Promise<InstanceStep[]>;
+    getInstanceSteps(id: string, callback: ClientMethodCallback<InstanceStep[]>): void;
+    getInstanceSteps(id: string, callback?: ClientMethodCallback<InstanceStep[]>): Promise<InstanceStep[]> | void {
+        if (callback) {
+            return this.callbackifyBound(this._getInstanceSteps)(id, callback);
+        }
+
+        return this._getInstanceSteps(id);
+    }
+
+    private async _getInstanceSteps(id: string): Promise<InstanceStep[]> {
+        const steps = [];
+
+        const options: FindInstanceStepsOptions = {
+            instanceID: id
+        };
+        let hasNextPage = true;
+
+        while (hasNextPage) {
+            const stepsPage = await this._findInstanceSteps(options);
+            steps.push(...stepsPage.steps);
+            if (stepsPage.nextPageToken) {
+                options.pageToken = stepsPage.nextPageToken;
+            } else {
+                hasNextPage = false;
+            }
+        }
+
+        return steps;
     }
 
     private formatFindInstanceStepOptions(
@@ -234,7 +265,7 @@ export default class InstanceClient extends BaseClient implements InstanceClient
             body
         });
 
-        return this.parseResponse<InstanceStep>(result);
+        return this.parseResponse<InstanceStep>(result, 'InstanceStep');
     }
 
     completeInstanceStep(id: string): Promise<InstanceStep>;
@@ -269,7 +300,7 @@ export default class InstanceClient extends BaseClient implements InstanceClient
             body,
             customHeaders: this.getRequestHeaders()
         });
-        return this.parseResponse<InstanceStep>(result);
+        return this.parseResponse<InstanceStep>(result, 'InstanceStep');
     }
 
     private formatFields(fields: FieldInput[]): FieldInput[] {
@@ -509,6 +540,27 @@ export interface InstanceClientInterface {
         options?: FindInstanceStepsOptions | ClientMethodCallback<InstancesPage>,
         callback?: ClientMethodCallback<InstancesPage>
     ): Promise<InstancesPage> | void;
+
+    /**
+     * Fetch all InstanceSteps in an Instance
+     * @param id The ID of the Instance whose InstanceSteps should be fetches
+     * @returns All InstanceSteps in the Instance
+     */
+    getInstanceSteps(id: string): Promise<InstanceStep[]>;
+    /**
+     * Fetch all InstanceSteps in an Instance
+     * @param id The ID of the Instance whose InstanceSteps should be fetches
+     * @param callback The callback
+     * @returns All InstanceSteps in the Instance
+     */
+    getInstanceSteps(id: string, callback: ClientMethodCallback<InstanceStep[]>): void;
+    /**
+     * Fetch all InstanceSteps in an Instance
+     * @param id The ID of the Instance whose InstanceSteps should be fetches
+     * @param callback The optional callback
+     * @returns All InstanceSteps in the Instance
+     */
+    getInstanceSteps(id: string, callback?: ClientMethodCallback<InstanceStep[]>): Promise<InstanceStep[]> | void;
 
     /**
      * @summary Reassign an InstanceStep
