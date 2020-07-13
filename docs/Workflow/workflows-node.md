@@ -27,7 +27,7 @@ The `Workflows` client allows you to access your Workflow definitions. These can
  */
 const { CatalyticClient } = require('@catalytic/sdk');
 
-const catalytic = new CatalyticClient('YOUR_SERIALIZED_ACCESS_TOKEN_STRING');
+const catalytic = new CatalyticClient();
 
 const workflowById = await catalytic.workflows.get('c9f2beec-10c0-4f2f-b4e0-1d884c7e053c');
 const workflowsByName = await catalytic.workflows.find({ query: 'SDK Examples' });

@@ -28,7 +28,7 @@ get(id: string, callback: (err?: Error, accessToken: AccessToken) => any): void;
 
 const { CatalyticClient } = require('@catalytic/sdk');
 
-const catalytic = new CatalyticClient('YOUR_SERIALIZED_ACCESS_TOKEN_STRING');
+const catalytic = new CatalyticClient();
 
 // Accesses the `id` of the AccessToken constructed from 'YOUR_SERIALIZED_ACCESS_TOKEN_STRING'
 const accessTokenID = catalytic.accessToken.id;

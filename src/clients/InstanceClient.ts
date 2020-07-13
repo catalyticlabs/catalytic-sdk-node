@@ -543,20 +543,20 @@ export interface InstanceClientInterface {
 
     /**
      * Fetch all InstanceSteps in an Instance
-     * @param id The ID of the Instance whose InstanceSteps should be fetches
+     * @param id The ID of the Instance whose InstanceSteps should be fetched
      * @returns All InstanceSteps in the Instance
      */
     getInstanceSteps(id: string): Promise<InstanceStep[]>;
     /**
      * Fetch all InstanceSteps in an Instance
-     * @param id The ID of the Instance whose InstanceSteps should be fetches
+     * @param id The ID of the Instance whose InstanceSteps should be fetched
      * @param callback The callback
      * @returns All InstanceSteps in the Instance
      */
     getInstanceSteps(id: string, callback: ClientMethodCallback<InstanceStep[]>): void;
     /**
      * Fetch all InstanceSteps in an Instance
-     * @param id The ID of the Instance whose InstanceSteps should be fetches
+     * @param id The ID of the Instance whose InstanceSteps should be fetched
      * @param callback The optional callback
      * @returns All InstanceSteps in the Instance
      */

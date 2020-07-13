@@ -28,7 +28,7 @@ get(id: string, callback: (err?: Error, instance: Instance) => any): void;
  */
 const { CatalyticClient } = require('@catalytic/sdk');
 
-const catalytic = new CatalyticClient('YOUR_SERIALIZED_ACCESS_TOKEN_STRING');
+const catalytic = new CatalyticClient();
 
 const instance = await catalytic.instances.get('c9f2beec-10c0-4f2f-b4e0-1d884c7e053c');
 ```

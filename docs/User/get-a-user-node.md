@@ -24,7 +24,7 @@ get(id: string, callback: (err?: Error, user: User) => any): void;
  */
 const { CatalyticClient } = require('@catalytic/sdk');
 
-const catalytic = new CatalyticClient('YOUR_SERIALIZED_ACCESS_TOKEN_STRING');
+const catalytic = new CatalyticClient();
 
 const alice = await catalytic.users.get('alice@example.com');
 ```

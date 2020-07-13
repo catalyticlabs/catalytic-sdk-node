@@ -27,7 +27,7 @@ import(filePath: string, password: string, callback: (err?: Error, workflow: Wor
  */
 const { CatalyticClient } = require('@catalytic/sdk');
 
-const catalytic = new CatalyticClient('YOUR_SERIALIZED_ACCESS_TOKEN_STRING');
+const catalytic = new CatalyticClient();
 
 const filePath = '/path/to/export/file.catalytic';
 const password = 'MY_EXPORT_PASSWORD';

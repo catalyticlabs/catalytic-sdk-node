@@ -24,38 +24,30 @@ You now have a few options for configuring the SDK to use that token.
 
 ### Environment Variable
 
-> 🚧 Not yet implemented
->
-> Setting the default Access Token via Environment Variable not yet implemented
-
 First, copy your token string by clicking on the `Copy` button, then save the copied value as the `CATALYTIC_TOKEN` environment variable.
 
 ### Default Access Token File
-
-> 🚧 Not yet implemented
->
-> Accessing an Access Token via file not yet implemented
 
 First, download your token by clicking on the `Download` button, then save the file as `$HOME/.catalytic/tokens/default`
 
 ### Using your Default Access Token
 
-> 🚧 Not yet implemented
->
-> `AccessToken.default` not yet implemented
-
-You can use an Access Token set in the environment or the default Access Token file by passing `AccessToken.Default` into the `SDK.Client` constructor. `AccessToken.Default` will first try to load the Access Token from the `CATALYTIC_TOKEN` environment variable. If that is not set, it will try to read them from `$HOME/.catalytic/tokens/default`
+You can use an Access Token set in the environment or the default Access Token file by passing `AccessToken.default` into the `SDK.Client` constructor. `AccessToken.default` will first try to load the Access Token from the `CATALYTIC_TOKEN` environment variable. If that is not set, it will try to read them from `$HOME/.catalytic/tokens/default`.
 
 ```js
 const catalytic = new CatalyticClient(AccessToken.default);
 ```
 
-### Named Access Token File
-
-> 🚧 Not yet implemented
+> ✅
 >
-> Accessing an Access Token via file not yet implemented
+> A `CatalyticClient` constructed without an `accessToken` argument will, by default, use the `AccessToken.default` AccessToken.
 
+```js
+// this is equivalent to `new CatalyticClient(AccessToken.default)
+const catalytic = new CatalyticClient();
+```
+
+### Named Access Token File
 If you want to use multiple Access Tokens from within the same application, or use different Access Tokens with different applications running under the same user account on your machine, you can name your saved Access Tokens and load them dynamically.
 
 Simply name your downloaded Access Token file something other than `default` when you save it to your `$HOME/.catalytic/tokens/` directory. You can then pass that name to `AccessToken.fromFile(name)`.

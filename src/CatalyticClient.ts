@@ -43,6 +43,10 @@ export default class CatalyticClient implements AccessTokenProvider, CatalyticCl
 
         if (accessToken) {
             this.setAccessToken(accessToken);
+        } else {
+            try {
+                this.setAccessToken(AccessToken.default);
+            } catch (e) {}
         }
 
         this.accessTokens = new AccessTokenClient(this._internalClient, this);
