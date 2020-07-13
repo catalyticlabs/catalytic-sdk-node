@@ -34,7 +34,7 @@ find(options: FindWorkflowOptions, callback: (err?: Error, workflowsPage: Workfl
  */
 const { CatalyticClient } = require('@catalytic/sdk');
 
-const catalytic = new CatalyticClient('YOUR_SERIALIZED_ACCESS_TOKEN_STRING');
+const catalytic = new CatalyticClient();
 
 const workflows = [];
 

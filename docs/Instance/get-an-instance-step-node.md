@@ -27,7 +27,7 @@ getInstanceStep(id: string, callback: (err?: Error, step: InstanceStep) => any):
  */
 const { CatalyticClient } = require('@catalytic/sdk');
 
-const catalytic = new CatalyticClient('YOUR_SERIALIZED_ACCESS_TOKEN_STRING');
+const catalytic = new CatalyticClient();
 
 const step = await catalytic.instances.getInstanceStep('e6df431b-1041-4326-89e5-1e14caa6a08f');
 ```

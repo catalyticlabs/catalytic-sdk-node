@@ -40,7 +40,7 @@ completeInstanceStep(id: string, fields: FieldInput[], callback: ClientMethodCal
 const { CatalyticClient } = require('@catalytic/sdk');
 const fs = require('fs');
 
-const catalytic = new CatalyticClient('YOUR_SERIALIZED_ACCESS_TOKEN_STRING');
+const catalytic = new CatalyticClient();
 
 // Search for Workflows containing "Sdk Example Workflow" in their title or description
 const matches = await catalytic.workflows.find({

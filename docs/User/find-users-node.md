@@ -28,7 +28,7 @@ find(options: FindUsersOptions, callback: (err?: Error, usersPage: UsersPage) =>
  */
 const { CatalyticClient } = require('@catalytic/sdk');
 
-const catalytic = new CatalyticClient('YOUR_SERIALIZED_ACCESS_TOKEN_STRING');
+const catalytic = new CatalyticClient();
 
 const users = [];
 

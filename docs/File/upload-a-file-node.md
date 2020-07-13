@@ -27,7 +27,7 @@ upload(filePath: string, callback: (err?: Error, fileMetadata: FileMetadata) => 
  */
 const { CatalyticClient } = require('@catalytic/sdk');
 
-const catalytic = new CatalyticClient('YOUR_SERIALIZED_ACCESS_TOKEN_STRING');
+const catalytic = new CatalyticClient();
 
 const filePath = '/path/to/file/to/upload';
 const fileMetadata = await catalytic.files.upload(filePath);

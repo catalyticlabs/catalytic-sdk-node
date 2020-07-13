@@ -45,7 +45,7 @@ See the [Instances Quickstart Example](doc:instances-node#quickstart-example) fo
 
 const { CatalyticClient } = require('@catalytic/sdk');
 
-const catalytic = new CatalyticClient('YOUR_SERIALIZED_ACCESS_TOKEN_STRING');
+const catalytic = new CatalyticClient();
 
 // Define some fields to pass to the Instance
 const fields = [

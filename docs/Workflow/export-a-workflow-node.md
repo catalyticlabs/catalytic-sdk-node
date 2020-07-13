@@ -31,7 +31,7 @@ export(id: string, password: string, callback: (err?: Error, file: FileMetadata)
  */
 const { CatalyticClient } = require('@catalytic/sdk');
 
-const catalytic = new CatalyticClient('YOUR_SERIALIZED_ACCESS_TOKEN_STRING');
+const catalytic = new CatalyticClient();
 
 const workflowId = '10000000-0000-0000-0000-000000000001';
 const exportFileMetadata = await catalytic.workflows.export(workflowId);

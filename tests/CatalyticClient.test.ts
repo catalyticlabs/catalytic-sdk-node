@@ -1,4 +1,5 @@
 import { expect } from 'chai';
+import sinon from 'sinon';
 
 import CatalyticClient from '../src/CatalyticClient';
 import { InvalidAccessTokenError } from '../src/errors';
@@ -7,6 +8,9 @@ import { mockAccessToken } from './helpers/mockEntities';
 import { AccessToken } from '../src/entities';
 
 describe('CatalyticClient', function() {
+    afterEach(function() {
+        sinon.restore();
+    });
     it('should take an Access Token in the constructor', function() {
         const accessToken = mockAccessToken();
 
@@ -36,5 +40,14 @@ describe('CatalyticClient', function() {
 
         const client = new CatalyticClient();
         expect(() => client.setAccessToken(badAccessToken as AccessToken)).to.throw(InvalidAccessTokenError);
+    });
+
+    it('should use default AccessToken if no argument provided', function() {
+        const mockToken = mockAccessToken();
+        sinon.stub(AccessToken, 'default').value(mockToken);
+
+        const client = new CatalyticClient();
+
+        expect(client.accessToken).to.deep.equal(mockToken);
     });
 });

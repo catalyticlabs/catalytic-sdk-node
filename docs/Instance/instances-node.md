@@ -11,7 +11,8 @@ The `Instances` client allows you to start and stop Instances, find and get data
 | [`start`](doc:start-an-instance-node)                        | Start an Instance of a Workflow           |
 | [`stop`](doc:stop-an-instance-node)                          | Stop an Instance                          |
 | [`getInstanceStep`](doc:get-an-instance-step-node)           | Get an Instance Step by ID                |
-| [`getInstanceSteps`](doc:find-instance-steps-node)           | Find Instance Steps                       |
+| [`findInstanceSteps`](doc:find-instance-steps-node)          | Find Instance Steps                       |
+| [`getInstanceSteps`](doc:get-instance-steps-node)            | Gets all Instance Steps on an Instance    |
 | [`completeInstanceStep`](doc:complete-an-instance-step-node) | Complete a Step                           |
 | [`reassignInstanceStep`](doc:reassign-an-instance-step-node) | Reassign an Instance Step                 |
 
@@ -27,7 +28,7 @@ The `Instances` client allows you to start and stop Instances, find and get data
 const { CatalyticClient } = require('@catalytic/sdk');
 const fs = require('fs');
 
-const catalytic = new CatalyticClient('YOUR_SERIALIZED_ACCESS_TOKEN_STRING');
+const catalytic = new CatalyticClient();
 
 // Search for Workflows containing "Sdk Example Workflow" in their title or description
 const matches = await catalytic.workflows.find({

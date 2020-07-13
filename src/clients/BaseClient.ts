@@ -102,14 +102,14 @@ export default abstract class BaseClient {
         });
     }
 
-    protected parseResponse<T>(response: InternalAPIResponse): T {
+    protected parseResponse<T>(response: InternalAPIResponse, entity?: string): T {
         if (response._response.status >= 400) {
-            this.handleError(response);
+            this.handleError(response, entity);
         }
         return response._response.parsedBody as T;
     }
 
-    private handleError(response: InternalAPIResponse): void {
+    private handleError(response: InternalAPIResponse, entity?: string): void {
         let detail = '';
         try {
             // ProblemDetails responses can come back with Pascal cased JSON, so casting may drop properties
@@ -117,15 +117,15 @@ export default abstract class BaseClient {
             // clean this up after https://github.com/catalyticlabs/catalytic-sdk-node/issues/3 is closed
             detail = problemDetails.detail || problemDetails.Detail;
         } catch (e) {}
-        this.throwError(detail || response._response.bodyAsText, response._response.status);
+        this.throwError(detail || response._response.bodyAsText, response._response.status, entity);
     }
 
-    private throwError(message: string, status: number): void {
+    private throwError(message: string, status: number, entity?: string): void {
         switch (status) {
             case 401:
                 throw new UnauthorizedError(message);
             case 404:
-                throw new ResourceNotFoundError(message, this.constructor['entity']);
+                throw new ResourceNotFoundError(message, entity || this.constructor['entity']);
             default:
                 throw new InternalError(message);
         }

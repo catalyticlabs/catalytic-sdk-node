@@ -35,7 +35,7 @@ replace(id: string, filePath: string, headerRow: number, sheetNumber: number, ca
  */
 const { CatalyticClient } = require('@catalytic/sdk');
 
-const catalytic = new CatalyticClient('YOUR_SERIALIZED_ACCESS_TOKEN_STRING');
+const catalytic = new CatalyticClient();
 
 const existingTableId = '10000000-0000-0000-0000-000000000001';
 const filePath = '/path/to/local/file.xlsx';

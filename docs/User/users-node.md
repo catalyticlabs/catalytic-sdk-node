@@ -15,7 +15,7 @@ The `users` client allows you to access your Users on your Catalytic team.
  */
 const { CatalyticClient } = require('@catalytic/sdk');
 
-const catalytic = new CatalyticClient('YOUR_SERIALIZED_ACCESS_TOKEN_STRING');
+const catalytic = new CatalyticClient();
 
 const users = [];
 
