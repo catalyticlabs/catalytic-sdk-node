@@ -9,7 +9,7 @@ const expect = chai.expect;
 import CatalyticClient from '../../src/CatalyticClient';
 import * as utils from '../../src/utils';
 import mock from '../helpers/mockEntities';
-import { createResponse, executeTest } from '../helpers';
+import { cleanForDeepComparison, createResponse, executeTest } from '../helpers';
 import { UnauthorizedError, ResourceNotFoundError } from '../../src/errors';
 
 describe('AccessTokenClient', function() {
@@ -36,7 +36,7 @@ describe('AccessTokenClient', function() {
             return executeTest(client.accessTokens, 'get', [mockAccessToken.id], (err, result) => {
                 expect(err).to.not.be.ok;
 
-                expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockAccessToken)));
+                expect(cleanForDeepComparison(result)).to.deep.equal(cleanForDeepComparison(mockAccessToken));
                 expect(client._internalClient.getAccessToken).to.have.callCount(1);
                 expect(client._internalClient.getAccessToken).to.have.been.calledWith(mockAccessToken.id, {
                     customHeaders: expectedCustomHeaders
@@ -72,7 +72,7 @@ describe('AccessTokenClient', function() {
             return executeTest(client.accessTokens, 'find', [], (err, result) => {
                 expect(err).to.not.be.ok;
 
-                expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockAccessTokensPage)));
+                expect(cleanForDeepComparison(result)).to.deep.equal(cleanForDeepComparison(mockAccessTokensPage));
                 expect(client._internalClient.findAccessTokens).to.have.callCount(1);
                 expect(client._internalClient.findAccessTokens).to.have.been.calledWith({
                     customHeaders: expectedCustomHeaders
@@ -90,7 +90,7 @@ describe('AccessTokenClient', function() {
             return executeTest(client.accessTokens, 'find', [options], (err, result) => {
                 expect(err).to.not.be.ok;
 
-                expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockAccessTokensPage)));
+                expect(cleanForDeepComparison(result)).to.deep.equal(cleanForDeepComparison(mockAccessTokensPage));
                 expect(client._internalClient.findAccessTokens).to.have.callCount(1);
                 expect(client._internalClient.findAccessTokens).to.have.been.calledWith({
                     customHeaders: expectedCustomHeaders,
@@ -130,7 +130,7 @@ describe('AccessTokenClient', function() {
             return executeTest(client.accessTokens, 'create', [teamName, email, password], (err, result) => {
                 expect(err).to.not.be.ok;
 
-                expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockAccessToken)));
+                expect(cleanForDeepComparison(result)).to.deep.equal(cleanForDeepComparison(mockAccessToken));
                 expect(client._internalClient.createAndApproveAccessToken).to.have.callCount(1);
                 expect(client._internalClient.createAndApproveAccessToken).to.have.been.calledWith({
                     body: {
@@ -157,7 +157,7 @@ describe('AccessTokenClient', function() {
             return executeTest(client.accessTokens, 'create', [teamName, email, password, tokenName], (err, result) => {
                 expect(err).to.not.be.ok;
 
-                expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockAccessToken)));
+                expect(cleanForDeepComparison(result)).to.deep.equal(cleanForDeepComparison(mockAccessToken));
                 expect(client._internalClient.createAndApproveAccessToken).to.have.callCount(1);
                 expect(client._internalClient.createAndApproveAccessToken).to.have.been.calledWith({
                     body: {
@@ -208,7 +208,7 @@ describe('AccessTokenClient', function() {
             return executeTest(client.accessTokens, 'createWithWebApprovalFlow', [teamName], (err, result) => {
                 expect(err).to.not.be.ok;
 
-                expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockAccessToken)));
+                expect(cleanForDeepComparison(result)).to.deep.equal(cleanForDeepComparison(mockAccessToken));
                 expect(client._internalClient.createAccessToken).to.have.callCount(1);
                 expect(client._internalClient.createAccessToken).to.have.been.calledWith({
                     body: {
@@ -235,7 +235,7 @@ describe('AccessTokenClient', function() {
                 (err, result) => {
                     expect(err).to.not.be.ok;
 
-                    expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockAccessToken)));
+                    expect(cleanForDeepComparison(result)).to.deep.equal(cleanForDeepComparison(mockAccessToken));
                     expect(client._internalClient.createAccessToken).to.have.callCount(1);
                     expect(client._internalClient.createAccessToken).to.have.been.calledWith({
                         body: {
@@ -279,7 +279,7 @@ describe('AccessTokenClient', function() {
             return executeTest(client.accessTokens, 'revoke', [mockAccessToken.id], (err, result) => {
                 expect(err).to.not.be.ok;
 
-                expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockAccessToken)));
+                expect(cleanForDeepComparison(result)).to.deep.equal(cleanForDeepComparison(mockAccessToken));
                 expect(client._internalClient.revokeAccessToken).to.have.callCount(1);
                 expect(client._internalClient.revokeAccessToken).to.have.been.calledWith(mockAccessToken.id, {
                     customHeaders: expectedCustomHeaders

@@ -22,7 +22,7 @@
     "lint": "eslint ./src/*.ts ./src/**/*.ts ./tests/*.ts ./tests/**/*.ts",
     "test": "mocha -r ts-node/register tests/*.test.ts tests/**/*.test.ts",
     "cover": "nyc yarn test",
-    "prepublish": "yarn build && yarn test",
+    "prepublishOnly": "yarn build && yarn test",
     "docs:compare": "ts-node ./bin/docs compare",
     "docs:pull": "ts-node ./bin/docs pull",
     "docs:push": "ts-node ./bin/docs push"
