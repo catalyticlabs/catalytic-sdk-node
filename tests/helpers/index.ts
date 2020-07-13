@@ -42,3 +42,7 @@ export const executeTest = async function(
         })
     );
 };
+
+export function cleanForDeepComparison(value: any): any {
+    return JSON.parse(JSON.stringify(value));
+}
