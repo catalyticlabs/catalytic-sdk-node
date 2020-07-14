@@ -18,11 +18,12 @@
   ],
   "scripts": {
     "autorest": "autorest",
+    "swagger": "ts-node ./bin/build-swagger.ts",
     "build": "tsc",
-    "lint": "eslint ./src/*.ts ./src/**/*.ts ./tests/*.ts ./tests/**/*.ts",
+    "lint": "eslint ./bin/*.ts ./src/*.ts ./src/**/*.ts ./tests/*.ts ./tests/**/*.ts",
     "test": "mocha -r ts-node/register tests/*.test.ts tests/**/*.test.ts",
     "cover": "nyc yarn test",
-    "prepublishOnly": "yarn build && yarn test",
+    "prepublishOnly": "yarn lint && yarn build && yarn test",
     "docs:compare": "ts-node ./bin/docs compare",
     "docs:pull": "ts-node ./bin/docs pull",
     "docs:push": "ts-node ./bin/docs push"
@@ -37,6 +38,7 @@
   "devDependencies": {
     "@types/chai": "^4.2.11",
     "@types/faker": "^4.1.12",
+    "@types/lodash": "^4.14.157",
     "@types/mocha": "^7.0.2",
     "@types/node": "^12.12.15",
     "@types/sinon": "^9.0.4",

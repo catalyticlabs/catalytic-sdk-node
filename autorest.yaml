@@ -1,0 +1,2 @@
+typescript:
+    - output-folder: ./src/internal
