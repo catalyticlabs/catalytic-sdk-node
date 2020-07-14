@@ -3,6 +3,7 @@ export { default as AccessTokensPage } from './AccessTokensPage';
 export { default as DataTable } from './DataTable';
 export { default as DataTablesPage } from './DataTablesPage';
 export { default as DataTableColumn } from './DataTableColumn';
+export { default as Field } from './Field';
 export { default as FileMetadata } from './FileMetadata';
 export { default as FileMetadataPage } from './FileMetadataPage';
 export { default as Instance } from './Instance';

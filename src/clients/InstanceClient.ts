@@ -1,15 +1,24 @@
 import { WildcardId } from '../constants';
-import { Instance, InstancesPage, InstanceStep, InstanceStepsPage } from '../entities';
+import {
+    Instance,
+    InstancesPage,
+    InstanceStep,
+    InstanceStepsPage,
+    Field,
+    Workflow,
+    FileMetadataPage
+} from '../entities';
 import { FieldInputError } from '../errors';
 import {
     CatalyticSDKAPIFindInstanceStepsOptionalParams,
     StartInstanceRequest,
     ReassignStepRequest,
     CompleteStepRequest,
-    CatalyticSDKAPIFindInstancesOptionalParams
+    CatalyticSDKAPIFindInstancesOptionalParams,
+    FieldType
 } from '../internal/lib/models';
 import { BaseFindOptions, ClientMethodCallback, FieldInput } from '../types';
-import { displayNameToInternal } from '../utils';
+import { displayNameToInternal, isUUID } from '../utils';
 
 import BaseClient from './BaseClient';
 
@@ -114,13 +123,18 @@ export default class InstanceClient extends BaseClient implements InstanceClient
     }
 
     private async _start(workflowID: string, name: string, inputs: FieldInput[]): Promise<Instance> {
+        const headers = this.getRequestHeaders();
+        const workflow = this.parseResponse<Workflow>(
+            await this._internalClient.getWorkflow(workflowID, { customHeaders: headers })
+        );
+
         const body: StartInstanceRequest = {
             workflowId: workflowID,
             name,
-            inputFields: this.formatFields(inputs)
+            inputFields: await this.formatFields(inputs, workflow.inputFields)
         };
 
-        const result = await this._internalClient.startInstance({ body, customHeaders: this.getRequestHeaders() });
+        const result = await this._internalClient.startInstance({ body, customHeaders: headers });
         return this.parseResponse<Instance>(result);
     }
 
@@ -275,7 +289,7 @@ export default class InstanceClient extends BaseClient implements InstanceClient
         fields: FieldInput[] | ClientMethodCallback<InstanceStep> = null,
         callback?: ClientMethodCallback<InstanceStep>
     ): Promise<InstanceStep> | void {
-        this.log(`Completing InstanceStep '${id}' with ${fields?.length} fields`);
+        this.log(`Completing InstanceStep '${id}' ${fields?.length ? `with ${fields.length} fields` : ''}`);
         if (typeof fields === 'function') {
             callback = fields;
             fields = null;
@@ -288,10 +302,12 @@ export default class InstanceClient extends BaseClient implements InstanceClient
         return this._completeStep(id, fields as FieldInput[]);
     }
 
-    private async _completeStep(id: string, fields: FieldInput[]): Promise<InstanceStep> {
+    private async _completeStep(id: string, inputs: FieldInput[]): Promise<InstanceStep> {
+        const step = await this._getStep(id);
+
         const body: CompleteStepRequest = {
             id,
-            stepOutputFields: this.formatFields(fields)
+            stepOutputFields: await this.formatFields(inputs, step.outputFields)
         };
 
         const result = await this._internalClient.completeStep(id, WildcardId, {
@@ -301,25 +317,78 @@ export default class InstanceClient extends BaseClient implements InstanceClient
         return this.parseResponse<InstanceStep>(result, 'InstanceStep');
     }
 
-    private formatFields(fields: FieldInput[]): FieldInput[] {
-        if (!fields) {
-            return fields;
+    private async formatFields(inputs: FieldInput[], fields: Field[]): Promise<FieldInput[]> {
+        if (!inputs) {
+            return inputs;
         }
-        if (!Array.isArray(fields)) {
+        if (!fields) {
+            fields = [];
+        }
+        if (!Array.isArray(inputs)) {
             throw new FieldInputError('Fields must be an Array of FieldInput objects');
         }
-        if (fields.some(f => !f.name && !f.referenceName)) {
-            throw new FieldInputError(
-                `No name or reference name provided for field at index ${fields.indexOf(
-                    fields.find(f => !f.name && !f.referenceName)
-                )}`
-            );
+
+        return Promise.all(
+            inputs.map(async (input, idx) => {
+                if (!input.name && !input.referenceName) {
+                    throw new FieldInputError(`No name or referenceName provided for FieldInput at index ${idx}`);
+                }
+
+                if (input.value != null && typeof input.value !== 'string') {
+                    throw new FieldInputError(
+                        `Value for field '${input.name || input.referenceName}' must be a string`
+                    );
+                }
+
+                const matchingField = fields.find(
+                    f =>
+                        f.referenceName === input.referenceName ||
+                        displayNameToInternal(f.name) === displayNameToInternal(input.referenceName)
+                );
+
+                if (!matchingField) {
+                    throw new FieldInputError(
+                        `No corresponding input field found with name '${input.name || input.referenceName}'`
+                    );
+                }
+
+                return {
+                    name: input.name,
+                    referenceName: displayNameToInternal(input.referenceName || input.name),
+                    value: !!input.value
+                        ? await this.getFieldValue(
+                              input.value,
+                              matchingField.fieldType,
+                              input.name || input.referenceName
+                          )
+                        : input.value
+                };
+            })
+        );
+    }
+
+    private async getFieldValue(value: string, fieldType: FieldType, fieldName: string): Promise<string> {
+        switch (fieldType) {
+            case 'file':
+                if (isUUID(value)) {
+                    return value;
+                }
+                const files = await this.uploadFile<FileMetadataPage>(value);
+                const file = files.files[0];
+                return file.id;
+
+            case 'table':
+            case 'user':
+            case 'workflow':
+            case 'instance':
+                if (!isUUID(value)) {
+                    throw new FieldInputError(
+                        `Value '${value}' provided for field '${fieldName}' of type '${fieldType}' is not a valid ID.`
+                    );
+                }
+            default:
+                return value;
         }
-        return fields.map(f => ({
-            name: f.name,
-            referenceName: f.referenceName || displayNameToInternal(f.name),
-            value: f.value
-        }));
     }
 }
 

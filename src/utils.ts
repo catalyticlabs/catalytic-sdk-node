@@ -38,3 +38,8 @@ export function getDomainFromTeamName(teamNameOrDomain: string): string {
 export function openUrl(url: string): void {
     open(url);
 }
+
+const UUID_REGEX = /^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/;
+export function isUUID(value: string): boolean {
+    return UUID_REGEX.test(value.trim().toLowerCase());
+}
