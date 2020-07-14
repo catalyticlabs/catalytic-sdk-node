@@ -317,12 +317,12 @@ export default class InstanceClient extends BaseClient implements InstanceClient
         return this.parseResponse<InstanceStep>(result, 'InstanceStep');
     }
 
-    private async formatFields(inputs: FieldInput[], fields: Field[]): Promise<FieldInput[]> {
+    private async formatFields(inputs: FieldInput[], sourceFields: Field[]): Promise<FieldInput[]> {
         if (!inputs) {
             return inputs;
         }
-        if (!fields) {
-            fields = [];
+        if (!sourceFields) {
+            sourceFields = [];
         }
         if (!Array.isArray(inputs)) {
             throw new FieldInputError('Fields must be an Array of FieldInput objects');
@@ -340,10 +340,11 @@ export default class InstanceClient extends BaseClient implements InstanceClient
                     );
                 }
 
-                const matchingField = fields.find(
-                    f =>
-                        f.referenceName === input.referenceName ||
-                        displayNameToInternal(f.name) === displayNameToInternal(input.referenceName)
+                const matchingField = sourceFields.find(field =>
+                    input.referenceName
+                        ? displayNameToInternal(field.referenceName || field.name) ===
+                          displayNameToInternal(input.referenceName)
+                        : displayNameToInternal(field.name) === displayNameToInternal(input.name)
                 );
 
                 if (!matchingField) {

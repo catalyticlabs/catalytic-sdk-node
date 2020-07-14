@@ -66,17 +66,17 @@ const localFilePath = './data-table.csv';
 await catalytic.dataTables.download(tableId, 'csv', localFilePath);
 const content = fs.readFileSync(localFilePath).toString();
 
-// Update the CSV file locally, and upload to Catalytic as a new file
-const updatedContent = content.replace('foo', 'bar');
-fs.writeFileSync(localFilePath, updatedContent);
-const uploadedFile = await catalytic.files.upload(localFilePath);
-
 // Find the "Upload Updated Spreadsheet and Set Email" Instance Step on the Instance
 const steps = (await catalytic.instances.findInstanceSteps({ instanceID: instance.id })).steps;
 const uploadStep = steps.find(step => step.name === 'Upload Updated Spreadsheet and Set Email');
 
-// Complete the "Upload Updated Spreadsheet and Set Email" with the ID of the uploaded File
-const stepFields = [{ name: 'Updated CSV', value: uploadedFile.id, 'Email Address': 'YOUR_EMAIL' }];
+// Update the CSV file locally, and upload to Catalytic as a new file
+const updatedContent = content.replace('foo', 'bar');
+fs.writeFileSync(localFilePath, updatedContent);
+
+// Complete the "Upload Updated Spreadsheet and Set Email" step with your email and the path of the updated file on disk.
+// If a file path is passed as the value for a file field, the file will automatically be uploaded
+const stepFields = [{ name: 'Updated CSV', value: localFilePath, 'Email Address': 'YOUR_EMAIL' }];
 catalytic.instances.completeInstanceStep(uploadStep.id, stepFields);
 
 console.log(
