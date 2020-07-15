@@ -19,7 +19,7 @@ export default class WorkflowClient extends BaseClient implements WorkflowClient
     }
 
     private async _get(id: string): Promise<Workflow> {
-        console.log(`Getting Workflow with ID '${id}'`);
+        this.log(`Getting Workflow with ID '${id}'`);
         const headers = this.getRequestHeaders();
         const result = await this._internalClient.getWorkflow(id, { customHeaders: headers });
         return this.parseResponse<Workflow>(result);
@@ -46,7 +46,7 @@ export default class WorkflowClient extends BaseClient implements WorkflowClient
     }
 
     private async _find(options: FindWorkflowOptions): Promise<WorkflowsPage> {
-        console.log('Finding Workflows');
+        this.log('Finding Workflows');
         const headers = this.getRequestHeaders();
         const result = await this._internalClient.findWorkflows(Object.assign({}, options, { customHeaders: headers }));
         return this.parseResponse<WorkflowsPage>(result);
@@ -74,7 +74,7 @@ export default class WorkflowClient extends BaseClient implements WorkflowClient
     }
 
     private async _import(filePath: string, password: string): Promise<Workflow> {
-        console.log(`Importing Workflow from file '${filePath}'`);
+        this.log(`Importing Workflow from file '${filePath}'`);
 
         // Calls protected BaseClient.uploadFile
         const files = await this.uploadFile<FileMetadataPage>(filePath);
@@ -136,7 +136,7 @@ export default class WorkflowClient extends BaseClient implements WorkflowClient
     }
 
     private async _export(id: string, password: string): Promise<FileMetadata> {
-        console.log(`Exporting Workflow with ID '${id}'`);
+        this.log(`Exporting Workflow with ID '${id}'`);
         const headers = this.getRequestHeaders();
         const request = {
             body: {

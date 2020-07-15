@@ -19,7 +19,7 @@ export default class DataTableClient extends BaseClient implements DataTableClie
     }
 
     private async _get(id: string): Promise<DataTable> {
-        console.log(`Getting DataTable with ID '${id}'`);
+        this.log(`Getting DataTable with ID '${id}'`);
         const headers = this.getRequestHeaders();
         const result = await this._internalClient.getDataTable(id, { customHeaders: headers });
         return this.parseResponse<DataTable>(result);
@@ -46,7 +46,7 @@ export default class DataTableClient extends BaseClient implements DataTableClie
     }
 
     private async _find(options: FindDataTablesOptions): Promise<DataTablesPage> {
-        console.log('Finding DataTables');
+        this.log('Finding DataTables');
         const headers = this.getRequestHeaders();
         const result = await this._internalClient.findDataTables(
             Object.assign({}, options, { customHeaders: headers })
@@ -62,7 +62,7 @@ export default class DataTableClient extends BaseClient implements DataTableClie
         path: string,
         callback?: ClientMethodCallback<void>
     ): Promise<void> | void {
-        console.log(`Downloading Data Table '${id}' to '${path}' with format '${format}'`);
+        this.log(`Downloading Data Table '${id}' to '${path}' with format '${format}'`);
         if (callback) {
             return this.callbackifyBound(this._download)(id, format, path, callback);
         }
@@ -83,7 +83,7 @@ export default class DataTableClient extends BaseClient implements DataTableClie
         format: DataTableExportFormat,
         callback?: ClientMethodCallback<Stream>
     ): Promise<Stream> | void {
-        console.log(`Getting download stream for Data Table ${id}`);
+        this.log(`Getting download stream for Data Table ${id}`);
         if (callback) {
             return this.callbackifyBound(this._getDownloadStream)(id, format, callback);
         }
@@ -121,6 +121,7 @@ export default class DataTableClient extends BaseClient implements DataTableClie
         sheetNumber: number | ClientMethodCallback<DataTable> = 1,
         callback?: ClientMethodCallback<DataTable>
     ): Promise<DataTable> | void {
+        this.log(`Creating new DataTable from file '${filePath}'`);
         if (typeof tableName === 'function') {
             callback = tableName;
             tableName = null;
@@ -173,6 +174,7 @@ export default class DataTableClient extends BaseClient implements DataTableClie
         sheetNumber: number | ClientMethodCallback<DataTable> = 1,
         callback?: ClientMethodCallback<DataTable>
     ): Promise<DataTable> | void {
+        this.log(`Replacing DataTable ${id} with contents of file '${filePath}'`);
         if (typeof headerRow === 'function') {
             callback = headerRow;
             headerRow = 1;

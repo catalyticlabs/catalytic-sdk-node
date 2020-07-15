@@ -20,7 +20,7 @@ export default class FileClient extends BaseClient implements FileClientInterfac
     }
 
     private async _get(id: string): Promise<FileMetadata> {
-        console.log(`Getting FileMetadata for File with ID '${id}'`);
+        this.log(`Getting FileMetadata for File with ID '${id}'`);
         const headers = this.getRequestHeaders();
         const result = await this._internalClient.getFile(id, { customHeaders: headers });
         return this.parseResponse<FileMetadata>(result);
@@ -29,6 +29,7 @@ export default class FileClient extends BaseClient implements FileClientInterfac
     upload(filePath: string): Promise<FileMetadata>;
     upload(filePath: string, callback: ClientMethodCallback<FileMetadata>): void;
     upload(filePath: string, callback?: ClientMethodCallback<FileMetadata>): Promise<FileMetadata> | void {
+        this.log(`Uploading file '${filePath}'`);
         if (callback) {
             return this.callbackifyBound(this._upload)(filePath, callback);
         }
@@ -49,7 +50,7 @@ export default class FileClient extends BaseClient implements FileClientInterfac
     download(id: string, path: string): Promise<void>;
     download(id: string, path: string, callback: ClientMethodCallback<void>): void;
     download(id: string, path: string, callback?: ClientMethodCallback<void>): Promise<void> | void {
-        console.log(`Downloading File '${id}' to '${path}'`);
+        this.log(`Downloading File '${id}' to '${path}'`);
         if (callback) {
             return this.callbackifyBound(this._download)(id, path, callback);
         }
@@ -66,7 +67,7 @@ export default class FileClient extends BaseClient implements FileClientInterfac
     getDownloadStream(id: string): Promise<Stream>;
     getDownloadStream(id: string, callback: ClientMethodCallback<Stream>): void;
     getDownloadStream(id: string, callback?: ClientMethodCallback<Stream>): Promise<Stream> | void {
-        console.log(`Getting download stream for File '${id}'`);
+        this.log(`Getting download stream for File '${id}'`);
         if (callback) {
             return this.callbackifyBound(this._getDownloadStream)(id, callback);
         }

@@ -15,6 +15,7 @@ export default class AccessTokenClient extends BaseClient implements AccessToken
     get(id: string): Promise<AccessToken>;
     get(id: string, callback: ClientMethodCallback<AccessToken>): void;
     get(id: string, callback?: ClientMethodCallback<AccessToken>): Promise<AccessToken> | void {
+        this.log(`Getting AccessToken with ID '${id}'`);
         if (callback) {
             return this.callbackifyBound(this._get)(id, callback);
         }
@@ -23,7 +24,6 @@ export default class AccessTokenClient extends BaseClient implements AccessToken
     }
 
     private async _get(id: string): Promise<AccessToken> {
-        console.log(`Getting AccessToken with ID '${id}'`);
         const headers = this.getRequestHeaders();
         const result = await this._internalClient.getAccessToken(id, { customHeaders: headers });
         return this.parseResponse<AccessToken>(result);
@@ -37,6 +37,7 @@ export default class AccessTokenClient extends BaseClient implements AccessToken
         options?: FindAccessTokensOptions | ClientMethodCallback<AccessTokensPage>,
         callback?: ClientMethodCallback<AccessTokensPage>
     ): Promise<AccessTokensPage> | void {
+        this.log('Finding AccessToken');
         if (typeof options === 'function') {
             callback = options;
             options = null;
@@ -50,7 +51,6 @@ export default class AccessTokenClient extends BaseClient implements AccessToken
     }
 
     private async _find(options: FindAccessTokensOptions): Promise<AccessTokensPage> {
-        console.log('Finding AccessToken');
         const headers = this.getRequestHeaders();
         const result = await this._internalClient.findAccessTokens(
             Object.assign({}, options, { customHeaders: headers })
@@ -99,8 +99,7 @@ export default class AccessTokenClient extends BaseClient implements AccessToken
         name: string
     ): Promise<AccessToken> {
         const domain = utils.getDomainFromTeamName(teamNameOrDomain);
-
-        console.log(`Creating AccessToken in '${domain}' for user '${email}'`);
+        this.log(`Creating AccessToken in '${domain}' for user '${email}'`);
 
         const body: AccessTokenCreationWithEmailAndPasswordRequest = { domain, email, password, name };
         const result = await this._internalClient.createAndApproveAccessToken({ body });
@@ -138,7 +137,7 @@ export default class AccessTokenClient extends BaseClient implements AccessToken
 
     private async _createWithWebApprovalFlow(teamNameOrDomain: string, name: string): Promise<AccessToken> {
         const domain = utils.getDomainFromTeamName(teamNameOrDomain);
-        console.log(`Creating AccessToken in '${domain}'`);
+        this.log(`Creating AccessToken in '${domain}'`);
 
         const creationBody: AccessTokenCreationRequest = { domain, name };
         const result = await this._internalClient.createAccessToken({ body: creationBody });
@@ -167,7 +166,7 @@ export default class AccessTokenClient extends BaseClient implements AccessToken
     }
 
     private async _waitForApproval(accessToken: AccessToken, waitTimeMillis: number): Promise<void> {
-        console.log(`Waiting for approval of AccessToken '${accessToken.id}'`);
+        this.log(`Waiting for approval of AccessToken '${accessToken.id}'`);
 
         const pollBody: WaitForAccessTokenApprovalRequest = { token: accessToken.token, waitTimeMillis };
         const result = await this._internalClient.waitForAccessTokenApproval({ body: pollBody });
@@ -185,7 +184,7 @@ export default class AccessTokenClient extends BaseClient implements AccessToken
     }
 
     private async _revoke(id: string): Promise<AccessToken> {
-        console.log(`Revoking AccessToken with ID '${id}'`);
+        this.log(`Revoking AccessToken with ID '${id}'`);
         const headers = this.getRequestHeaders();
         const result = await this._internalClient.revokeAccessToken(id, { customHeaders: headers });
         return this.parseResponse<AccessToken>(result);

@@ -8,17 +8,29 @@ import { promisify, callbackify } from 'util';
 import { CatalyticSDKAPI } from '../internal/lib/catalyticSDKAPI';
 import { InvalidAccessTokenError, UnauthorizedError, ResourceNotFoundError, InternalError } from '../errors';
 import { BaseUri, UserAgent } from '../constants';
-import { ClientMethodCallback, AccessTokenProvider, InternalAPIResponse } from '../types';
+import { ClientMethodCallback, AccessTokenProvider, InternalAPIResponse, LoggerProvider } from '../types';
 
 export default abstract class BaseClient {
     static entity: string;
 
     protected _internalClient: CatalyticSDKAPI;
     protected _accessTokenProvider: AccessTokenProvider;
+    protected _loggerProvider: LoggerProvider;
 
-    constructor(internalClient: CatalyticSDKAPI, accessTokenProvider: AccessTokenProvider) {
+    constructor(
+        internalClient: CatalyticSDKAPI,
+        accessTokenProvider: AccessTokenProvider,
+        loggerProvider: LoggerProvider
+    ) {
         this._internalClient = internalClient;
         this._accessTokenProvider = accessTokenProvider;
+        this._loggerProvider = loggerProvider;
+    }
+
+    protected log(message: string): void {
+        if (this._loggerProvider.logger) {
+            this._loggerProvider.logger.info(message);
+        }
     }
 
     protected getRequestHeaders(): { [headerName: string]: string } {

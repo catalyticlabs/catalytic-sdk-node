@@ -113,3 +113,20 @@ console.log(
     `You should have an email waiting for you at ${YOUR_EMAIL} now with the updated CSV converted to an Excel attachment`
 );
 ```
+
+# Logging
+
+You may inject a custom logger when creating a new CatalyticClient instance. Four log levels are supported `debug`, `info`, `warn`, and `error`. Each method will only ever be called with a single string argument.
+
+```js
+const { CatalyticClient } = require('@catalytic/sdk');
+
+const logger = {
+    debug: message => console.debug(message),
+    info: message => console.info(message),
+    warn: message => console.warn(message),
+    error: message => console.warn(message)
+}
+
+const catalytic = new CatalyticClient('YOUR_SERIALIZED_ACCESS_TOKEN_STRING', logger);
+```

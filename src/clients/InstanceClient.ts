@@ -19,6 +19,7 @@ export default class InstanceClient extends BaseClient implements InstanceClient
     get(id: string): Promise<Instance>;
     get(id: string, callback: ClientMethodCallback<Instance>): void;
     get(id: string, callback?: ClientMethodCallback<Instance>): Promise<Instance> | void {
+        this.log(`Getting Instance with ID '${id}'`);
         if (callback) {
             return this.callbackifyBound(this._get)(id, callback);
         }
@@ -27,7 +28,6 @@ export default class InstanceClient extends BaseClient implements InstanceClient
     }
 
     private async _get(id: string): Promise<Instance> {
-        console.log(`Getting Instance with ID '${id}'`);
         const headers = this.getRequestHeaders();
         const result = await this._internalClient.getInstance(id, { customHeaders: headers });
         return this.parseResponse<Instance>(result);
@@ -41,6 +41,7 @@ export default class InstanceClient extends BaseClient implements InstanceClient
         options?: FindInstancesOptions | ClientMethodCallback<InstancesPage>,
         callback?: ClientMethodCallback<InstancesPage>
     ): Promise<InstancesPage> | void {
+        this.log('Finding Instances');
         if (typeof options === 'function') {
             callback = options;
             options = null;
@@ -54,7 +55,6 @@ export default class InstanceClient extends BaseClient implements InstanceClient
     }
 
     private async _find(options: FindInstancesOptions): Promise<InstancesPage> {
-        console.log('Finding Instances');
         const headers = this.getRequestHeaders();
         const result = await this._internalClient.findInstances(
             Object.assign(this.formatFindInstanceOptions(options), { customHeaders: headers })
@@ -92,6 +92,7 @@ export default class InstanceClient extends BaseClient implements InstanceClient
         inputs: FieldInput[] | ClientMethodCallback<Instance> = null,
         callback?: ClientMethodCallback<Instance>
     ): Promise<Instance> | void {
+        this.log(`Starting new Instance of Workflow '${workflowID}'`);
         if (typeof inputs === 'function') {
             callback = inputs;
             inputs = null;
@@ -113,8 +114,6 @@ export default class InstanceClient extends BaseClient implements InstanceClient
     }
 
     private async _start(workflowID: string, name: string, inputs: FieldInput[]): Promise<Instance> {
-        console.log(`Starting new Instance of Workflow '${workflowID}'`);
-
         const body: StartInstanceRequest = {
             workflowId: workflowID,
             name,
@@ -128,6 +127,7 @@ export default class InstanceClient extends BaseClient implements InstanceClient
     stop(id: string): Promise<Instance>;
     stop(id: string, callback: ClientMethodCallback<Instance>): void;
     stop(id: string, callback?: ClientMethodCallback<Instance>): Promise<Instance> | void {
+        this.log(`Stopping Instance '${id}'`);
         if (callback) {
             return this.callbackifyBound(this._stop)(id, callback);
         }
@@ -135,8 +135,6 @@ export default class InstanceClient extends BaseClient implements InstanceClient
     }
 
     private async _stop(id: string): Promise<Instance> {
-        console.log(`Stopping Instance '${id}'`);
-
         const result = await this._internalClient.stopInstance(id, { customHeaders: this.getRequestHeaders() });
         return this.parseResponse<Instance>(result);
     }
@@ -144,6 +142,7 @@ export default class InstanceClient extends BaseClient implements InstanceClient
     getInstanceStep(id: string): Promise<InstanceStep>;
     getInstanceStep(id: string, callback: ClientMethodCallback<InstanceStep>): void;
     getInstanceStep(id: string, callback?: ClientMethodCallback<InstanceStep>): Promise<InstanceStep> | void {
+        this.log(`Getting InstanceStep '${id}'`);
         if (callback) {
             return this.callbackifyBound(this._getStep)(id, callback);
         }
@@ -152,7 +151,6 @@ export default class InstanceClient extends BaseClient implements InstanceClient
     }
 
     private async _getStep(id: string): Promise<InstanceStep> {
-        console.log(`Getting InstanceStep '${id}'`);
         const result = await this._internalClient.getInstanceStep(id, WildcardId, {
             customHeaders: this.getRequestHeaders()
         });
@@ -168,7 +166,7 @@ export default class InstanceClient extends BaseClient implements InstanceClient
         options?: FindInstanceStepsOptions | ClientMethodCallback<InstancesPage>,
         callback?: ClientMethodCallback<InstancesPage>
     ): Promise<InstancesPage> | void {
-        console.log('Finding InstanceSteps');
+        this.log('Finding InstanceSteps');
         if (typeof options === 'function') {
             callback = options;
             options = null;
@@ -194,6 +192,7 @@ export default class InstanceClient extends BaseClient implements InstanceClient
     getInstanceSteps(id: string): Promise<InstanceStep[]>;
     getInstanceSteps(id: string, callback: ClientMethodCallback<InstanceStep[]>): void;
     getInstanceSteps(id: string, callback?: ClientMethodCallback<InstanceStep[]>): Promise<InstanceStep[]> | void {
+        this.log(`Getting InstanceSteps for Instance '${id}'`);
         if (callback) {
             return this.callbackifyBound(this._getInstanceSteps)(id, callback);
         }
@@ -246,6 +245,7 @@ export default class InstanceClient extends BaseClient implements InstanceClient
         newAssigneeEmailAddress: string,
         callback?: ClientMethodCallback<InstanceStep>
     ): Promise<InstanceStep> | void {
+        this.log(`Reassigning InstanceStep ${id} to ${newAssigneeEmailAddress}`);
         if (callback) {
             return this.callbackifyBound(this._reassignStep)(id, newAssigneeEmailAddress, callback);
         }
@@ -254,8 +254,6 @@ export default class InstanceClient extends BaseClient implements InstanceClient
     }
 
     private async _reassignStep(id: string, newAssigneeEmailAddress: string): Promise<InstanceStep> {
-        console.log(`Reassigning InstanceStep ${id} to ${newAssigneeEmailAddress}`);
-
         const body: ReassignStepRequest = {
             id,
             assignTo: newAssigneeEmailAddress
@@ -277,7 +275,7 @@ export default class InstanceClient extends BaseClient implements InstanceClient
         fields: FieldInput[] | ClientMethodCallback<InstanceStep> = null,
         callback?: ClientMethodCallback<InstanceStep>
     ): Promise<InstanceStep> | void {
-        console.log(`Completing InstanceStep '${id}' with ${fields?.length} fields`);
+        this.log(`Completing InstanceStep '${id}' with ${fields?.length} fields`);
         if (typeof fields === 'function') {
             callback = fields;
             fields = null;
