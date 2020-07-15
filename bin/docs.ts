@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable no-console */
 import axios from 'axios';
 import Bluebird from 'bluebird';
 import fs from 'fs';

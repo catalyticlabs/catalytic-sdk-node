@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/no-use-before-define */
-
+/* eslint-disable no-console */
 import { transform, Dictionary } from 'lodash';
 import axios from 'axios';
 import Bluebird from 'bluebird';

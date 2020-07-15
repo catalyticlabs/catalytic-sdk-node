@@ -1,7 +1,7 @@
 import { CatalyticSDKAPI } from './internal/lib/catalyticSDKAPI';
 import AccessToken from './entities/AccessToken';
 import { UserAgent } from './constants';
-import { AccessTokenProvider } from './types';
+import { AccessTokenProvider, Logger, LoggerProvider } from './types';
 
 import {
     AccessTokenClient,
@@ -19,10 +19,11 @@ import {
 } from './clients';
 import { InvalidAccessTokenError } from './errors';
 
-export default class CatalyticClient implements AccessTokenProvider, CatalyticClientInterface {
+export default class CatalyticClient implements AccessTokenProvider, LoggerProvider, CatalyticClientInterface {
     _internalClient: CatalyticSDKAPI;
 
     public accessToken: AccessToken;
+    public logger: Logger;
 
     public accessTokens: AccessTokenClientInterface;
     public dataTables: DataTableClientInterface;
@@ -36,7 +37,7 @@ export default class CatalyticClient implements AccessTokenProvider, CatalyticCl
      *
      * @param accessToken A serialized Access Token string or constructed Access Token instance to use for requests made by client
      */
-    constructor(accessToken?: AccessToken | string) {
+    constructor(accessToken?: AccessToken | string, logger?: Logger) {
         this._internalClient = new CatalyticSDKAPI({
             userAgent: (defaultUserAgent): string => `${defaultUserAgent} ${UserAgent}`
         });
@@ -49,12 +50,14 @@ export default class CatalyticClient implements AccessTokenProvider, CatalyticCl
             } catch (e) {}
         }
 
-        this.accessTokens = new AccessTokenClient(this._internalClient, this);
-        this.dataTables = new DataTableClient(this._internalClient, this);
-        this.files = new FileClient(this._internalClient, this);
-        this.instances = new InstanceClient(this._internalClient, this);
-        this.users = new UserClient(this._internalClient, this);
-        this.workflows = new WorkflowClient(this._internalClient, this);
+        this.logger = logger;
+
+        this.accessTokens = new AccessTokenClient(this._internalClient, this, this);
+        this.dataTables = new DataTableClient(this._internalClient, this, this);
+        this.files = new FileClient(this._internalClient, this, this);
+        this.instances = new InstanceClient(this._internalClient, this, this);
+        this.users = new UserClient(this._internalClient, this, this);
+        this.workflows = new WorkflowClient(this._internalClient, this, this);
     }
 
     setAccessToken(accessToken: string | AccessToken): void {

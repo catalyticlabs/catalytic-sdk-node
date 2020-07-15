@@ -38,7 +38,7 @@ export const executeTest = async function(
     await Bluebird.fromCallback(cb =>
         client[method].call(client, ...args, (err, result) => {
             assert(err, result);
-            cb();
+            cb(null, null);
         })
     );
 };

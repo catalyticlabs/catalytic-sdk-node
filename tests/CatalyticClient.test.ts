@@ -4,8 +4,10 @@ import sinon from 'sinon';
 import CatalyticClient from '../src/CatalyticClient';
 import { InvalidAccessTokenError } from '../src/errors';
 
-import { mockAccessToken } from './helpers/mockEntities';
+import { mockAccessToken, mockWorkflow } from './helpers/mockEntities';
 import { AccessToken } from '../src/entities';
+import { Logger } from '../src/types';
+import { createResponse } from './helpers';
 
 describe('CatalyticClient', function() {
     afterEach(function() {
@@ -49,5 +51,27 @@ describe('CatalyticClient', function() {
         const client = new CatalyticClient();
 
         expect(client.accessToken).to.deep.equal(mockToken);
+    });
+
+    describe('logger', function() {
+        it('should use a custom logger', async function() {
+            const mockToken = mockAccessToken();
+            const logger: Logger = {
+                debug: sinon.stub(),
+                info: sinon.stub(),
+                warn: sinon.stub(),
+                error: sinon.stub()
+            };
+
+            const client = new CatalyticClient(mockToken, logger);
+            const workflow = mockWorkflow();
+            sinon
+                .stub(client._internalClient, 'getWorkflow')
+                .callsFake(() => Promise.resolve(createResponse(workflow)));
+
+            await client.workflows.get(workflow.id);
+
+            expect(logger.info).to.have.been.calledWith(`Getting Workflow with ID '${workflow.id}'`);
+        });
     });
 });

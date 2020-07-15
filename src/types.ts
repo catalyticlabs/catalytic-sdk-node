@@ -54,3 +54,14 @@ export interface InternalAPIResponse {
 export interface AccessTokenProvider {
     accessToken: AccessToken;
 }
+
+export interface LoggerProvider {
+    logger: Logger;
+}
+
+export interface Logger {
+    debug: (message: string) => void;
+    info: (message: string) => void;
+    warn: (message: string) => void;
+    error: (message: string) => void;
+}

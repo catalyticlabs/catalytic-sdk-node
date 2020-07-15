@@ -36,6 +36,7 @@
     "open": "^7.0.4"
   },
   "devDependencies": {
+    "@types/bluebird": "^3.5.32",
     "@types/chai": "^4.2.11",
     "@types/faker": "^4.1.12",
     "@types/lodash": "^4.14.157",
