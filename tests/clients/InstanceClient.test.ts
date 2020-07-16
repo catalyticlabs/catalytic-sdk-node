@@ -798,10 +798,15 @@ describe('InstanceClient', function() {
 
         describe('Complete InstanceStep', function() {
             it('should complete an InstanceStep without output fields', function() {
+                const mockInstance = mock.mockInstance();
                 const mockInstanceStep = mock.mockInstanceStep();
+                mockInstanceStep.instanceId = mockInstance.id;
                 sinon
                     .stub(client._internalClient, 'getInstanceStep')
                     .callsFake(() => Promise.resolve(createResponse(mockInstanceStep)));
+                sinon
+                    .stub(client._internalClient, 'getInstance')
+                    .callsFake(() => Promise.resolve(createResponse(mockInstance)));
                 sinon
                     .stub(client._internalClient, 'completeStep')
                     .callsFake(() => Promise.resolve(createResponse(mockInstanceStep)));
@@ -826,21 +831,26 @@ describe('InstanceClient', function() {
             });
 
             it('should complete an InstanceStep with output fields', function() {
+                const mockInstance = mock.mockInstance();
                 const mockInstanceStep = mock.mockInstanceStep();
-                mockInstanceStep.outputFields = [
+                mockInstanceStep.instanceId = mockInstance.id;
+                mockInstance.fields = [
                     { name: 'My Field', fieldType: 'text' },
                     { name: 'Another Field', fieldType: 'user' }
                 ];
                 sinon
                     .stub(client._internalClient, 'getInstanceStep')
                     .callsFake(() => Promise.resolve(createResponse(mockInstanceStep)));
+                sinon
+                    .stub(client._internalClient, 'getInstance')
+                    .callsFake(() => Promise.resolve(createResponse(mockInstance)));
+                sinon
+                    .stub(client._internalClient, 'completeStep')
+                    .callsFake(() => Promise.resolve(createResponse(mockInstanceStep)));
                 const fields = [
                     { name: 'My Field', value: 'some value' },
                     { name: 'Another Field', value: v4() }
                 ];
-                sinon
-                    .stub(client._internalClient, 'completeStep')
-                    .callsFake(() => Promise.resolve(createResponse(mockInstanceStep)));
 
                 return executeTest(
                     client.instances,
@@ -879,11 +889,16 @@ describe('InstanceClient', function() {
                     return Promise.resolve(result);
                 });
 
+                const mockInstance = mock.mockInstance();
                 const mockInstanceStep = mock.mockInstanceStep();
-                mockInstanceStep.outputFields = [{ name: 'My Field', fieldType: 'file' }];
+                mockInstanceStep.instanceId = mockInstance.id;
+                mockInstance.fields = [{ name: 'My Field', fieldType: 'file' }];
                 sinon
                     .stub(client._internalClient, 'getInstanceStep')
                     .callsFake(() => Promise.resolve(createResponse(mockInstanceStep)));
+                sinon
+                    .stub(client._internalClient, 'getInstance')
+                    .callsFake(() => Promise.resolve(createResponse(mockInstance)));
                 sinon
                     .stub(client._internalClient, 'completeStep')
                     .callsFake(() => Promise.resolve(createResponse(mockInstanceStep)));
@@ -934,11 +949,16 @@ describe('InstanceClient', function() {
                 // stubbing protected method on BaseClient, which is called by FileClient.upload
                 const stub = sinon.stub(client.instances, 'uploadFile' as any);
 
+                const mockInstance = mock.mockInstance();
                 const mockInstanceStep = mock.mockInstanceStep();
-                mockInstanceStep.outputFields = [{ name: 'My Field', fieldType: 'file' }];
+                mockInstanceStep.instanceId = mockInstance.id;
+                mockInstance.fields = [{ name: 'My Field', fieldType: 'file' }];
                 sinon
                     .stub(client._internalClient, 'getInstanceStep')
                     .callsFake(() => Promise.resolve(createResponse(mockInstanceStep)));
+                sinon
+                    .stub(client._internalClient, 'getInstance')
+                    .callsFake(() => Promise.resolve(createResponse(mockInstance)));
                 sinon
                     .stub(client._internalClient, 'completeStep')
                     .callsFake(() => Promise.resolve(createResponse(mockInstanceStep)));
@@ -984,12 +1004,17 @@ describe('InstanceClient', function() {
             });
 
             it('should throw error if field does not exist on InstanceStep', function() {
+                const mockInstance = mock.mockInstance();
                 const mockInstanceStep = mock.mockInstanceStep();
-                mockInstanceStep.outputFields = [];
+                mockInstanceStep.instanceId = mockInstance.id;
+                mockInstance.fields = [];
                 const fields = [{ name: 'My Field', value: 'some value' }];
                 sinon
                     .stub(client._internalClient, 'getInstanceStep')
                     .callsFake(() => Promise.resolve(createResponse(mockInstanceStep)));
+                sinon
+                    .stub(client._internalClient, 'getInstance')
+                    .callsFake(() => Promise.resolve(createResponse(mockInstance)));
                 sinon.stub(client._internalClient, 'completeStep');
 
                 return executeTest(
@@ -1006,10 +1031,15 @@ describe('InstanceClient', function() {
             });
 
             it('should throw error when bad status code returned', function() {
+                const mockInstance = mock.mockInstance();
                 const mockInstanceStep = mock.mockInstanceStep();
+                mockInstanceStep.instanceId = mockInstance.id;
                 sinon
                     .stub(client._internalClient, 'getInstanceStep')
                     .callsFake(() => Promise.resolve(createResponse(mockInstanceStep)));
+                sinon
+                    .stub(client._internalClient, 'getInstance')
+                    .callsFake(() => Promise.resolve(createResponse(mockInstance)));
                 sinon
                     .stub(client._internalClient, 'completeStep')
                     .callsFake(() => Promise.resolve(createResponse({ detail: 'Intentional bad request error' }, 400)));
@@ -1038,13 +1068,17 @@ describe('InstanceClient', function() {
                 );
             });
             it('should throw an error when user/table/instance/workflow field is not a UUID', async function() {
-                const stub = sinon.stub(client._internalClient, 'getInstanceStep');
+                const completeStub = sinon.stub(client._internalClient, 'getInstanceStep');
+                const instanceStub = sinon.stub(client._internalClient, 'getInstance');
                 sinon.stub(client._internalClient, 'completeStep');
                 await Bluebird.each(['user', 'workflow', 'table', 'instance'], async fieldType => {
-                    const instanceStep = mock.mockInstanceStep();
-                    instanceStep.outputFields = [{ name: 'My Field', fieldType: fieldType as FieldType }];
-                    const instanceStepID = instanceStep.id;
-                    stub.callsFake(() => Promise.resolve(createResponse(instanceStep)));
+                    const mockInstance = mock.mockInstance();
+                    const mockInstanceStep = mock.mockInstanceStep();
+                    mockInstanceStep.instanceId = mockInstance.id;
+                    mockInstance.fields = [{ name: 'My Field', fieldType: fieldType as FieldType }];
+                    const instanceStepID = mockInstanceStep.id;
+                    completeStub.callsFake(() => Promise.resolve(createResponse(mockInstanceStep)));
+                    instanceStub.callsFake(() => Promise.resolve(createResponse(mockInstance)));
 
                     await executeTest(
                         client.instances,

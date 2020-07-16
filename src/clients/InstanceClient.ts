@@ -304,10 +304,11 @@ export default class InstanceClient extends BaseClient implements InstanceClient
 
     private async _completeStep(id: string, inputs: FieldInput[]): Promise<InstanceStep> {
         const step = await this._getStep(id);
+        const instance = await this._get(step.instanceId);
 
         const body: CompleteStepRequest = {
             id,
-            stepOutputFields: await this.formatFields(inputs, step.outputFields)
+            stepOutputFields: await this.formatFields(inputs, instance.fields)
         };
 
         const result = await this._internalClient.completeStep(id, WildcardId, {
