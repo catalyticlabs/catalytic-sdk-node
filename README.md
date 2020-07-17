@@ -1,5 +1,6 @@
 [![codecov](https://codecov.io/gh/catalyticlabs/catalytic-sdk-node/branch/master/graph/badge.svg)](https://codecov.io/gh/catalyticlabs/catalytic-sdk-node)
 [![Build Status](https://github.com/catalyticlabs/catalytic-sdk-node/workflows/CI/badge.svg)](https://github.com/catalyticlabs/catalytic-sdk-node/actions)
+[![npm version](https://badge.fury.io/js/%40catalytic%2Fsdk.svg)](https://badge.fury.io/js/%40catalytic%2Fsdk)
 
 # Catalytic SDK for Node.js
 
