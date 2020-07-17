@@ -1,4 +1,6 @@
+import Bluebird from 'bluebird';
 import chai from 'chai';
+import { join } from 'path';
 import sinonChai from 'sinon-chai';
 import sinon from 'sinon';
 import { v4 } from 'uuid';
@@ -13,6 +15,8 @@ import { displayNameToInternal } from '../../src/utils';
 import mock from '../helpers/mockEntities';
 import { createResponse, executeTest } from '../helpers';
 import { FieldInputError } from '../../src/errors';
+import { FieldType } from '../../src/internal/lib/models';
+import { FileMetadataPage } from '../../src/entities';
 
 describe('InstanceClient', function() {
     let client: CatalyticClient;
@@ -173,8 +177,12 @@ describe('InstanceClient', function() {
 
     describe('Start Instance', function() {
         it('should start an instance with no name or inputs', function() {
-            const workflowID = v4();
+            const workflow = mock.mockWorkflow();
+            const workflowID = workflow.id;
             const mockInstance = mock.mockInstance();
+            sinon
+                .stub(client._internalClient, 'getWorkflow')
+                .callsFake(() => Promise.resolve(createResponse(workflow)));
             sinon
                 .stub(client._internalClient, 'startInstance')
                 .callsFake(() => Promise.resolve(createResponse(mockInstance)));
@@ -183,6 +191,10 @@ describe('InstanceClient', function() {
                 expect(err).to.not.be.ok;
 
                 expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockInstance)));
+                expect(client._internalClient.getWorkflow).to.have.callCount(1);
+                expect(client._internalClient.getWorkflow).to.have.been.calledWith(workflowID, {
+                    customHeaders: expectedCustomHeaders
+                });
                 expect(client._internalClient.startInstance).to.have.callCount(1);
                 expect(client._internalClient.startInstance).to.have.been.calledWith({
                     body: {
@@ -196,17 +208,25 @@ describe('InstanceClient', function() {
         });
 
         it('should start an instance with name', function() {
-            const workflowID = v4();
-            const name = 'test instance name';
+            const workflow = mock.mockWorkflow();
+            const workflowID = workflow.id;
             const mockInstance = mock.mockInstance();
+            sinon
+                .stub(client._internalClient, 'getWorkflow')
+                .callsFake(() => Promise.resolve(createResponse(workflow)));
             sinon
                 .stub(client._internalClient, 'startInstance')
                 .callsFake(() => Promise.resolve(createResponse(mockInstance)));
+            const name = 'test instance name';
 
             return executeTest(client.instances, 'start', [workflowID, name], (err, result) => {
                 expect(err).to.not.be.ok;
 
                 expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockInstance)));
+                expect(client._internalClient.getWorkflow).to.have.callCount(1);
+                expect(client._internalClient.getWorkflow).to.have.been.calledWith(workflowID, {
+                    customHeaders: expectedCustomHeaders
+                });
                 expect(client._internalClient.startInstance).to.have.callCount(1);
                 expect(client._internalClient.startInstance).to.have.been.calledWith({
                     body: {
@@ -219,105 +239,290 @@ describe('InstanceClient', function() {
             });
         });
 
-        it('should start an instance with inputs', function() {
-            const workflowID = v4();
-            const inputs = [
-                { name: 'My Field', value: 'some value' },
-                { name: 'Another Field', value: 'second value' }
-            ];
-            const mockInstance = mock.mockInstance();
-            sinon
-                .stub(client._internalClient, 'startInstance')
-                .callsFake(() => Promise.resolve(createResponse(mockInstance)));
+        describe('with inputs', function() {
+            it('should start an instance with inputs', function() {
+                const workflow = mock.mockWorkflow();
+                workflow.inputFields = [
+                    { name: 'My Field', fieldType: 'text' },
+                    { name: 'Another Field', fieldType: 'text' }
+                ];
+                const workflowID = workflow.id;
+                const mockInstance = mock.mockInstance();
+                sinon
+                    .stub(client._internalClient, 'getWorkflow')
+                    .callsFake(() => Promise.resolve(createResponse(workflow)));
+                sinon
+                    .stub(client._internalClient, 'startInstance')
+                    .callsFake(() => Promise.resolve(createResponse(mockInstance)));
+                const inputs = [
+                    { name: 'My Field', value: 'some value' },
+                    { name: 'Another Field', value: '' }
+                ];
 
-            return executeTest(client.instances, 'start', [workflowID, inputs], (err, result) => {
-                expect(err).to.not.be.ok;
+                return executeTest(client.instances, 'start', [workflowID, inputs], (err, result) => {
+                    expect(err).to.not.be.ok;
 
-                expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockInstance)));
-                expect(client._internalClient.startInstance).to.have.callCount(1);
-                expect(client._internalClient.startInstance).to.have.been.calledWith({
-                    body: {
-                        workflowId: workflowID,
-                        inputFields: inputs.map(f => ({ ...f, referenceName: displayNameToInternal(f.name) })),
-                        name: null
-                    },
-                    customHeaders: expectedCustomHeaders
+                    expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockInstance)));
+                    expect(client._internalClient.getWorkflow).to.have.callCount(1);
+                    expect(client._internalClient.getWorkflow).to.have.been.calledWith(workflowID, {
+                        customHeaders: expectedCustomHeaders
+                    });
+                    expect(client._internalClient.startInstance).to.have.callCount(1);
+                    expect(client._internalClient.startInstance).to.have.been.calledWith({
+                        body: {
+                            workflowId: workflowID,
+                            inputFields: inputs.map(f => ({ ...f, referenceName: displayNameToInternal(f.name) })),
+                            name: null
+                        },
+                        customHeaders: expectedCustomHeaders
+                    });
                 });
             });
-        });
 
-        it('should start an instance with name and inputs', function() {
-            const workflowID = v4();
-            const name = 'test instance name';
-            const inputs = [
-                { name: 'My Field', value: 'some value' },
-                { name: 'Another Field', value: 'second value' }
-            ];
-            const mockInstance = mock.mockInstance();
-            sinon
-                .stub(client._internalClient, 'startInstance')
-                .callsFake(() => Promise.resolve(createResponse(mockInstance)));
+            it('should start an instance with name and inputs', function() {
+                const workflow = mock.mockWorkflow();
+                workflow.inputFields = [
+                    { name: 'My Field', fieldType: 'text' },
+                    { name: 'Another Field', fieldType: 'table' },
+                    { name: 'Instance Field', fieldType: 'instance' },
+                    { name: 'Workflow Field', fieldType: 'workflow' },
+                    { name: 'User Field', fieldType: 'user' }
+                ];
+                const workflowID = workflow.id;
+                const mockInstance = mock.mockInstance();
+                sinon
+                    .stub(client._internalClient, 'getWorkflow')
+                    .callsFake(() => Promise.resolve(createResponse(workflow)));
+                sinon
+                    .stub(client._internalClient, 'startInstance')
+                    .callsFake(() => Promise.resolve(createResponse(mockInstance)));
+                const name = 'test instance name';
+                const inputs = [
+                    { name: 'My Field', value: 'some value' },
+                    { name: 'Another Field', value: v4() },
+                    { name: 'Instance Field', value: v4() },
+                    { name: 'Workflow Field', value: v4() },
+                    { name: 'User Field', value: v4() }
+                ];
 
-            return executeTest(client.instances, 'start', [workflowID, name, inputs], (err, result) => {
-                expect(err).to.not.be.ok;
+                return executeTest(client.instances, 'start', [workflowID, name, inputs], (err, result) => {
+                    expect(err).to.not.be.ok;
 
-                expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockInstance)));
-                expect(client._internalClient.startInstance).to.have.callCount(1);
-                expect(client._internalClient.startInstance).to.have.been.calledWith({
-                    body: {
-                        workflowId: workflowID,
-                        inputFields: inputs.map(f => ({ ...f, referenceName: displayNameToInternal(f.name) })),
-                        name
-                    },
-                    customHeaders: expectedCustomHeaders
+                    expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockInstance)));
+                    expect(client._internalClient.getWorkflow).to.have.callCount(1);
+                    expect(client._internalClient.getWorkflow).to.have.been.calledWith(workflowID, {
+                        customHeaders: expectedCustomHeaders
+                    });
+                    expect(client._internalClient.startInstance).to.have.callCount(1);
+                    expect(client._internalClient.startInstance).to.have.been.calledWith({
+                        body: {
+                            workflowId: workflowID,
+                            inputFields: inputs.map(f => ({ ...f, referenceName: displayNameToInternal(f.name) })),
+                            name
+                        },
+                        customHeaders: expectedCustomHeaders
+                    });
                 });
             });
-        });
 
-        it('should throw proper error when invalid inputs passed', async function() {
-            const workflowID = v4();
-            const name = 'test instance name';
-            sinon
-                .stub(client._internalClient, 'startInstance')
-                .callsFake(() => Promise.resolve(createResponse({ detail: 'Intentional bad request error' }, 400)));
+            it('should automatically upload a file input if a path is provided', function() {
+                const filePath = join(__dirname, '../fixtures/test.txt');
+                const mockFileMetadata = mock.mockFileMetadata();
+                // stubbing protected method on BaseClient, which is called by FileClient.upload
+                const stub = sinon.stub(client.instances, 'uploadFile' as any).callsFake(() => {
+                    const result = new FileMetadataPage();
+                    result.files = [mockFileMetadata];
+                    return Promise.resolve(result);
+                });
 
-            await executeTest(
-                client.instances,
-                'start',
-                [workflowID, name, { name: 'My Field', value: 'some value' }],
-                (err, result) => {
-                    expect(result).to.not.be.ok;
-                    expect(err).to.be.ok.and.to.be.instanceOf(FieldInputError);
-                    expect(err.message).to.include('Fields must be an Array of FieldInput objects');
-                    expect(client._internalClient.startInstance).to.have.callCount(0);
-                }
-            );
+                const workflow = mock.mockWorkflow();
+                workflow.inputFields = [{ name: 'My Field', referenceName: 'my-field', fieldType: 'file' }];
+                const workflowID = workflow.id;
+                const mockInstance = mock.mockInstance();
+                sinon
+                    .stub(client._internalClient, 'getWorkflow')
+                    .callsFake(() => Promise.resolve(createResponse(workflow)));
+                sinon
+                    .stub(client._internalClient, 'startInstance')
+                    .callsFake(() => Promise.resolve(createResponse(mockInstance)));
+                const name = 'test instance name';
+                const inputs = [{ name: 'my-field', value: filePath }];
 
-            await executeTest(
-                client.instances,
-                'start',
-                [workflowID, name, [{ value: 'some value' }]],
-                (err, result) => {
-                    expect(result).to.not.be.ok;
-                    expect(err).to.be.ok.and.to.be.instanceOf(FieldInputError);
-                    expect(err.message).to.include('No name or reference name provided for field at index 0');
-                    expect(client._internalClient.startInstance).to.have.callCount(0);
-                }
-            );
+                return executeTest(client.instances, 'start', [workflowID, name, inputs], (err, result) => {
+                    expect(err).to.not.be.ok;
+
+                    expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockInstance)));
+                    expect(client._internalClient.getWorkflow).to.have.callCount(1);
+                    expect(client._internalClient.getWorkflow).to.have.been.calledWith(workflowID, {
+                        customHeaders: expectedCustomHeaders
+                    });
+                    expect(stub).to.have.callCount(1);
+                    expect(stub).to.have.been.calledWith(filePath);
+                    expect(client._internalClient.startInstance).to.have.callCount(1);
+                    expect(client._internalClient.startInstance).to.have.been.calledWith({
+                        body: {
+                            workflowId: workflowID,
+                            inputFields: [{ name: 'My Field', referenceName: 'my-field', value: mockFileMetadata.id }],
+                            name
+                        },
+                        customHeaders: expectedCustomHeaders
+                    });
+                });
+            });
+
+            it('should passthrough fileID in file input if the value is a UUID', function() {
+                const mockFileMetadata = mock.mockFileMetadata();
+                const stub = sinon.stub(client.instances, 'uploadFile' as any);
+
+                const workflow = mock.mockWorkflow();
+                workflow.inputFields = [{ name: 'My Field', fieldType: 'file' }];
+                const workflowID = workflow.id;
+                const mockInstance = mock.mockInstance();
+                sinon
+                    .stub(client._internalClient, 'getWorkflow')
+                    .callsFake(() => Promise.resolve(createResponse(workflow)));
+                sinon
+                    .stub(client._internalClient, 'startInstance')
+                    .callsFake(() => Promise.resolve(createResponse(mockInstance)));
+                const name = 'test instance name';
+                const inputs = [{ name: 'My Field', value: mockFileMetadata.id }];
+
+                return executeTest(client.instances, 'start', [workflowID, name, inputs], (err, result) => {
+                    expect(err).to.not.be.ok;
+
+                    expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockInstance)));
+                    expect(client._internalClient.getWorkflow).to.have.callCount(1);
+                    expect(client._internalClient.getWorkflow).to.have.been.calledWith(workflowID, {
+                        customHeaders: expectedCustomHeaders
+                    });
+                    expect(stub).to.have.callCount(0);
+                    expect(client._internalClient.startInstance).to.have.callCount(1);
+                    expect(client._internalClient.startInstance).to.have.been.calledWith({
+                        body: {
+                            workflowId: workflowID,
+                            inputFields: [{ name: 'My Field', referenceName: 'my-field', value: mockFileMetadata.id }],
+                            name
+                        },
+                        customHeaders: expectedCustomHeaders
+                    });
+                });
+            });
+
+            it('should throw proper error when invalid inputs passed', async function() {
+                const workflow = mock.mockWorkflow();
+                workflow.inputFields = [
+                    { name: 'My Field', fieldType: 'text' },
+                    { name: 'Another Field', fieldType: 'text' }
+                ];
+                const workflowID = workflow.id;
+                sinon
+                    .stub(client._internalClient, 'getWorkflow')
+                    .callsFake(() => Promise.resolve(createResponse(workflow)));
+                sinon
+                    .stub(client._internalClient, 'startInstance')
+                    .callsFake(() => Promise.resolve(createResponse({ detail: 'Intentional bad request error' }, 400)));
+                const name = 'test instance name';
+
+                await executeTest(
+                    client.instances,
+                    'start',
+                    [workflowID, name, { name: 'My Field', value: 'some value' }],
+                    (err, result) => {
+                        expect(result).to.not.be.ok;
+                        expect(err).to.be.ok.and.to.be.instanceOf(FieldInputError);
+                        expect(err.message).to.include('Fields must be an Array of FieldInput objects');
+                        expect(client._internalClient.startInstance).to.have.callCount(0);
+                    }
+                );
+
+                await executeTest(
+                    client.instances,
+                    'start',
+                    [workflowID, name, [{ value: 'some value' }]],
+                    (err, result) => {
+                        expect(result).to.not.be.ok;
+                        expect(err).to.be.ok.and.to.be.instanceOf(FieldInputError);
+                        expect(err.message).to.include('No name provided for FieldInput at index 0');
+                        expect(client._internalClient.startInstance).to.have.callCount(0);
+                    }
+                );
+
+                await executeTest(
+                    client.instances,
+                    'start',
+                    [workflowID, name, [{ name: 'My Field', value: {} }]],
+                    (err, result) => {
+                        expect(result).to.not.be.ok;
+                        expect(err).to.be.ok.and.to.be.instanceOf(FieldInputError);
+                        expect(err.message).to.include(`Value for field 'My Field' must be a string`);
+                        expect(client._internalClient.startInstance).to.have.callCount(0);
+                    }
+                );
+            });
+
+            it('should throw an error when user/table/instance/workflow field is not a UUID', async function() {
+                const stub = sinon.stub(client._internalClient, 'getWorkflow');
+                sinon.stub(client._internalClient, 'startInstance');
+                await Bluebird.each(['user', 'workflow', 'table', 'instance'], async fieldType => {
+                    const workflow = mock.mockWorkflow();
+                    workflow.inputFields = [{ name: 'My Field', fieldType: fieldType as FieldType }];
+                    const workflowID = workflow.id;
+                    const name = 'My New Instance';
+                    stub.callsFake(() => Promise.resolve(createResponse(workflow)));
+
+                    await executeTest(
+                        client.instances,
+                        'start',
+                        [workflowID, name, [{ name: 'My Field', value: 'not-a-uuid' }]],
+                        (err, result) => {
+                            expect(result).to.not.be.ok;
+                            expect(err).to.be.ok.and.to.be.instanceOf(FieldInputError);
+                            expect(err.message).to.include(
+                                `Value 'not-a-uuid' provided for field 'My Field' of type '${fieldType}' is not a valid ID`
+                            );
+                            expect(client._internalClient.startInstance).to.have.callCount(0);
+                        }
+                    );
+                });
+            });
+
+            it('should throw proper error when passed field does not exist on Workflow', function() {
+                const workflow = mock.mockWorkflow();
+                const workflowID = workflow.id;
+                sinon
+                    .stub(client._internalClient, 'getWorkflow')
+                    .callsFake(() => Promise.resolve(createResponse(workflow)));
+                sinon
+                    .stub(client._internalClient, 'startInstance')
+                    .callsFake(() => Promise.resolve(createResponse({ detail: 'Intentional bad request error' }, 400)));
+                const name = 'test instance name';
+
+                return executeTest(
+                    client.instances,
+                    'start',
+                    [workflowID, name, [{ name: 'my-field', value: 'some value' }]],
+                    (err, result) => {
+                        expect(result).to.not.be.ok;
+                        expect(err).to.be.ok.and.to.be.instanceOf(FieldInputError);
+                        expect(err.message).to.include(`No corresponding input field found with name 'my-field'`);
+                        expect(client._internalClient.startInstance).to.have.callCount(0);
+                    }
+                );
+            });
         });
 
         it('should throw proper error when Instance start request fails', function() {
-            const workflowID = v4();
-            const name = 'test instance name';
-            const inputs = [
-                { name: 'My Field', value: 'some value' },
-                { name: 'Another Field', value: 'second value' }
-            ];
+            const workflow = mock.mockWorkflow();
+            const workflowID = workflow.id;
+            sinon
+                .stub(client._internalClient, 'getWorkflow')
+                .callsFake(() => Promise.resolve(createResponse(workflow)));
             sinon
                 .stub(client._internalClient, 'startInstance')
                 .callsFake(() => Promise.resolve(createResponse({ detail: 'Intentional bad request error' }, 400)));
+            const name = 'test instance name';
 
-            return executeTest(client.instances, 'start', [workflowID, name, inputs], (err, result) => {
+            return executeTest(client.instances, 'start', [workflowID, name], (err, result) => {
                 expect(result).to.not.be.ok;
                 expect(err).to.be.ok;
                 expect(err.message).to.include('Intentional bad request error');
@@ -325,7 +530,7 @@ describe('InstanceClient', function() {
                 expect(client._internalClient.startInstance).to.have.been.calledWith({
                     body: {
                         workflowId: workflowID,
-                        inputFields: inputs.map(f => ({ ...f, referenceName: displayNameToInternal(f.name) })),
+                        inputFields: null,
                         name
                     },
                     customHeaders: expectedCustomHeaders
@@ -593,7 +798,15 @@ describe('InstanceClient', function() {
 
         describe('Complete InstanceStep', function() {
             it('should complete an InstanceStep without output fields', function() {
+                const mockInstance = mock.mockInstance();
                 const mockInstanceStep = mock.mockInstanceStep();
+                mockInstanceStep.instanceId = mockInstance.id;
+                sinon
+                    .stub(client._internalClient, 'getInstanceStep')
+                    .callsFake(() => Promise.resolve(createResponse(mockInstanceStep)));
+                sinon
+                    .stub(client._internalClient, 'getInstance')
+                    .callsFake(() => Promise.resolve(createResponse(mockInstance)));
                 sinon
                     .stub(client._internalClient, 'completeStep')
                     .callsFake(() => Promise.resolve(createResponse(mockInstanceStep)));
@@ -618,14 +831,26 @@ describe('InstanceClient', function() {
             });
 
             it('should complete an InstanceStep with output fields', function() {
+                const mockInstance = mock.mockInstance();
                 const mockInstanceStep = mock.mockInstanceStep();
-                const fields = [
-                    { name: 'My Field', value: 'some value' },
-                    { name: 'Another Field', value: 'second value' }
+                mockInstanceStep.instanceId = mockInstance.id;
+                mockInstance.fields = [
+                    { name: 'My Field', fieldType: 'text' },
+                    { name: 'Another Field', fieldType: 'user' }
                 ];
+                sinon
+                    .stub(client._internalClient, 'getInstanceStep')
+                    .callsFake(() => Promise.resolve(createResponse(mockInstanceStep)));
+                sinon
+                    .stub(client._internalClient, 'getInstance')
+                    .callsFake(() => Promise.resolve(createResponse(mockInstance)));
                 sinon
                     .stub(client._internalClient, 'completeStep')
                     .callsFake(() => Promise.resolve(createResponse(mockInstanceStep)));
+                const fields = [
+                    { name: 'My Field', value: 'some value' },
+                    { name: 'Another Field', value: v4() }
+                ];
 
                 return executeTest(
                     client.instances,
@@ -654,12 +879,167 @@ describe('InstanceClient', function() {
                 );
             });
 
-            it('should throw error when bad status code returned', function() {
+            it('should automatically upload file field if path is passed as value', function() {
+                const filePath = join(__dirname, '../fixtures/test.txt');
+                const mockFileMetadata = mock.mockFileMetadata();
+                // stubbing protected method on BaseClient, which is called by FileClient.upload
+                const stub = sinon.stub(client.instances, 'uploadFile' as any).callsFake(() => {
+                    const result = new FileMetadataPage();
+                    result.files = [mockFileMetadata];
+                    return Promise.resolve(result);
+                });
+
+                const mockInstance = mock.mockInstance();
                 const mockInstanceStep = mock.mockInstanceStep();
-                const fields = [
-                    { name: 'My Field', value: 'some value' },
-                    { name: 'Another Field', value: 'second value' }
-                ];
+                mockInstanceStep.instanceId = mockInstance.id;
+                mockInstance.fields = [{ name: 'My Field', fieldType: 'file' }];
+                sinon
+                    .stub(client._internalClient, 'getInstanceStep')
+                    .callsFake(() => Promise.resolve(createResponse(mockInstanceStep)));
+                sinon
+                    .stub(client._internalClient, 'getInstance')
+                    .callsFake(() => Promise.resolve(createResponse(mockInstance)));
+                sinon
+                    .stub(client._internalClient, 'completeStep')
+                    .callsFake(() => Promise.resolve(createResponse(mockInstanceStep)));
+                const fields = [{ name: 'My Field', value: filePath }];
+
+                return executeTest(
+                    client.instances,
+                    'completeInstanceStep',
+                    [mockInstanceStep.id, fields],
+                    (err, result) => {
+                        expect(err).to.not.be.ok;
+
+                        expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockInstanceStep)));
+                        expect(client._internalClient.getInstanceStep).to.have.callCount(1);
+                        expect(client._internalClient.getInstanceStep).to.have.been.calledWith(
+                            mockInstanceStep.id,
+                            WildcardId,
+                            {
+                                customHeaders: expectedCustomHeaders
+                            }
+                        );
+                        expect(stub).to.have.callCount(1);
+                        expect(stub).to.have.been.calledWith(filePath);
+                        expect(client._internalClient.completeStep).to.have.callCount(1);
+                        expect(client._internalClient.completeStep).to.have.been.calledWith(
+                            mockInstanceStep.id,
+                            WildcardId,
+                            {
+                                body: {
+                                    id: mockInstanceStep.id,
+                                    stepOutputFields: [
+                                        {
+                                            name: 'My Field',
+                                            referenceName: 'my-field',
+                                            value: mockFileMetadata.id
+                                        }
+                                    ]
+                                },
+                                customHeaders: expectedCustomHeaders
+                            }
+                        );
+                    }
+                );
+            });
+
+            it('should passthrough file id if file field value is a UUID', function() {
+                const mockFileMetadata = mock.mockFileMetadata();
+                // stubbing protected method on BaseClient, which is called by FileClient.upload
+                const stub = sinon.stub(client.instances, 'uploadFile' as any);
+
+                const mockInstance = mock.mockInstance();
+                const mockInstanceStep = mock.mockInstanceStep();
+                mockInstanceStep.instanceId = mockInstance.id;
+                mockInstance.fields = [{ name: 'My Field', fieldType: 'file' }];
+                sinon
+                    .stub(client._internalClient, 'getInstanceStep')
+                    .callsFake(() => Promise.resolve(createResponse(mockInstanceStep)));
+                sinon
+                    .stub(client._internalClient, 'getInstance')
+                    .callsFake(() => Promise.resolve(createResponse(mockInstance)));
+                sinon
+                    .stub(client._internalClient, 'completeStep')
+                    .callsFake(() => Promise.resolve(createResponse(mockInstanceStep)));
+                const fields = [{ name: 'My Field', value: mockFileMetadata.id }];
+
+                return executeTest(
+                    client.instances,
+                    'completeInstanceStep',
+                    [mockInstanceStep.id, fields],
+                    (err, result) => {
+                        expect(err).to.not.be.ok;
+
+                        expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockInstanceStep)));
+                        expect(client._internalClient.getInstanceStep).to.have.callCount(1);
+                        expect(client._internalClient.getInstanceStep).to.have.been.calledWith(
+                            mockInstanceStep.id,
+                            WildcardId,
+                            {
+                                customHeaders: expectedCustomHeaders
+                            }
+                        );
+                        expect(stub).to.have.callCount(0);
+                        expect(client._internalClient.completeStep).to.have.callCount(1);
+                        expect(client._internalClient.completeStep).to.have.been.calledWith(
+                            mockInstanceStep.id,
+                            WildcardId,
+                            {
+                                body: {
+                                    id: mockInstanceStep.id,
+                                    stepOutputFields: [
+                                        {
+                                            name: 'My Field',
+                                            referenceName: 'my-field',
+                                            value: mockFileMetadata.id
+                                        }
+                                    ]
+                                },
+                                customHeaders: expectedCustomHeaders
+                            }
+                        );
+                    }
+                );
+            });
+
+            it('should throw error if field does not exist on InstanceStep', function() {
+                const mockInstance = mock.mockInstance();
+                const mockInstanceStep = mock.mockInstanceStep();
+                mockInstanceStep.instanceId = mockInstance.id;
+                mockInstance.fields = [];
+                const fields = [{ name: 'My Field', value: 'some value' }];
+                sinon
+                    .stub(client._internalClient, 'getInstanceStep')
+                    .callsFake(() => Promise.resolve(createResponse(mockInstanceStep)));
+                sinon
+                    .stub(client._internalClient, 'getInstance')
+                    .callsFake(() => Promise.resolve(createResponse(mockInstance)));
+                sinon.stub(client._internalClient, 'completeStep');
+
+                return executeTest(
+                    client.instances,
+                    'completeInstanceStep',
+                    [mockInstanceStep.id, fields],
+                    (err, result) => {
+                        expect(result).to.not.be.ok;
+                        expect(err).to.be.ok.and.to.be.instanceOf(FieldInputError);
+                        expect(err.message).to.include(`No corresponding input field found with name 'My Field'`);
+                        expect(client._internalClient.completeStep).to.have.callCount(0);
+                    }
+                );
+            });
+
+            it('should throw error when bad status code returned', function() {
+                const mockInstance = mock.mockInstance();
+                const mockInstanceStep = mock.mockInstanceStep();
+                mockInstanceStep.instanceId = mockInstance.id;
+                sinon
+                    .stub(client._internalClient, 'getInstanceStep')
+                    .callsFake(() => Promise.resolve(createResponse(mockInstanceStep)));
+                sinon
+                    .stub(client._internalClient, 'getInstance')
+                    .callsFake(() => Promise.resolve(createResponse(mockInstance)));
                 sinon
                     .stub(client._internalClient, 'completeStep')
                     .callsFake(() => Promise.resolve(createResponse({ detail: 'Intentional bad request error' }, 400)));
@@ -667,7 +1047,7 @@ describe('InstanceClient', function() {
                 return executeTest(
                     client.instances,
                     'completeInstanceStep',
-                    [mockInstanceStep.id, fields],
+                    [mockInstanceStep.id, []],
                     (err, result) => {
                         expect(result).to.not.be.ok;
                         expect(err).to.be.ok;
@@ -680,15 +1060,40 @@ describe('InstanceClient', function() {
                                 customHeaders: expectedCustomHeaders,
                                 body: {
                                     id: mockInstanceStep.id,
-                                    stepOutputFields: fields.map(f => ({
-                                        ...f,
-                                        referenceName: displayNameToInternal(f.name)
-                                    }))
+                                    stepOutputFields: []
                                 }
                             }
                         );
                     }
                 );
+            });
+            it('should throw an error when user/table/instance/workflow field is not a UUID', async function() {
+                const completeStub = sinon.stub(client._internalClient, 'getInstanceStep');
+                const instanceStub = sinon.stub(client._internalClient, 'getInstance');
+                sinon.stub(client._internalClient, 'completeStep');
+                await Bluebird.each(['user', 'workflow', 'table', 'instance'], async fieldType => {
+                    const mockInstance = mock.mockInstance();
+                    const mockInstanceStep = mock.mockInstanceStep();
+                    mockInstanceStep.instanceId = mockInstance.id;
+                    mockInstance.fields = [{ name: 'My Field', fieldType: fieldType as FieldType }];
+                    const instanceStepID = mockInstanceStep.id;
+                    completeStub.callsFake(() => Promise.resolve(createResponse(mockInstanceStep)));
+                    instanceStub.callsFake(() => Promise.resolve(createResponse(mockInstance)));
+
+                    await executeTest(
+                        client.instances,
+                        'completeInstanceStep',
+                        [instanceStepID, [{ name: 'My Field', value: 'not-a-uuid' }]],
+                        (err, result) => {
+                            expect(result).to.not.be.ok;
+                            expect(err).to.be.ok.and.to.be.instanceOf(FieldInputError);
+                            expect(err.message).to.include(
+                                `Value 'not-a-uuid' provided for field 'My Field' of type '${fieldType}' is not a valid ID`
+                            );
+                            expect(client._internalClient.completeStep).to.have.callCount(0);
+                        }
+                    );
+                });
             });
         });
     });

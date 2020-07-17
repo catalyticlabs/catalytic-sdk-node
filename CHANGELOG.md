@@ -7,6 +7,7 @@
 - `getInstanceSteps` method for fetching all `InstanceSteps` on a specific `Instance`
 - `CHANGELOG.md`
 - Custom logger support
+- FieldType checking on `startInstance` and `completeInstanceStep`
 
 ## [v1.0.0-pre-2]
 ### Added
