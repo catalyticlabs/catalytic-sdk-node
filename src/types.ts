@@ -3,13 +3,9 @@ import { AccessToken } from './entities';
 
 export interface FieldInput {
     /**
-     * @summary The name of the Field on the Instance
+     * @summary The name or referenceName of the Field on the Instance
      */
-    name?: string;
-    /**
-     * @summary The internal reference name of the Field on the Instance
-     */
-    referenceName?: string;
+    name: string;
     /**
      * @summary The string-serialized value of the Field
      */

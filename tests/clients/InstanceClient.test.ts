@@ -336,7 +336,7 @@ describe('InstanceClient', function() {
                 });
 
                 const workflow = mock.mockWorkflow();
-                workflow.inputFields = [{ referenceName: 'my-field', fieldType: 'file' }];
+                workflow.inputFields = [{ name: 'My Field', referenceName: 'my-field', fieldType: 'file' }];
                 const workflowID = workflow.id;
                 const mockInstance = mock.mockInstance();
                 sinon
@@ -346,7 +346,7 @@ describe('InstanceClient', function() {
                     .stub(client._internalClient, 'startInstance')
                     .callsFake(() => Promise.resolve(createResponse(mockInstance)));
                 const name = 'test instance name';
-                const inputs = [{ referenceName: 'my-field', value: filePath }];
+                const inputs = [{ name: 'my-field', value: filePath }];
 
                 return executeTest(client.instances, 'start', [workflowID, name, inputs], (err, result) => {
                     expect(err).to.not.be.ok;
@@ -362,7 +362,7 @@ describe('InstanceClient', function() {
                     expect(client._internalClient.startInstance).to.have.been.calledWith({
                         body: {
                             workflowId: workflowID,
-                            inputFields: [{ name: undefined, referenceName: 'my-field', value: mockFileMetadata.id }],
+                            inputFields: [{ name: 'My Field', referenceName: 'my-field', value: mockFileMetadata.id }],
                             name
                         },
                         customHeaders: expectedCustomHeaders
@@ -442,7 +442,7 @@ describe('InstanceClient', function() {
                     (err, result) => {
                         expect(result).to.not.be.ok;
                         expect(err).to.be.ok.and.to.be.instanceOf(FieldInputError);
-                        expect(err.message).to.include('No name or referenceName provided for FieldInput at index 0');
+                        expect(err.message).to.include('No name provided for FieldInput at index 0');
                         expect(client._internalClient.startInstance).to.have.callCount(0);
                     }
                 );
@@ -450,7 +450,7 @@ describe('InstanceClient', function() {
                 await executeTest(
                     client.instances,
                     'start',
-                    [workflowID, name, [{ referenceName: 'My Field', value: {} }]],
+                    [workflowID, name, [{ name: 'My Field', value: {} }]],
                     (err, result) => {
                         expect(result).to.not.be.ok;
                         expect(err).to.be.ok.and.to.be.instanceOf(FieldInputError);
@@ -500,7 +500,7 @@ describe('InstanceClient', function() {
                 return executeTest(
                     client.instances,
                     'start',
-                    [workflowID, name, [{ referenceName: 'my-field', value: 'some value' }]],
+                    [workflowID, name, [{ name: 'my-field', value: 'some value' }]],
                     (err, result) => {
                         expect(result).to.not.be.ok;
                         expect(err).to.be.ok.and.to.be.instanceOf(FieldInputError);
@@ -902,7 +902,7 @@ describe('InstanceClient', function() {
                 sinon
                     .stub(client._internalClient, 'completeStep')
                     .callsFake(() => Promise.resolve(createResponse(mockInstanceStep)));
-                const fields = [{ referenceName: 'My Field', value: filePath }];
+                const fields = [{ name: 'My Field', value: filePath }];
 
                 return executeTest(
                     client.instances,
@@ -931,7 +931,7 @@ describe('InstanceClient', function() {
                                     id: mockInstanceStep.id,
                                     stepOutputFields: [
                                         {
-                                            name: undefined,
+                                            name: 'My Field',
                                             referenceName: 'my-field',
                                             value: mockFileMetadata.id
                                         }
@@ -962,7 +962,7 @@ describe('InstanceClient', function() {
                 sinon
                     .stub(client._internalClient, 'completeStep')
                     .callsFake(() => Promise.resolve(createResponse(mockInstanceStep)));
-                const fields = [{ referenceName: 'My Field', value: mockFileMetadata.id }];
+                const fields = [{ name: 'My Field', value: mockFileMetadata.id }];
 
                 return executeTest(
                     client.instances,
@@ -990,7 +990,7 @@ describe('InstanceClient', function() {
                                     id: mockInstanceStep.id,
                                     stepOutputFields: [
                                         {
-                                            name: undefined,
+                                            name: 'My Field',
                                             referenceName: 'my-field',
                                             value: mockFileMetadata.id
                                         }

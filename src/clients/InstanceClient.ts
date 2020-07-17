@@ -331,38 +331,30 @@ export default class InstanceClient extends BaseClient implements InstanceClient
 
         return Promise.all(
             inputs.map(async (input, idx) => {
-                if (!input.name && !input.referenceName) {
-                    throw new FieldInputError(`No name or referenceName provided for FieldInput at index ${idx}`);
+                if (!input.name) {
+                    throw new FieldInputError(`No name provided for FieldInput at index ${idx}`);
                 }
 
                 if (input.value != null && typeof input.value !== 'string') {
-                    throw new FieldInputError(
-                        `Value for field '${input.name || input.referenceName}' must be a string`
-                    );
+                    throw new FieldInputError(`Value for field '${input.name}' must be a string`);
                 }
 
-                const matchingField = sourceFields.find(field =>
-                    input.referenceName
-                        ? displayNameToInternal(field.referenceName || field.name) ===
-                          displayNameToInternal(input.referenceName)
-                        : displayNameToInternal(field.name) === displayNameToInternal(input.name)
+                const matchingField = sourceFields.find(
+                    field =>
+                        field.name === input.name ||
+                        displayNameToInternal(field.referenceName) === displayNameToInternal(input.name) ||
+                        displayNameToInternal(field.name) === displayNameToInternal(input.name)
                 );
 
                 if (!matchingField) {
-                    throw new FieldInputError(
-                        `No corresponding input field found with name '${input.name || input.referenceName}'`
-                    );
+                    throw new FieldInputError(`No corresponding input field found with name '${input.name}'`);
                 }
 
                 return {
-                    name: input.name,
-                    referenceName: displayNameToInternal(input.referenceName || input.name),
+                    name: matchingField.name,
+                    referenceName: displayNameToInternal(matchingField.referenceName || matchingField.name),
                     value: !!input.value
-                        ? await this.getFieldValue(
-                              input.value,
-                              matchingField.fieldType,
-                              input.name || input.referenceName
-                          )
+                        ? await this.getFieldValue(input.value, matchingField.fieldType, input.name)
                         : input.value
                 };
             })
