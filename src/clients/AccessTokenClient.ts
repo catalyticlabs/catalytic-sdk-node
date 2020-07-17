@@ -103,7 +103,8 @@ export default class AccessTokenClient extends BaseClient implements AccessToken
 
         const body: AccessTokenCreationWithEmailAndPasswordRequest = { domain, email, password, name };
         const result = await this._internalClient.createAndApproveAccessToken({ body });
-        return this.parseResponse<AccessToken>(result);
+        const accessToken = this.parseResponse<AccessToken>(result);
+        return new AccessToken(accessToken.token);
     }
 
     createWithWebApprovalFlow(teamName: string): Promise<AccessToken>;
@@ -141,7 +142,8 @@ export default class AccessTokenClient extends BaseClient implements AccessToken
 
         const creationBody: AccessTokenCreationRequest = { domain, name };
         const result = await this._internalClient.createAccessToken({ body: creationBody });
-        return this.parseResponse<AccessToken>(result);
+        const accessToken = this.parseResponse<AccessToken>(result);
+        return new AccessToken(accessToken.token);
     }
 
     waitForApproval(accessToken: AccessToken): Promise<void>;
