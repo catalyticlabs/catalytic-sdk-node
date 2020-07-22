@@ -12,23 +12,26 @@ export interface FieldRestrictions {
     valueRequired?: boolean;
 }
 
-export type FieldType =
-    | 'undefined'
-    | 'text'
-    | 'integer'
-    | 'decimal'
-    | 'date'
-    | 'dateTime'
-    | 'json'
-    | 'bool'
-    | 'singleChoice'
-    | 'multipleChoice'
-    | 'instructions'
-    | 'file'
-    | 'table'
-    | 'workflow'
-    | 'instance'
-    | 'user';
+export enum FieldTypeEnumeration {
+    bool = 'bool',
+    date = 'date',
+    dateTime = 'dateTime',
+    decimal = 'decimal',
+    file = 'file',
+    instance = 'instance',
+    instructions = 'instructions',
+    integer = 'integer',
+    json = 'json',
+    multipleChoice = 'multipleChoice',
+    singleChoice = 'singleChoice',
+    table = 'table',
+    text = 'text',
+    undefined = 'undefined',
+    user = 'user',
+    workflow = 'workflow'
+}
+
+export type FieldType = FieldTypeEnumeration | keyof typeof FieldTypeEnumeration;
 
 export type FieldVisibility = 'public' | 'internal' | 'confidential' | 'highlyConfidential';
 

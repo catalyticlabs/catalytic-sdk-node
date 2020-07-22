@@ -1,6 +1,9 @@
 # Changelog
 
 ## [Unreleased]
+### Added
+- Exposed a `FieldTypeEnumeration` type
+
 ### Fixed
 - Expose CatalyticClient Type on export
 
