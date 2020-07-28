@@ -1,9 +1,9 @@
-import { existsSync, readFileSync, readdirSync, unlinkSync, writeFileSync, mkdirSync } from 'fs';
 import { homedir } from 'os';
 import { join } from 'path';
 
 import { CatalyticSDKAPIModels } from '../internal/lib/catalyticSDKAPI';
 import { InvalidAccessTokenError, AccessTokenNameConflictError } from '../errors';
+import { exists, readFile, readdir, unlink, writeFile, mkdir } from '../utils';
 
 const TOKEN_DELIMITER = ':';
 const ENV_VAR_NAME = 'CATALYTIC_TOKEN';
@@ -78,14 +78,14 @@ export default class AccessToken implements CatalyticSDKAPIModels.AccessToken {
         if (!directoryPath) {
             directoryPath = AccessToken.DEFAULT_ACCESS_TOKEN_DIR;
         }
-        if (!existsSync(directoryPath)) {
-            mkdirSync(directoryPath, { recursive: true });
+        if (!exists(directoryPath)) {
+            mkdir(directoryPath, { recursive: true });
         }
         const path = join(directoryPath, fileName);
-        if (existsSync(path)) {
+        if (exists(path)) {
             throw new AccessTokenNameConflictError(`AccessToken at path '${path}' already exists`);
         }
-        writeFileSync(path, this.token);
+        writeFile(path, this.token);
     }
 
     public static DEFAULT_ACCESS_TOKEN_DIR = getDefaultAccessTokensDirectory('tokens');
@@ -133,8 +133,8 @@ export default class AccessToken implements CatalyticSDKAPIModels.AccessToken {
     static fromFile(fileNameOrPath: string): AccessToken {
         const path = getPathFromFileNameOrPath(fileNameOrPath);
 
-        if (existsSync(path)) {
-            const token = readFileSync(path).toString();
+        if (exists(path)) {
+            const token = readFile(path).toString();
             return new AccessToken(token);
         }
         throw new InvalidAccessTokenError(`Could not locate Access Token '${fileNameOrPath}'`);
@@ -156,9 +156,9 @@ export default class AccessToken implements CatalyticSDKAPIModels.AccessToken {
             directoryPath = AccessToken.DEFAULT_ACCESS_TOKEN_DIR;
         }
 
-        const files = readdirSync(directoryPath);
+        const files = readdir(directoryPath);
         return files.reduce((accessTokens, file) => {
-            const token = readFileSync(join(directoryPath, file)).toString();
+            const token = readFile(join(directoryPath, file)).toString();
             accessTokens[file] = new AccessToken(token);
             return accessTokens;
         }, {});
@@ -173,10 +173,10 @@ export default class AccessToken implements CatalyticSDKAPIModels.AccessToken {
      */
     public static deleteAccessTokenFile(fileNameOrPath: string): void {
         const path = getPathFromFileNameOrPath(fileNameOrPath);
-        if (!existsSync(path)) {
+        if (!exists(path)) {
             throw new InvalidAccessTokenError(`No AccessToken found at path '${path}'`);
         }
-        unlinkSync(path);
+        unlink(path);
     }
 }
 
@@ -186,12 +186,12 @@ export enum AccessTokenType {
 
 export function getDefaultAccessTokensDirectory(subDirectory: string): string {
     const path = join(homedir(), '.catalytic', subDirectory);
-    if (!existsSync(path)) {
-        mkdirSync(path, { recursive: true });
+    if (!exists(path)) {
+        mkdir(path, { recursive: true });
     }
     return path;
 }
 
 function getPathFromFileNameOrPath(fileNameOrPath: string): string {
-    return existsSync(fileNameOrPath) ? fileNameOrPath : join(AccessToken.DEFAULT_ACCESS_TOKEN_DIR, fileNameOrPath);
+    return exists(fileNameOrPath) ? fileNameOrPath : join(AccessToken.DEFAULT_ACCESS_TOKEN_DIR, fileNameOrPath);
 }
