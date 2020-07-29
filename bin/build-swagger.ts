@@ -11,13 +11,15 @@ import { BaseUri as BASE_URI } from '../src/constants';
 const SWAGGER_URL = `${BASE_URI}/swagger/v1/swagger.json`;
 
 getSwagger(SWAGGER_URL)
-    .then(swagger => {
-        return Bluebird.fromCallback(callback => fs.mkdtemp(path.join(os.tmpdir(), 'foo-'), callback)).then(folder => {
-            const swaggerPath = path.join(folder, 'swagger.json');
-            const cleanSwagger = clean(swagger);
-            fs.writeFileSync(swaggerPath, JSON.stringify(cleanSwagger, null, 2));
-            return autorest(swaggerPath);
-        });
+    .then((swagger: Dictionary<object>) => {
+        return Bluebird.fromCallback(callback => fs.mkdtemp(path.join(os.tmpdir(), 'foo-'), callback)).then(
+            (folder: string) => {
+                const swaggerPath = path.join(folder, 'swagger.json');
+                const cleanSwagger = clean(swagger);
+                fs.writeFileSync(swaggerPath, JSON.stringify(cleanSwagger, null, 2));
+                return autorest(swaggerPath);
+            }
+        );
     })
     .tap(() => console.log('done'))
     .catch(err => console.error(err));

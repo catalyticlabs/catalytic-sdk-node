@@ -893,7 +893,7 @@ class CatalyticSDKAPI extends CatalyticSDKAPIContext {
 const serializer = new msRest.Serializer(Mappers);
 const findAccessTokensOperationSpec: msRest.OperationSpec = {
   httpMethod: "GET",
-  path: "v1.0.1-pre-34/api/access-tokens",
+  path: "v1.0.1-pre-35/api/access-tokens",
   queryParameters: [
     Parameters.query,
     Parameters.status,
@@ -929,7 +929,7 @@ const findAccessTokensOperationSpec: msRest.OperationSpec = {
 
 const getAccessTokenOperationSpec: msRest.OperationSpec = {
   httpMethod: "GET",
-  path: "v1.0.1-pre-34/api/access-tokens/{id}",
+  path: "v1.0.1-pre-35/api/access-tokens/{id}",
   urlParameters: [
     Parameters.id
   ],
@@ -953,7 +953,7 @@ const getAccessTokenOperationSpec: msRest.OperationSpec = {
 
 const revokeAccessTokenOperationSpec: msRest.OperationSpec = {
   httpMethod: "POST",
-  path: "v1.0.1-pre-34/api/access-tokens/{id}:revoke",
+  path: "v1.0.1-pre-35/api/access-tokens/{id}:revoke",
   urlParameters: [
     Parameters.id
   ],
@@ -977,7 +977,7 @@ const revokeAccessTokenOperationSpec: msRest.OperationSpec = {
 
 const createAccessTokenOperationSpec: msRest.OperationSpec = {
   httpMethod: "POST",
-  path: "v1.0.1-pre-34/api/auth",
+  path: "v1.0.1-pre-35/api/auth",
   requestBody: {
     parameterPath: [
       "options",
@@ -1003,7 +1003,7 @@ const createAccessTokenOperationSpec: msRest.OperationSpec = {
 
 const createAndApproveAccessTokenOperationSpec: msRest.OperationSpec = {
   httpMethod: "POST",
-  path: "v1.0.1-pre-34/api/auth/create-and-approve",
+  path: "v1.0.1-pre-35/api/auth/create-and-approve",
   requestBody: {
     parameterPath: [
       "options",
@@ -1029,7 +1029,7 @@ const createAndApproveAccessTokenOperationSpec: msRest.OperationSpec = {
 
 const waitForAccessTokenApprovalOperationSpec: msRest.OperationSpec = {
   httpMethod: "POST",
-  path: "v1.0.1-pre-34/api/auth/wait-for-approval",
+  path: "v1.0.1-pre-35/api/auth/wait-for-approval",
   requestBody: {
     parameterPath: [
       "options",
@@ -1060,7 +1060,7 @@ const waitForAccessTokenApprovalOperationSpec: msRest.OperationSpec = {
 
 const getDataTableOperationSpec: msRest.OperationSpec = {
   httpMethod: "GET",
-  path: "v1.0.1-pre-34/api/tables/{id}",
+  path: "v1.0.1-pre-35/api/tables/{id}",
   urlParameters: [
     Parameters.id
   ],
@@ -1081,7 +1081,7 @@ const getDataTableOperationSpec: msRest.OperationSpec = {
 
 const downloadDataTableOperationSpec: msRest.OperationSpec = {
   httpMethod: "GET",
-  path: "v1.0.1-pre-34/api/tables/{id}/download",
+  path: "v1.0.1-pre-35/api/tables/{id}/download",
   urlParameters: [
     Parameters.id
   ],
@@ -1110,7 +1110,7 @@ const downloadDataTableOperationSpec: msRest.OperationSpec = {
 
 const replaceDataTableOperationSpec: msRest.OperationSpec = {
   httpMethod: "POST",
-  path: "v1.0.1-pre-34/api/tables/{id}:replace",
+  path: "v1.0.1-pre-35/api/tables/{id}:replace",
   urlParameters: [
     Parameters.id
   ],
@@ -1139,7 +1139,7 @@ const replaceDataTableOperationSpec: msRest.OperationSpec = {
 
 const uploadDataTableOperationSpec: msRest.OperationSpec = {
   httpMethod: "POST",
-  path: "v1.0.1-pre-34/api/tables:upload",
+  path: "v1.0.1-pre-35/api/tables:upload",
   queryParameters: [
     Parameters.tableName,
     Parameters.headerRow,
@@ -1163,7 +1163,7 @@ const uploadDataTableOperationSpec: msRest.OperationSpec = {
 
 const findDataTablesOperationSpec: msRest.OperationSpec = {
   httpMethod: "GET",
-  path: "v1.0.1-pre-34/api/tables",
+  path: "v1.0.1-pre-35/api/tables",
   queryParameters: [
     Parameters.query,
     Parameters.status,
@@ -1193,7 +1193,7 @@ const findDataTablesOperationSpec: msRest.OperationSpec = {
 
 const getFileOperationSpec: msRest.OperationSpec = {
   httpMethod: "GET",
-  path: "v1.0.1-pre-34/api/files/{id}",
+  path: "v1.0.1-pre-35/api/files/{id}",
   urlParameters: [
     Parameters.id
   ],
@@ -1214,7 +1214,7 @@ const getFileOperationSpec: msRest.OperationSpec = {
 
 const downloadFileOperationSpec: msRest.OperationSpec = {
   httpMethod: "GET",
-  path: "v1.0.1-pre-34/api/files/{id}/download",
+  path: "v1.0.1-pre-35/api/files/{id}/download",
   urlParameters: [
     Parameters.id
   ],
@@ -1240,7 +1240,7 @@ const downloadFileOperationSpec: msRest.OperationSpec = {
 
 const uploadFilesOperationSpec: msRest.OperationSpec = {
   httpMethod: "POST",
-  path: "v1.0.1-pre-34/api/files:upload",
+  path: "v1.0.1-pre-35/api/files:upload",
   formDataParameters: [
     Parameters.files
   ],
@@ -1259,7 +1259,7 @@ const uploadFilesOperationSpec: msRest.OperationSpec = {
 
 const findInstancesOperationSpec: msRest.OperationSpec = {
   httpMethod: "GET",
-  path: "v1.0.1-pre-34/api/instances",
+  path: "v1.0.1-pre-35/api/instances",
   queryParameters: [
     Parameters.query,
     Parameters.status,
@@ -1289,7 +1289,7 @@ const findInstancesOperationSpec: msRest.OperationSpec = {
 
 const startInstanceOperationSpec: msRest.OperationSpec = {
   httpMethod: "POST",
-  path: "v1.0.1-pre-34/api/instances",
+  path: "v1.0.1-pre-35/api/instances",
   requestBody: {
     parameterPath: [
       "options",
@@ -1312,7 +1312,7 @@ const startInstanceOperationSpec: msRest.OperationSpec = {
 
 const getInstanceOperationSpec: msRest.OperationSpec = {
   httpMethod: "GET",
-  path: "v1.0.1-pre-34/api/instances/{id}",
+  path: "v1.0.1-pre-35/api/instances/{id}",
   urlParameters: [
     Parameters.id
   ],
@@ -1333,7 +1333,7 @@ const getInstanceOperationSpec: msRest.OperationSpec = {
 
 const stopInstanceOperationSpec: msRest.OperationSpec = {
   httpMethod: "POST",
-  path: "v1.0.1-pre-34/api/instances/{id}:stop",
+  path: "v1.0.1-pre-35/api/instances/{id}:stop",
   urlParameters: [
     Parameters.id
   ],
@@ -1354,7 +1354,7 @@ const stopInstanceOperationSpec: msRest.OperationSpec = {
 
 const findInstanceStepsOperationSpec: msRest.OperationSpec = {
   httpMethod: "GET",
-  path: "v1.0.1-pre-34/api/instances/{instanceId}/steps",
+  path: "v1.0.1-pre-35/api/instances/{instanceId}/steps",
   urlParameters: [
     Parameters.instanceId
   ],
@@ -1387,7 +1387,7 @@ const findInstanceStepsOperationSpec: msRest.OperationSpec = {
 
 const getInstanceStepOperationSpec: msRest.OperationSpec = {
   httpMethod: "GET",
-  path: "v1.0.1-pre-34/api/instances/{instanceId}/steps/{id}",
+  path: "v1.0.1-pre-35/api/instances/{instanceId}/steps/{id}",
   urlParameters: [
     Parameters.id,
     Parameters.instanceId
@@ -1409,7 +1409,7 @@ const getInstanceStepOperationSpec: msRest.OperationSpec = {
 
 const completeStepOperationSpec: msRest.OperationSpec = {
   httpMethod: "POST",
-  path: "v1.0.1-pre-34/api/instances/{instanceId}/steps/{id}:complete",
+  path: "v1.0.1-pre-35/api/instances/{instanceId}/steps/{id}:complete",
   urlParameters: [
     Parameters.id,
     Parameters.instanceId
@@ -1442,7 +1442,7 @@ const completeStepOperationSpec: msRest.OperationSpec = {
 
 const startStepOperationSpec: msRest.OperationSpec = {
   httpMethod: "POST",
-  path: "v1.0.1-pre-34/api/instances/{instanceId}/steps/{id}:start",
+  path: "v1.0.1-pre-35/api/instances/{instanceId}/steps/{id}:start",
   urlParameters: [
     Parameters.id,
     Parameters.instanceId
@@ -1467,7 +1467,7 @@ const startStepOperationSpec: msRest.OperationSpec = {
 
 const snoozeStepOperationSpec: msRest.OperationSpec = {
   httpMethod: "POST",
-  path: "v1.0.1-pre-34/api/instances/{instanceId}/steps/{id}:snooze",
+  path: "v1.0.1-pre-35/api/instances/{instanceId}/steps/{id}:snooze",
   urlParameters: [
     Parameters.id,
     Parameters.instanceId
@@ -1492,7 +1492,7 @@ const snoozeStepOperationSpec: msRest.OperationSpec = {
 
 const reassignStepOperationSpec: msRest.OperationSpec = {
   httpMethod: "POST",
-  path: "v1.0.1-pre-34/api/instances/{instanceId}/steps/{id}:reassign",
+  path: "v1.0.1-pre-35/api/instances/{instanceId}/steps/{id}:reassign",
   urlParameters: [
     Parameters.id,
     Parameters.instanceId
@@ -1525,7 +1525,7 @@ const reassignStepOperationSpec: msRest.OperationSpec = {
 
 const getUserOperationSpec: msRest.OperationSpec = {
   httpMethod: "GET",
-  path: "v1.0.1-pre-34/api/users/{id}",
+  path: "v1.0.1-pre-35/api/users/{id}",
   urlParameters: [
     Parameters.id
   ],
@@ -1546,7 +1546,7 @@ const getUserOperationSpec: msRest.OperationSpec = {
 
 const findUsersOperationSpec: msRest.OperationSpec = {
   httpMethod: "GET",
-  path: "v1.0.1-pre-34/api/users",
+  path: "v1.0.1-pre-35/api/users",
   queryParameters: [
     Parameters.query,
     Parameters.status,
@@ -1576,7 +1576,7 @@ const findUsersOperationSpec: msRest.OperationSpec = {
 
 const findWorkflowsOperationSpec: msRest.OperationSpec = {
   httpMethod: "GET",
-  path: "v1.0.1-pre-34/api/workflows",
+  path: "v1.0.1-pre-35/api/workflows",
   queryParameters: [
     Parameters.query,
     Parameters.status,
@@ -1606,7 +1606,7 @@ const findWorkflowsOperationSpec: msRest.OperationSpec = {
 
 const getWorkflowOperationSpec: msRest.OperationSpec = {
   httpMethod: "GET",
-  path: "v1.0.1-pre-34/api/workflows/{id}",
+  path: "v1.0.1-pre-35/api/workflows/{id}",
   urlParameters: [
     Parameters.id
   ],
@@ -1627,7 +1627,7 @@ const getWorkflowOperationSpec: msRest.OperationSpec = {
 
 const importWorkflowOperationSpec: msRest.OperationSpec = {
   httpMethod: "POST",
-  path: "v1.0.1-pre-34/api/workflows:import",
+  path: "v1.0.1-pre-35/api/workflows:import",
   requestBody: {
     parameterPath: [
       "options",
@@ -1653,7 +1653,7 @@ const importWorkflowOperationSpec: msRest.OperationSpec = {
 
 const getWorkflowImportOperationSpec: msRest.OperationSpec = {
   httpMethod: "GET",
-  path: "v1.0.1-pre-34/api/workflows/imports/{id}",
+  path: "v1.0.1-pre-35/api/workflows/imports/{id}",
   urlParameters: [
     Parameters.id
   ],
@@ -1674,7 +1674,7 @@ const getWorkflowImportOperationSpec: msRest.OperationSpec = {
 
 const exportWorkflowOperationSpec: msRest.OperationSpec = {
   httpMethod: "POST",
-  path: "v1.0.1-pre-34/api/workflows/{id}:export",
+  path: "v1.0.1-pre-35/api/workflows/{id}:export",
   urlParameters: [
     Parameters.id
   ],
@@ -1703,7 +1703,7 @@ const exportWorkflowOperationSpec: msRest.OperationSpec = {
 
 const getWorkflowExportOperationSpec: msRest.OperationSpec = {
   httpMethod: "GET",
-  path: "v1.0.1-pre-34/api/workflows/exports/{id}",
+  path: "v1.0.1-pre-35/api/workflows/exports/{id}",
   urlParameters: [
     Parameters.id
   ],
