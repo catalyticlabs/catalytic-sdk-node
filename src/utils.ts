@@ -1,4 +1,6 @@
-import open = require('open');
+import { existsSync, readFileSync, readdirSync, unlinkSync, writeFileSync, mkdirSync } from 'fs';
+// eslint-disable-next-line import/default
+import open from 'open';
 
 import { InvalidTeamNameError } from './errors';
 
@@ -43,3 +45,19 @@ const UUID_REGEX = /^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12
 export function isUUID(value: string): boolean {
     return UUID_REGEX.test(value.trim().toLowerCase());
 }
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function wrapNative<T extends Function>(fn: T, defaultReturn: any = undefined): T {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return function(...args: any[]) {
+        return !!fn ? fn(...args) : defaultReturn;
+    } as any; // eslint-disable-line @typescript-eslint/no-explicit-any
+}
+
+// Native wrappers Node FS functions for browser environments
+export const exists = wrapNative(existsSync, false);
+export const mkdir = wrapNative(mkdirSync);
+export const readFile = wrapNative(readFileSync, '');
+export const readdir = wrapNative(readdirSync, []);
+export const unlink = wrapNative(unlinkSync);
+export const writeFile = wrapNative(writeFileSync);

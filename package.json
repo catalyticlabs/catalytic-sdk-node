@@ -71,5 +71,8 @@
   "eslintIgnore": [
     "dist/*",
     "src/internal/*"
-  ]
+  ],
+  "browser": {
+    "open": false
+  }
 }
