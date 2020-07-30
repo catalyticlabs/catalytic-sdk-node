@@ -1,8 +1,13 @@
 # Changelog
 
 ## [Unreleased]
+
+## [v1.0.0-pre-4]
 ### Added
 - Exposed a `FieldTypeEnumeration` type
+
+### Changed
+- Use latest version of SDK API (v1.0.1-pre-35)
 
 ### Fixed
 - Expose CatalyticClient Type on export
@@ -30,7 +35,8 @@
 ### Added
 - `AccessToken`, `DataTable`, `File`, `Instance`, `User`, and `Workflow` clients and associated entities
 
-[Unreleased]: https://github.com/catalyticlabs/catalytic-sdk-node/compare/v1.0.0-pre-3...HEAD
-[v1.0.0-pre-2]: https://github.com/catalyticlabs/catalytic-sdk-node/compare/v1.0.0-pre-2...v1.0.0-pre-3
+[Unreleased]: https://github.com/catalyticlabs/catalytic-sdk-node/compare/v1.0.0-pre-4...HEAD
+[v1.0.0-pre-4]: https://github.com/catalyticlabs/catalytic-sdk-node/compare/v1.0.0-pre-3...v1.0.0-pre-4
+[v1.0.0-pre-3]: https://github.com/catalyticlabs/catalytic-sdk-node/compare/v1.0.0-pre-2...v1.0.0-pre-3
 [v1.0.0-pre-2]: https://github.com/catalyticlabs/catalytic-sdk-node/compare/v1.0.0-pre-1...v1.0.0-pre-2
 [v1.0.0-pre-1]: https://github.com/catalyticlabs/catalytic-sdk-node/tree/v1.0.0-pre-1
