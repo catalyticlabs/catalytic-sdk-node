@@ -1,4 +1,5 @@
 export const Version = '1.0.2';
-export const BaseUri = 'https://sdk.catalytic.com/v1.0.1-pre-35/';
+// TODO change this version
+export const BaseUri = 'https://sdk.catalytic.com/v1.0.3/';
 export const UserAgent = `catalytic-sdk-node/${Version}`;
 export const WildcardId = '-';

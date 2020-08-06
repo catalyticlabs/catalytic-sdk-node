@@ -18,7 +18,7 @@ import {
     FieldType
 } from '../internal/lib/models';
 import { BaseFindOptions, ClientMethodCallback, FieldInput } from '../types';
-import { displayNameToInternal, isUUID } from '../utils';
+import { displayNameToInternal, isUUID, findMatchingField } from '../utils';
 
 import BaseClient from './BaseClient';
 
@@ -339,16 +339,7 @@ export default class InstanceClient extends BaseClient implements InstanceClient
                     throw new FieldInputError(`Value for field '${input.name}' must be a string`);
                 }
 
-                const matchingField = sourceFields.find(
-                    field =>
-                        field.name === input.name ||
-                        displayNameToInternal(field.referenceName) === displayNameToInternal(input.name) ||
-                        displayNameToInternal(field.name) === displayNameToInternal(input.name)
-                );
-
-                if (!matchingField) {
-                    throw new FieldInputError(`No corresponding input field found with name '${input.name}'`);
-                }
+                const matchingField = findMatchingField(input, sourceFields);
 
                 return {
                     name: matchingField.name,

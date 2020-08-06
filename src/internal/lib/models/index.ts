@@ -235,7 +235,7 @@ export interface DataTableColumn {
    * @member {Type1} [type] Possible values include: 'undefined', 'text',
    * 'integer', 'decimal', 'date', 'dateTime', 'json', 'bool', 'singleChoice',
    * 'multipleChoice', 'instructions', 'file', 'table', 'workflow', 'instance',
-   * 'user'
+   * 'user', 'password'
    */
   type?: Type1;
   /**
@@ -399,7 +399,7 @@ export interface FileMetadata {
 export interface FileMetadataPage {
   /**
    * @member {FileMetadata[]} [files] A Collection of items with Dictionaries
-   * keyed by both ID and Name
+   * keyed by both ID and ReferenceName
    */
   files?: FileMetadata[];
   /**
@@ -445,6 +445,10 @@ export interface Field {
    */
   description?: string;
   /**
+   * @member {string} [example] An example of possible values for this field.
+   */
+  example?: string;
+  /**
    * @member {number} [position] The visual position of this field relative
    * others in the same scope
    */
@@ -457,13 +461,19 @@ export interface Field {
    * @member {FieldType} [fieldType] Possible values include: 'undefined',
    * 'text', 'integer', 'decimal', 'date', 'dateTime', 'json', 'bool',
    * 'singleChoice', 'multipleChoice', 'instructions', 'file', 'table',
-   * 'workflow', 'instance', 'user'
+   * 'workflow', 'instance', 'user', 'password'
    */
   fieldType?: FieldType;
   /**
    * @member {string} [value] The value of this field, serialized as a string
    */
   value?: string;
+  /**
+   * @member {string} [templateValue] The template expression that will become
+   * the field value
+   * once it is evaluated
+   */
+  templateValue?: string;
   /**
    * @member {string} [defaultValue] The optional default value of this field,
    * serialized as a string. The
@@ -766,6 +776,199 @@ export interface ReassignStepRequest {
    * task to
    */
   assignTo?: string;
+}
+
+/**
+ * @interface
+ * An interface representing IntegrationConnection.
+ */
+export interface IntegrationConnection {
+  /**
+   * @member {string} [id] The unique Id of the Integration Connection
+   */
+  id?: string;
+  /**
+   * @member {string} [name] The display Name of the Integration Connection
+   */
+  name?: string;
+  /**
+   * @member {string} [referenceName] The unique Reference Name of the
+   * Integration Connection
+   */
+  referenceName?: string;
+  /**
+   * @member {string} [integrationId] The Id of the Integration Definition with
+   * which this Integration Connection was created
+   */
+  integrationId?: string;
+  /**
+   * @member {Date} [createdAt] The DateTime at which the Integration
+   * Connection was created
+   */
+  createdAt?: Date;
+}
+
+/**
+ * @interface
+ * An interface representing Integration.
+ */
+export interface Integration {
+  /**
+   * @member {string} [id] The unique ID of the Integration
+   */
+  id?: string;
+  /**
+   * @member {string} [referenceName]
+   */
+  referenceName?: string;
+  /**
+   * @member {string} [name] The display Name of the Integration
+   */
+  name?: string;
+  /**
+   * @member {boolean} [isCustomIntegration] Boolean indicating whether this
+   * Integration Defintion is custom to your Catalytic team.
+   * Only custom Integrations can be updated using the SDK.
+   */
+  isCustomIntegration?: boolean;
+  /**
+   * @member {IntegrationConnection[]} [connections] The List of Integration
+   * Connections using this Integration
+   */
+  connections?: IntegrationConnection[];
+  /**
+   * @member {Field[]} [connectionParams] The values required to create a new
+   */
+  connectionParams?: Field[];
+}
+
+/**
+ * @interface
+ * An interface representing IntegrationsPage.
+ * A page of Integrations returned from a FindAync request
+ *
+ */
+export interface IntegrationsPage {
+  /**
+   * @member {Integration[]} [integrations] The list of Integrations
+   */
+  integrations?: Integration[];
+  /**
+   * @member {PagingOptions} [nextPageOptions]
+   */
+  nextPageOptions?: PagingOptions;
+  /**
+   * @member {string} [nextPageToken]
+   */
+  nextPageToken?: string;
+  /**
+   * @member {number} [count]
+   */
+  count?: number;
+}
+
+/**
+ * @interface
+ * An interface representing IntegrationConfiguration.
+ * Authentication configuration settings for the Integration Definition
+ *
+ */
+export interface IntegrationConfiguration {
+  /**
+   * @member {string} clientId Client Id corresponding to the custom OAuth
+   * application
+   */
+  clientId: string;
+  /**
+   * @member {string} clientSecret Client Secret corresponding to the custom
+   * OAuth application
+   */
+  clientSecret: string;
+  /**
+   * @member {string} tokenPath Token Path corresponding to the custom OAuth
+   * application
+   */
+  tokenPath: string;
+  /**
+   * @member {string} revokePath Token Revoke Path corresponding to the custom
+   * OAuth application
+   */
+  revokePath: string;
+  /**
+   * @member {string} site The site corresponding to the custom OAuth
+   * application
+   */
+  site: string;
+  /**
+   * @member {string} authorizeBaseUrl The Authorization base url corresponding
+   * to the custom OAuth application
+   */
+  authorizeBaseUrl: string;
+  /**
+   * @member {string[]} [scopes] The scopes corresponding to the custom OAuth
+   * application
+   */
+  scopes?: string[];
+  /**
+   * @member {boolean} [useBodyAuth] Whether to supply authorization
+   * credentials in the body of the request
+   */
+  useBodyAuth?: boolean;
+}
+
+/**
+ * @interface
+ * An interface representing IntegrationCreationRequest.
+ */
+export interface IntegrationCreationRequest {
+  /**
+   * @member {string} name The display Name to apply to the  Integration
+   */
+  name: string;
+  /**
+   * @member {IntegrationConfiguration} config
+   */
+  config: IntegrationConfiguration;
+}
+
+/**
+ * @interface
+ * An interface representing IntegrationUpdateRequest.
+ */
+export interface IntegrationUpdateRequest {
+  /**
+   * @member {string} name The display Name to apply to the Integration
+   * Definition
+   */
+  name: string;
+  /**
+   * @member {IntegrationConfiguration} config
+   */
+  config: IntegrationConfiguration;
+}
+
+/**
+ * @interface
+ * An interface representing IntegrationConnectionCreationRequest.
+ * A request to create a new IntegrationConnection
+ *
+ */
+export interface IntegrationConnectionCreationRequest {
+  /**
+   * @member {string} [integrationId] The Id of the Integration with which the
+   * Connection will be created
+   */
+  integrationId?: string;
+  /**
+   * @member {string} [name] The display Name to apply to the new Integration
+   * Connection
+   */
+  name?: string;
+  /**
+   * @member {FieldUpdateRequest[]} [connectionParams] Parameters used to
+   * create an Integration Connection
+   */
+  connectionParams?: FieldUpdateRequest[];
 }
 
 /**
@@ -1509,6 +1712,149 @@ export interface CatalyticSDKAPIReassignStepOptionalParams extends msRest.Reques
 
 /**
  * @interface
+ * An interface representing CatalyticSDKAPIFindIntegrationsOptionalParams.
+ * Optional Parameters.
+ *
+ * @extends RequestOptionsBase
+ */
+export interface CatalyticSDKAPIFindIntegrationsOptionalParams extends msRest.RequestOptionsBase {
+  /**
+   * @member {string} [query] Free text query terms to search all attributes
+   * for
+   */
+  query?: string;
+  /**
+   * @member {string} [status] Run or task status to search for
+   */
+  status?: string;
+  /**
+   * @member {string} [processId] Process ID (aka Pushbot ID or Workflow ID) to
+   * search for
+   */
+  processId?: string;
+  /**
+   * @member {string} [runId] RunID (aka Instance ID) to search for
+   */
+  runId?: string;
+  /**
+   * @member {string} [owner] Run or task owner to search for
+   */
+  owner?: string;
+  /**
+   * @member {string} [category] Category of process or run to search for
+   */
+  category?: string;
+  /**
+   * @member {string} [participatingUsers] Task assignee to search for
+   */
+  participatingUsers?: string;
+  /**
+   * @member {string} [startedBefore] Latest start date of the task or run to
+   * search for
+   */
+  startedBefore?: string;
+  /**
+   * @member {string} [startedAfter] Earliest start date of the task or run to
+   * search for
+   */
+  startedAfter?: string;
+  /**
+   * @member {string} [endedBefore] Latest end date of the task or run to
+   * search for
+   */
+  endedBefore?: string;
+  /**
+   * @member {string} [endedAfter] Earliest end date of the task or run to
+   * search for
+   */
+  endedAfter?: string;
+  /**
+   * @member {string} [pageToken] The token representing the result page to get
+   */
+  pageToken?: string;
+  /**
+   * @member {number} [pageSize] The page size requested
+   */
+  pageSize?: number;
+}
+
+/**
+ * @interface
+ * An interface representing CatalyticSDKAPICreateIntegrationOptionalParams.
+ * Optional Parameters.
+ *
+ * @extends RequestOptionsBase
+ */
+export interface CatalyticSDKAPICreateIntegrationOptionalParams extends msRest.RequestOptionsBase {
+  /**
+   * @member {IntegrationCreationRequest} [body] The definition of the action
+   * to create
+   */
+  body?: IntegrationCreationRequest;
+}
+
+/**
+ * @interface
+ * An interface representing CatalyticSDKAPIUpdateIntegrationOptionalParams.
+ * Optional Parameters.
+ *
+ * @extends RequestOptionsBase
+ */
+export interface CatalyticSDKAPIUpdateIntegrationOptionalParams extends msRest.RequestOptionsBase {
+  /**
+   * @member {IntegrationUpdateRequest} [body] The updates to apply to the
+   * action
+   */
+  body?: IntegrationUpdateRequest;
+}
+
+/**
+ * @interface
+ * An interface representing CatalyticSDKAPIUpdateIntegrationUnencodedOptionalParams.
+ * Optional Parameters.
+ *
+ * @extends RequestOptionsBase
+ */
+export interface CatalyticSDKAPIUpdateIntegrationUnencodedOptionalParams extends msRest.RequestOptionsBase {
+  /**
+   * @member {IntegrationUpdateRequest} [body] The updates to apply to the
+   * action
+   */
+  body?: IntegrationUpdateRequest;
+}
+
+/**
+ * @interface
+ * An interface representing CatalyticSDKAPICreateIntegrationConnectionOptionalParams.
+ * Optional Parameters.
+ *
+ * @extends RequestOptionsBase
+ */
+export interface CatalyticSDKAPICreateIntegrationConnectionOptionalParams extends msRest.RequestOptionsBase {
+  /**
+   * @member {IntegrationConnectionCreationRequest} [body] Request containing
+   * information used to create the Integration Connection
+   */
+  body?: IntegrationConnectionCreationRequest;
+}
+
+/**
+ * @interface
+ * An interface representing CatalyticSDKAPICreateIntegrationConnectionUnencodedOptionalParams.
+ * Optional Parameters.
+ *
+ * @extends RequestOptionsBase
+ */
+export interface CatalyticSDKAPICreateIntegrationConnectionUnencodedOptionalParams extends msRest.RequestOptionsBase {
+  /**
+   * @member {IntegrationConnectionCreationRequest} [body] Request containing
+   * information used to create the Integration Connection
+   */
+  body?: IntegrationConnectionCreationRequest;
+}
+
+/**
+ * @interface
  * An interface representing CatalyticSDKAPIFindUsersOptionalParams.
  * Optional Parameters.
  *
@@ -1683,11 +2029,11 @@ export type Type = 'user' | 'actionWorker';
  * Defines values for Type1.
  * Possible values include: 'undefined', 'text', 'integer', 'decimal', 'date', 'dateTime', 'json',
  * 'bool', 'singleChoice', 'multipleChoice', 'instructions', 'file', 'table', 'workflow',
- * 'instance', 'user'
+ * 'instance', 'user', 'password'
  * @readonly
  * @enum {string}
  */
-export type Type1 = 'undefined' | 'text' | 'integer' | 'decimal' | 'date' | 'dateTime' | 'json' | 'bool' | 'singleChoice' | 'multipleChoice' | 'instructions' | 'file' | 'table' | 'workflow' | 'instance' | 'user';
+export type Type1 = 'undefined' | 'text' | 'integer' | 'decimal' | 'date' | 'dateTime' | 'json' | 'bool' | 'singleChoice' | 'multipleChoice' | 'instructions' | 'file' | 'table' | 'workflow' | 'instance' | 'user' | 'password';
 
 /**
  * Defines values for Type2.
@@ -1709,11 +2055,11 @@ export type Visibility = 'open' | 'restricted';
  * Defines values for FieldType.
  * Possible values include: 'undefined', 'text', 'integer', 'decimal', 'date', 'dateTime', 'json',
  * 'bool', 'singleChoice', 'multipleChoice', 'instructions', 'file', 'table', 'workflow',
- * 'instance', 'user'
+ * 'instance', 'user', 'password'
  * @readonly
  * @enum {string}
  */
-export type FieldType = 'undefined' | 'text' | 'integer' | 'decimal' | 'date' | 'dateTime' | 'json' | 'bool' | 'singleChoice' | 'multipleChoice' | 'instructions' | 'file' | 'table' | 'workflow' | 'instance' | 'user';
+export type FieldType = 'undefined' | 'text' | 'integer' | 'decimal' | 'date' | 'dateTime' | 'json' | 'bool' | 'singleChoice' | 'multipleChoice' | 'instructions' | 'file' | 'table' | 'workflow' | 'instance' | 'user' | 'password';
 
 /**
  * Defines values for Status.
@@ -2305,6 +2651,328 @@ export type SnoozeStepResponse = {
  * Contains response data for the reassignStep operation.
  */
 export type ReassignStepResponse = {
+  /**
+   * The parsed response body.
+   */
+  body: any;
+  /**
+   * The underlying HTTP response.
+   */
+  _response: msRest.HttpResponse & {
+      /**
+       * The response body as text (string format)
+       */
+      bodyAsText: string;
+      /**
+       * The response body as parsed JSON or XML
+       */
+      parsedBody: any;
+    };
+};
+
+/**
+ * Contains response data for the findIntegrations operation.
+ */
+export type FindIntegrationsResponse = {
+  /**
+   * The parsed response body.
+   */
+  body: any;
+  /**
+   * The underlying HTTP response.
+   */
+  _response: msRest.HttpResponse & {
+      /**
+       * The response body as text (string format)
+       */
+      bodyAsText: string;
+      /**
+       * The response body as parsed JSON or XML
+       */
+      parsedBody: any;
+    };
+};
+
+/**
+ * Contains response data for the createIntegration operation.
+ */
+export type CreateIntegrationResponse = {
+  /**
+   * The parsed response body.
+   */
+  body: any;
+  /**
+   * The underlying HTTP response.
+   */
+  _response: msRest.HttpResponse & {
+      /**
+       * The response body as text (string format)
+       */
+      bodyAsText: string;
+      /**
+       * The response body as parsed JSON or XML
+       */
+      parsedBody: any;
+    };
+};
+
+/**
+ * Contains response data for the getIntegration operation.
+ */
+export type GetIntegrationResponse = {
+  /**
+   * The parsed response body.
+   */
+  body: any;
+  /**
+   * The underlying HTTP response.
+   */
+  _response: msRest.HttpResponse & {
+      /**
+       * The response body as text (string format)
+       */
+      bodyAsText: string;
+      /**
+       * The response body as parsed JSON or XML
+       */
+      parsedBody: any;
+    };
+};
+
+/**
+ * Contains response data for the updateIntegration operation.
+ */
+export type UpdateIntegrationResponse = {
+  /**
+   * The parsed response body.
+   */
+  body: any;
+  /**
+   * The underlying HTTP response.
+   */
+  _response: msRest.HttpResponse & {
+      /**
+       * The response body as text (string format)
+       */
+      bodyAsText: string;
+      /**
+       * The response body as parsed JSON or XML
+       */
+      parsedBody: any;
+    };
+};
+
+/**
+ * Contains response data for the deleteIntegration operation.
+ */
+export type DeleteIntegrationResponse = {
+  /**
+   * The parsed response body.
+   */
+  body: any;
+  /**
+   * The underlying HTTP response.
+   */
+  _response: msRest.HttpResponse & {
+      /**
+       * The response body as text (string format)
+       */
+      bodyAsText: string;
+      /**
+       * The response body as parsed JSON or XML
+       */
+      parsedBody: any;
+    };
+};
+
+/**
+ * Contains response data for the getIntegrationUnencoded operation.
+ */
+export type GetIntegrationUnencodedResponse = {
+  /**
+   * The parsed response body.
+   */
+  body: any;
+  /**
+   * The underlying HTTP response.
+   */
+  _response: msRest.HttpResponse & {
+      /**
+       * The response body as text (string format)
+       */
+      bodyAsText: string;
+      /**
+       * The response body as parsed JSON or XML
+       */
+      parsedBody: any;
+    };
+};
+
+/**
+ * Contains response data for the updateIntegrationUnencoded operation.
+ */
+export type UpdateIntegrationUnencodedResponse = {
+  /**
+   * The parsed response body.
+   */
+  body: any;
+  /**
+   * The underlying HTTP response.
+   */
+  _response: msRest.HttpResponse & {
+      /**
+       * The response body as text (string format)
+       */
+      bodyAsText: string;
+      /**
+       * The response body as parsed JSON or XML
+       */
+      parsedBody: any;
+    };
+};
+
+/**
+ * Contains response data for the deleteIntegrationUnencoded operation.
+ */
+export type DeleteIntegrationUnencodedResponse = {
+  /**
+   * The parsed response body.
+   */
+  body: any;
+  /**
+   * The underlying HTTP response.
+   */
+  _response: msRest.HttpResponse & {
+      /**
+       * The response body as text (string format)
+       */
+      bodyAsText: string;
+      /**
+       * The response body as parsed JSON or XML
+       */
+      parsedBody: any;
+    };
+};
+
+/**
+ * Contains response data for the createIntegrationConnection operation.
+ */
+export type CreateIntegrationConnectionResponse = {
+  /**
+   * The parsed response body.
+   */
+  body: any;
+  /**
+   * The underlying HTTP response.
+   */
+  _response: msRest.HttpResponse & {
+      /**
+       * The response body as text (string format)
+       */
+      bodyAsText: string;
+      /**
+       * The response body as parsed JSON or XML
+       */
+      parsedBody: any;
+    };
+};
+
+/**
+ * Contains response data for the createIntegrationConnectionUnencoded operation.
+ */
+export type CreateIntegrationConnectionUnencodedResponse = {
+  /**
+   * The parsed response body.
+   */
+  body: any;
+  /**
+   * The underlying HTTP response.
+   */
+  _response: msRest.HttpResponse & {
+      /**
+       * The response body as text (string format)
+       */
+      bodyAsText: string;
+      /**
+       * The response body as parsed JSON or XML
+       */
+      parsedBody: any;
+    };
+};
+
+/**
+ * Contains response data for the getIntegrationConnection operation.
+ */
+export type GetIntegrationConnectionResponse = {
+  /**
+   * The parsed response body.
+   */
+  body: any;
+  /**
+   * The underlying HTTP response.
+   */
+  _response: msRest.HttpResponse & {
+      /**
+       * The response body as text (string format)
+       */
+      bodyAsText: string;
+      /**
+       * The response body as parsed JSON or XML
+       */
+      parsedBody: any;
+    };
+};
+
+/**
+ * Contains response data for the deleteIntegrationConnection operation.
+ */
+export type DeleteIntegrationConnectionResponse = {
+  /**
+   * The parsed response body.
+   */
+  body: any;
+  /**
+   * The underlying HTTP response.
+   */
+  _response: msRest.HttpResponse & {
+      /**
+       * The response body as text (string format)
+       */
+      bodyAsText: string;
+      /**
+       * The response body as parsed JSON or XML
+       */
+      parsedBody: any;
+    };
+};
+
+/**
+ * Contains response data for the getIntegrationConnectionUnencoded operation.
+ */
+export type GetIntegrationConnectionUnencodedResponse = {
+  /**
+   * The parsed response body.
+   */
+  body: any;
+  /**
+   * The underlying HTTP response.
+   */
+  _response: msRest.HttpResponse & {
+      /**
+       * The response body as text (string format)
+       */
+      bodyAsText: string;
+      /**
+       * The response body as parsed JSON or XML
+       */
+      parsedBody: any;
+    };
+};
+
+/**
+ * Contains response data for the deleteIntegrationConnectionUnencoded operation.
+ */
+export type DeleteIntegrationConnectionUnencodedResponse = {
   /**
    * The parsed response body.
    */

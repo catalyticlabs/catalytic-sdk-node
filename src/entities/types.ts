@@ -25,6 +25,7 @@ export enum FieldTypeEnumeration {
     integer = 'integer',
     json = 'json',
     multipleChoice = 'multipleChoice',
+    password = 'password',
     singleChoice = 'singleChoice',
     table = 'table',
     text = 'text',

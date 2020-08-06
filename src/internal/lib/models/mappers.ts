@@ -618,6 +618,12 @@ export const Field: msRest.CompositeMapper = {
           name: "String"
         }
       },
+      example: {
+        serializedName: "example",
+        type: {
+          name: "String"
+        }
+      },
       position: {
         serializedName: "position",
         type: {
@@ -639,6 +645,12 @@ export const Field: msRest.CompositeMapper = {
       },
       value: {
         serializedName: "value",
+        type: {
+          name: "String"
+        }
+      },
+      templateValue: {
+        serializedName: "templateValue",
         type: {
           name: "String"
         }
@@ -1084,6 +1096,317 @@ export const ReassignStepRequest: msRest.CompositeMapper = {
         serializedName: "assignTo",
         type: {
           name: "String"
+        }
+      }
+    }
+  }
+};
+
+export const IntegrationConnection: msRest.CompositeMapper = {
+  serializedName: "IntegrationConnection",
+  type: {
+    name: "Composite",
+    className: "IntegrationConnection",
+    modelProperties: {
+      id: {
+        serializedName: "id",
+        type: {
+          name: "String"
+        }
+      },
+      name: {
+        serializedName: "name",
+        type: {
+          name: "String"
+        }
+      },
+      referenceName: {
+        serializedName: "referenceName",
+        type: {
+          name: "String"
+        }
+      },
+      integrationId: {
+        serializedName: "integrationId",
+        type: {
+          name: "String"
+        }
+      },
+      createdAt: {
+        serializedName: "createdAt",
+        type: {
+          name: "DateTime"
+        }
+      }
+    }
+  }
+};
+
+export const Integration: msRest.CompositeMapper = {
+  serializedName: "Integration",
+  type: {
+    name: "Composite",
+    className: "Integration",
+    modelProperties: {
+      id: {
+        serializedName: "id",
+        type: {
+          name: "String"
+        }
+      },
+      referenceName: {
+        serializedName: "referenceName",
+        type: {
+          name: "String"
+        }
+      },
+      name: {
+        serializedName: "name",
+        type: {
+          name: "String"
+        }
+      },
+      isCustomIntegration: {
+        serializedName: "isCustomIntegration",
+        type: {
+          name: "Boolean"
+        }
+      },
+      connections: {
+        serializedName: "connections",
+        type: {
+          name: "Sequence",
+          element: {
+            type: {
+              name: "Composite",
+              className: "IntegrationConnection"
+            }
+          }
+        }
+      },
+      connectionParams: {
+        serializedName: "connectionParams",
+        type: {
+          name: "Sequence",
+          element: {
+            type: {
+              name: "Composite",
+              className: "Field"
+            }
+          }
+        }
+      }
+    }
+  }
+};
+
+export const IntegrationsPage: msRest.CompositeMapper = {
+  serializedName: "IntegrationsPage",
+  type: {
+    name: "Composite",
+    className: "IntegrationsPage",
+    modelProperties: {
+      integrations: {
+        serializedName: "integrations",
+        type: {
+          name: "Sequence",
+          element: {
+            type: {
+              name: "Composite",
+              className: "Integration"
+            }
+          }
+        }
+      },
+      nextPageOptions: {
+        serializedName: "nextPageOptions",
+        type: {
+          name: "Composite",
+          className: "PagingOptions"
+        }
+      },
+      nextPageToken: {
+        serializedName: "nextPageToken",
+        type: {
+          name: "String"
+        }
+      },
+      count: {
+        serializedName: "count",
+        type: {
+          name: "Number"
+        }
+      }
+    }
+  }
+};
+
+export const IntegrationConfiguration: msRest.CompositeMapper = {
+  serializedName: "IntegrationConfiguration",
+  type: {
+    name: "Composite",
+    className: "IntegrationConfiguration",
+    modelProperties: {
+      clientId: {
+        required: true,
+        serializedName: "clientId",
+        type: {
+          name: "String"
+        }
+      },
+      clientSecret: {
+        required: true,
+        serializedName: "clientSecret",
+        type: {
+          name: "String"
+        }
+      },
+      tokenPath: {
+        required: true,
+        serializedName: "tokenPath",
+        type: {
+          name: "String"
+        }
+      },
+      revokePath: {
+        required: true,
+        serializedName: "revokePath",
+        type: {
+          name: "String"
+        }
+      },
+      site: {
+        required: true,
+        serializedName: "site",
+        type: {
+          name: "String"
+        }
+      },
+      authorizeBaseUrl: {
+        required: true,
+        serializedName: "authorizeBaseUrl",
+        type: {
+          name: "String"
+        }
+      },
+      scopes: {
+        serializedName: "scopes",
+        type: {
+          name: "Sequence",
+          element: {
+            type: {
+              name: "String"
+            }
+          }
+        }
+      },
+      useBodyAuth: {
+        nullable: true,
+        serializedName: "useBodyAuth",
+        type: {
+          name: "Boolean"
+        }
+      }
+    }
+  }
+};
+
+export const IntegrationCreationRequest: msRest.CompositeMapper = {
+  serializedName: "IntegrationCreationRequest",
+  type: {
+    name: "Composite",
+    className: "IntegrationCreationRequest",
+    modelProperties: {
+      name: {
+        required: true,
+        serializedName: "name",
+        type: {
+          name: "String"
+        }
+      },
+      type: {
+        required: true,
+        isConstant: true,
+        serializedName: "type",
+        defaultValue: 'oAuth2',
+        type: {
+          name: "String"
+        }
+      },
+      config: {
+        required: true,
+        serializedName: "config",
+        type: {
+          name: "Composite",
+          className: "IntegrationConfiguration"
+        }
+      }
+    }
+  }
+};
+
+export const IntegrationUpdateRequest: msRest.CompositeMapper = {
+  serializedName: "IntegrationUpdateRequest",
+  type: {
+    name: "Composite",
+    className: "IntegrationUpdateRequest",
+    modelProperties: {
+      name: {
+        required: true,
+        serializedName: "name",
+        type: {
+          name: "String"
+        }
+      },
+      type: {
+        required: true,
+        isConstant: true,
+        serializedName: "type",
+        defaultValue: 'oAuth2',
+        type: {
+          name: "String"
+        }
+      },
+      config: {
+        required: true,
+        serializedName: "config",
+        type: {
+          name: "Composite",
+          className: "IntegrationConfiguration"
+        }
+      }
+    }
+  }
+};
+
+export const IntegrationConnectionCreationRequest: msRest.CompositeMapper = {
+  serializedName: "IntegrationConnectionCreationRequest",
+  type: {
+    name: "Composite",
+    className: "IntegrationConnectionCreationRequest",
+    modelProperties: {
+      integrationId: {
+        serializedName: "integrationId",
+        type: {
+          name: "String"
+        }
+      },
+      name: {
+        serializedName: "name",
+        type: {
+          name: "String"
+        }
+      },
+      connectionParams: {
+        serializedName: "connectionParams",
+        type: {
+          name: "Sequence",
+          element: {
+            type: {
+              name: "Composite",
+              className: "FieldUpdateRequest"
+            }
+          }
         }
       }
     }

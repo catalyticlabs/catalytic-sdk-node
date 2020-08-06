@@ -1,4 +1,4 @@
-import { CatalyticSDKAPIModels } from '../internal/lib/catalyticSDKAPI';
+import { CatalyticSDKAPIModels } from '../../internal/lib/catalyticSDKAPI';
 
 export default class FileMetadata implements CatalyticSDKAPIModels.FileMetadata {
     /**

@@ -36,7 +36,7 @@ export default class Field implements CatalyticSDKAPIModels.Field {
      * The type of this Field's value. Possible values include:
      * 'undefined', 'text', 'integer', 'decimal', 'date', 'dateTime', 'json', 'bool',
      * 'singleChoice', 'multipleChoice', 'instructions', 'file', 'table',
-     * 'workflow', 'instance', 'user'
+     * 'workflow', 'instance', 'user', or 'password'
      */
     fieldType?: FieldType;
     /**

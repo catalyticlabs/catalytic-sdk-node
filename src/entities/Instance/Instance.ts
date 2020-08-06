@@ -1,7 +1,7 @@
-import Field from './Field';
+import Field from '../Field';
 import InstanceStep from './InstanceStep';
-import { InstanceStatus, FieldVisibility, Visibility } from './types';
-import { CatalyticSDKAPIModels } from '../internal/lib/catalyticSDKAPI';
+import { InstanceStatus, FieldVisibility, Visibility } from '../types';
+import { CatalyticSDKAPIModels } from '../../internal/lib/catalyticSDKAPI';
 
 export default class Instance implements CatalyticSDKAPIModels.Instance {
     /**

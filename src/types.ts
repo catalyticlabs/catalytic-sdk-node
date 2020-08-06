@@ -12,6 +12,10 @@ export interface FieldInput {
     value: string;
 }
 
+export interface ReferenceableFieldInput extends FieldInput {
+    referenceName: string;
+}
+
 export interface BaseFindOptions {
     /**
      * Free text query terms to search for

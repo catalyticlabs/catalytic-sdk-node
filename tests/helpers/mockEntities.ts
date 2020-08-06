@@ -15,7 +15,11 @@ import {
     InstanceStepsPage,
     AccessTokensPage,
     DataTablesPage,
-    FileMetadataPage
+    FileMetadataPage,
+    Integration,
+    IntegrationConnection,
+    IntegrationsPage,
+    IntegrationConfiguration
 } from '../../src/entities';
 import { WorkflowImport } from '../../src/internal/lib/models';
 
@@ -104,6 +108,54 @@ export const mockInstanceStepsPage = (): InstanceStepsPage => {
     return { steps };
 };
 
+export const mockIntegration = (): Integration => {
+    const values: Integration = {
+        name: faker.random.words(3),
+        id: [faker.random.word(), faker.random.word(), 'v1'].join('/'),
+        isCustomIntegration: true
+    };
+    values.referenceName = values.id;
+    values.connections = [
+        mockIntegrationConnection(values.id),
+        mockIntegrationConnection(values.id),
+        mockIntegrationConnection(values.id)
+    ];
+
+    return values;
+};
+
+export const mockIntegrationConfiguration = (): IntegrationConfiguration => {
+    const values: IntegrationConfiguration = {
+        clientId: v4(),
+        clientSecret: v4(),
+        tokenPath: '/oauth/token',
+        revokePath: '/oauth/revoke',
+        site: faker.internet.url(),
+        authorizeBaseUrl: faker.internet.url(),
+        scopes: ['read', 'write'],
+        useBodyAuth: false
+    };
+
+    return values;
+};
+
+export const mockIntegrationConnection = (integrationId?: string): IntegrationConnection => {
+    const values: IntegrationConnection = {
+        name: faker.random.words(3),
+        id: v4(),
+        referenceName: v4(),
+        integrationId: integrationId || [faker.random.word(), faker.random.word(), 'v1'].join('/')
+    };
+
+    return values;
+};
+
+export const mockIntegrationsPage = (): IntegrationsPage => {
+    const integrations = [mockIntegration(), mockIntegration()];
+
+    return { integrations };
+};
+
 export const mockUser = (): User => {
     const values = {
         id: v4(),
@@ -161,6 +213,10 @@ export default {
     mockInstancesPage,
     mockInstanceStep,
     mockInstanceStepsPage,
+    mockIntegration,
+    mockIntegrationConfiguration,
+    mockIntegrationConnection,
+    mockIntegrationsPage,
     mockUser,
     mockUsersPage,
     mockWorkflow,

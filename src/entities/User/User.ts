@@ -1,4 +1,4 @@
-import { CatalyticSDKAPIModels } from '../internal/lib/catalyticSDKAPI';
+import { CatalyticSDKAPIModels } from '../../internal/lib/catalyticSDKAPI';
 
 export default class User implements CatalyticSDKAPIModels.User {
     /**

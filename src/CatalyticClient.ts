@@ -1,5 +1,5 @@
 import { CatalyticSDKAPI } from './internal/lib/catalyticSDKAPI';
-import AccessToken from './entities/AccessToken';
+import AccessToken from './entities/AccessToken/AccessToken';
 import { UserAgent } from './constants';
 import { AccessTokenProvider, Logger, LoggerProvider } from './types';
 
@@ -12,6 +12,8 @@ import {
     FileClientInterface,
     InstanceClient,
     InstanceClientInterface,
+    IntegrationClient,
+    IntegrationClientInterface,
     UserClient,
     UserClientInterface,
     WorkflowClient,
@@ -29,6 +31,7 @@ export default class CatalyticClient implements AccessTokenProvider, LoggerProvi
     public dataTables: DataTableClientInterface;
     public files: FileClientInterface;
     public instances: InstanceClientInterface;
+    public integrations: IntegrationClientInterface;
     public users: UserClientInterface;
     public workflows: WorkflowClientInterface;
 
@@ -56,6 +59,7 @@ export default class CatalyticClient implements AccessTokenProvider, LoggerProvi
         this.dataTables = new DataTableClient(this._internalClient, this, this);
         this.files = new FileClient(this._internalClient, this, this);
         this.instances = new InstanceClient(this._internalClient, this, this);
+        this.integrations = new IntegrationClient(this._internalClient, this, this);
         this.users = new UserClient(this._internalClient, this, this);
         this.workflows = new WorkflowClient(this._internalClient, this, this);
     }
@@ -76,6 +80,7 @@ export interface CatalyticClientInterface {
     dataTables: DataTableClientInterface;
     files: FileClientInterface;
     instances: InstanceClientInterface;
+    integrations: IntegrationClientInterface;
     users: UserClientInterface;
     workflows: WorkflowClientInterface;
 

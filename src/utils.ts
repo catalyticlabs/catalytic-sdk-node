@@ -2,7 +2,31 @@ import { existsSync, readFileSync, readdirSync, unlinkSync, writeFileSync, mkdir
 // eslint-disable-next-line import/default
 import open from 'open';
 
-import { InvalidTeamNameError } from './errors';
+import { InvalidTeamNameError, FieldInputError } from './errors';
+import { FieldInput } from './types';
+import { Field } from './entities';
+
+/**
+ * Find a matching field for an input field value
+ *
+ * @param input The FieldInput for which a matching field should be identified
+ * @param sourceFields The set of source Fields from which the matching field should be identified
+ * @returns The matching field
+ */
+export function findMatchingField(input: FieldInput, sourceFields: Field[]): Field {
+    const matchingField = sourceFields.find(
+        field =>
+            field.name === input.name ||
+            displayNameToInternal(field.referenceName) === displayNameToInternal(input.name) ||
+            displayNameToInternal(field.name) === displayNameToInternal(input.name)
+    );
+
+    if (!matchingField) {
+        throw new FieldInputError(`No corresponding input field found with name '${input.name}'`);
+    }
+
+    return matchingField;
+}
 
 export function displayNameToInternal(name: string): string {
     if (!name) {
