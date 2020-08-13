@@ -1,3 +1,5 @@
+import { VFileCompatible } from 'vfile';
+
 export type DataTableType = 'imported' | 'master' | 'application' | 'instance' | 'batch';
 
 export interface FieldRestrictions {
@@ -34,6 +36,8 @@ export enum FieldTypeEnumeration {
 export type FieldType = FieldTypeEnumeration | keyof typeof FieldTypeEnumeration;
 
 export type FieldVisibility = 'public' | 'internal' | 'confidential' | 'highlyConfidential';
+
+export type FileDescriptor = VFileCompatible;
 
 export type InstanceStatus = 'running' | 'completed' | 'cancelled';
 

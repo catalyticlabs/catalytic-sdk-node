@@ -1,6 +1,5 @@
 import { Stream } from 'stream';
-
-import { FileMetadata, FileMetadataPage } from '../entities';
+import { FileDescriptor, FileMetadata, FileMetadataPage } from '../entities';
 import { FileUploadError } from '../errors';
 import { ClientMethodCallback } from '../types';
 
@@ -26,24 +25,43 @@ export default class FileClient extends BaseClient implements FileClientInterfac
         return this.parseResponse<FileMetadata>(result);
     }
 
-    upload(filePath: string): Promise<FileMetadata>;
-    upload(filePath: string, callback: ClientMethodCallback<FileMetadata>): void;
-    upload(filePath: string, callback?: ClientMethodCallback<FileMetadata>): Promise<FileMetadata> | void {
-        this.log(`Uploading file '${filePath}'`);
+    bulkUpload(files: FileDescriptor[]): Promise<FileMetadata[]>;
+    bulkUpload(files: FileDescriptor[], callback: ClientMethodCallback<FileMetadata[]>): void;
+    bulkUpload(
+        files: FileDescriptor[],
+        callback?: ClientMethodCallback<FileMetadata[]>
+    ): Promise<FileMetadata[]> | void {
+        this.log(`Uploading file '${files}'`);
         if (callback) {
-            return this.callbackifyBound(this._upload)(filePath, callback);
+            return this.callbackifyBound(this._bulkUpload)(files, callback);
         }
 
-        return this._upload(filePath);
+        return this._bulkUpload(files);
     }
 
-    private async _upload(filePath: string): Promise<FileMetadata> {
+    private async _bulkUpload(files: FileDescriptor | FileDescriptor[]): Promise<FileMetadata[]> {
         // Calls protected BaseClient.uploadFile method
-        const files = await this.uploadFile<FileMetadataPage>(filePath);
-        const result = (files.files || [])[0];
-        if (!result) {
-            throw new FileUploadError('Failed to upload file');
+        const fileMetaPage = await this.uploadFile<FileMetadataPage>(files);
+        const results = fileMetaPage.files || [];
+        if (!results.length) {
+            throw new FileUploadError('Failed to upload files');
         }
+        return results;
+    }
+
+    upload(file: FileDescriptor): Promise<FileMetadata>;
+    upload(file: FileDescriptor, callback: ClientMethodCallback<FileMetadata>): void;
+    upload(file: FileDescriptor, callback?: ClientMethodCallback<FileMetadata>): Promise<FileMetadata> | void {
+        this.log(`Uploading file '${file}'`);
+        if (callback) {
+            return this.callbackifyBound(this._upload)(file, callback);
+        }
+
+        return this._upload(file);
+    }
+
+    private async _upload(file: FileDescriptor): Promise<FileMetadata> {
+        const [result] = await this._bulkUpload([file]);
         return result;
     }
 
@@ -111,27 +129,54 @@ export interface FileClientInterface {
     get(id: string, callback?: ClientMethodCallback<FileMetadata>): Promise<FileMetadata> | void;
 
     /**
+     * @summary Uploads multiple files to Catalytic
+     *
+     * @param files Array of file paths on disk
+     * @returns The Metadata Array of uploaded Files
+     */
+    bulkUpload(files: FileDescriptor[]): Promise<FileMetadata[]>;
+    /**
+     * @summary Uploads multiple files to Catalytic
+     *
+     * @param files Array of file paths on disk
+     * @param callback The callback
+     * @returns The Metadata Array of uploaded Files
+     */
+    bulkUpload(files: FileDescriptor[], callback: ClientMethodCallback<FileMetadata[]>): void;
+    /**
+     * @summary Uploads multiple files to Catalytic
+     *
+     * @param files Array of file paths on disk
+     * @param callback The callback
+     * @returns The Metadata Array of uploaded Files
+     */
+    bulkUpload(
+        files: FileDescriptor[],
+        callback?: ClientMethodCallback<FileMetadata>[]
+    ): Promise<FileMetadata[]> | void;
+
+    /**
      * @summary Uploads a file to Catalytic
      *
-     * @param filePath The path of the file on disk
+     * @param files The path of the file on disk
      * @returns The Metadata of the uploaded File
      */
-    upload(filePath: string): Promise<FileMetadata>;
+    upload(file: FileDescriptor): Promise<FileMetadata>;
     /**
      * @summary Uploads a file to Catalytic
      *
-     * @param filePath The path of the file on disk
+     * @param files The path of the file on disk
      * @param callback The callback
      */
-    upload(filePath: string, callback: ClientMethodCallback<FileMetadata>): void;
+    upload(file: FileDescriptor, callback: ClientMethodCallback<FileMetadata>): void;
     /**
      * @summary Uploads a file to Catalytic
      *
-     * @param filePath The path of the file on disk
+     * @param files The path of the file on disk
      * @param callback The optional callback
      * @returns The Metadata of the uploaded File
      */
-    upload(filePath: string, callback?: ClientMethodCallback<FileMetadata>): Promise<FileMetadata> | void;
+    upload(file: FileDescriptor, callback?: ClientMethodCallback<FileMetadata>): Promise<FileMetadata> | void;
 
     /**
      * @summary Downloads a File from Catalytic
