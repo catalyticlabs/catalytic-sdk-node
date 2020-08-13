@@ -1,6 +1,6 @@
 import { Stream } from 'stream';
 
-import { DataTable, DataTablesPage } from '../entities';
+import { DataTable, DataTablesPage, FileDescriptor } from '../entities';
 import { BaseFindOptions, ClientMethodCallback } from '../types';
 
 import BaseClient from './BaseClient';
@@ -100,28 +100,28 @@ export default class DataTableClient extends BaseClient implements DataTableClie
         return `/tables/${id}/download?format=${format}`;
     }
 
-    upload(filePath: string): Promise<DataTable>;
-    upload(filePath: string, tableName: string): Promise<DataTable>;
-    upload(filePath: string, tableName: string, headerRow: number): Promise<DataTable>;
-    upload(filePath: string, tableName: string, headerRow: number, sheetNumber: number): Promise<DataTable>;
-    upload(filePath: string, callback: ClientMethodCallback<DataTable>): void;
-    upload(filePath: string, tableName: string, callback: ClientMethodCallback<DataTable>): void;
-    upload(filePath: string, tableName: string, headerRow: number, callback: ClientMethodCallback<DataTable>): void;
+    upload(file: FileDescriptor): Promise<DataTable>;
+    upload(file: FileDescriptor, tableName: string): Promise<DataTable>;
+    upload(file: FileDescriptor, tableName: string, headerRow: number): Promise<DataTable>;
+    upload(file: FileDescriptor, tableName: string, headerRow: number, sheetNumber: number): Promise<DataTable>;
+    upload(file: FileDescriptor, callback: ClientMethodCallback<DataTable>): void;
+    upload(file: FileDescriptor, tableName: string, callback: ClientMethodCallback<DataTable>): void;
+    upload(file: FileDescriptor, tableName: string, headerRow: number, callback: ClientMethodCallback<DataTable>): void;
     upload(
-        filePath: string,
+        file: FileDescriptor,
         tableName: string,
         headerRow: number,
         sheetNumber: number,
         callback: ClientMethodCallback<DataTable>
     ): void;
     upload(
-        filePath: string,
+        file: FileDescriptor,
         tableName: string | ClientMethodCallback<DataTable> = null,
         headerRow: number | ClientMethodCallback<DataTable> = 1,
         sheetNumber: number | ClientMethodCallback<DataTable> = 1,
         callback?: ClientMethodCallback<DataTable>
     ): Promise<DataTable> | void {
-        this.log(`Creating new DataTable from file '${filePath}'`);
+        this.log(`Creating new DataTable from file '${file}'`);
         if (typeof tableName === 'function') {
             callback = tableName;
             tableName = null;
@@ -139,7 +139,7 @@ export default class DataTableClient extends BaseClient implements DataTableClie
 
         if (callback) {
             return this.callbackifyBound(this._upload)(
-                filePath,
+                file,
                 tableName as string,
                 headerRow as number,
                 sheetNumber as number,
@@ -147,34 +147,39 @@ export default class DataTableClient extends BaseClient implements DataTableClie
             );
         }
 
-        return this._upload(filePath, tableName as string, headerRow as number, sheetNumber as number);
+        return this._upload(file, tableName as string, headerRow as number, sheetNumber as number);
     }
 
-    private _upload(filePath: string, tableName: string, headerRow: number, sheetNumber: number): Promise<DataTable> {
+    private _upload(
+        file: FileDescriptor,
+        tableName: string,
+        headerRow: number,
+        sheetNumber: number
+    ): Promise<DataTable> {
         // Calls protected BaseClient.uploadFile method
-        return this.uploadFile(filePath, this._getUploadEndpoint(tableName, headerRow, sheetNumber));
+        return this.uploadFile(file, this._getUploadEndpoint(tableName, headerRow, sheetNumber));
     }
 
-    replace(id: string, filePath: string): Promise<DataTable>;
-    replace(id: string, filePath: string, headerRow: number): Promise<DataTable>;
-    replace(id: string, filePath: string, headerRow: number, sheetNumber: number): Promise<DataTable>;
-    replace(id: string, filePath: string, callback: ClientMethodCallback<DataTable>): void;
-    replace(id: string, filePath: string, headerRow: number, callback: ClientMethodCallback<DataTable>): void;
+    replace(id: string, file: FileDescriptor): Promise<DataTable>;
+    replace(id: string, file: FileDescriptor, headerRow: number): Promise<DataTable>;
+    replace(id: string, file: FileDescriptor, headerRow: number, sheetNumber: number): Promise<DataTable>;
+    replace(id: string, file: FileDescriptor, callback: ClientMethodCallback<DataTable>): void;
+    replace(id: string, file: FileDescriptor, headerRow: number, callback: ClientMethodCallback<DataTable>): void;
     replace(
         id: string,
-        filePath: string,
+        file: FileDescriptor,
         headerRow: number,
         sheetNumber: number,
         callback: ClientMethodCallback<DataTable>
     ): void;
     replace(
         id: string,
-        filePath: string,
+        file: FileDescriptor,
         headerRow: number | ClientMethodCallback<DataTable> = 1,
         sheetNumber: number | ClientMethodCallback<DataTable> = 1,
         callback?: ClientMethodCallback<DataTable>
     ): Promise<DataTable> | void {
-        this.log(`Replacing DataTable ${id} with contents of file '${filePath}'`);
+        this.log(`Replacing DataTable ${id} with contents of file '${file}'`);
         if (typeof headerRow === 'function') {
             callback = headerRow;
             headerRow = 1;
@@ -186,15 +191,20 @@ export default class DataTableClient extends BaseClient implements DataTableClie
         }
 
         if (callback) {
-            return this.callbackifyBound(this._replace)(id, filePath, headerRow, sheetNumber, callback);
+            return this.callbackifyBound(this._replace)(id, file, headerRow, sheetNumber, callback);
         }
 
-        return this._replace(id, filePath, headerRow, sheetNumber);
+        return this._replace(id, file, headerRow, sheetNumber);
     }
 
-    private async _replace(id: string, filePath: string, headerRow: number, sheetNumber: number): Promise<DataTable> {
+    private async _replace(
+        id: string,
+        file: FileDescriptor,
+        headerRow: number,
+        sheetNumber: number
+    ): Promise<DataTable> {
         const endpoint = this._getReplaceEndpoint(id, headerRow, sheetNumber);
-        return this.uploadFile(filePath, endpoint);
+        return this.uploadFile(file, endpoint);
     }
 
     private _getUploadEndpoint(tableName: string, headerRow: number, sheetNumber: number): string {
@@ -336,72 +346,72 @@ export interface DataTableClientInterface {
     /**
      * @summary Uploads a CSV or Excel file to create a new Data Table
      *
-     * @param filePath The path of the CSV or Excel file on disk
+     * @param file The path of the CSV or Excel file on disk
      * @returns The newly created Data Table
      */
-    upload(filePath: string): Promise<DataTable>;
+    upload(file: FileDescriptor): Promise<DataTable>;
     /**
      * @summary Uploads a CSV or Excel file to create a new Data Table
      *
-     * @param filePath The path of the CSV or Excel file on disk
+     * @param file The path of the CSV or Excel file on disk
      * @param tableName The name of the table to create. Defaults to the file name without the extension
      * @returns The newly created Data Table
      */
-    upload(filePath: string, tableName: string): Promise<DataTable>;
+    upload(file: FileDescriptor, tableName: string): Promise<DataTable>;
     /**
      * @summary Uploads a CSV or Excel file to create a new Data Table
      *
-     * @param filePath The path of the CSV or Excel file on disk
+     * @param file The path of the CSV or Excel file on disk
      * @param tableName The name of the table to create. Defaults to the file name without the extension
      * @param headerRow The row number that contains the column headers. Defaults to 1.
      * @returns The newly created Data Table
      */
-    upload(filePath: string, tableName: string, headerRow: number): Promise<DataTable>;
+    upload(file: FileDescriptor, tableName: string, headerRow: number): Promise<DataTable>;
     /**
      * @summary Uploads a CSV or Excel file to create a new Data Table
      *
-     * @param filePath The path of the CSV or Excel file on disk
+     * @param file The path of the CSV or Excel file on disk
      * @param tableName The name of the table to create. Defaults to the file name without the extension
      * @param headerRow The row number that contains the column headers. Defaults to 1.
      * @param sheetNumber The number of the sheet to import. Only applies to Excel files. The first sheet is imported by default.
      * @returns The newly created Data Table
      */
-    upload(filePath: string, tableName: string, headerRow: number, sheetNumber: number): Promise<DataTable>;
+    upload(file: FileDescriptor, tableName: string, headerRow: number, sheetNumber: number): Promise<DataTable>;
     /**
      * @summary Uploads a CSV or Excel file to create a new Data Table
      *
-     * @param filePath The path of the CSV or Excel file on disk
+     * @param file The path of the CSV or Excel file on disk
      * @param callback The callback
      */
-    upload(filePath: string, callback: ClientMethodCallback<DataTable>): void;
+    upload(file: FileDescriptor, callback: ClientMethodCallback<DataTable>): void;
     /**
      * @summary Uploads a CSV or Excel file to create a new Data Table
      *
-     * @param filePath The path of the CSV or Excel file on disk
+     * @param file The path of the CSV or Excel file on disk
      * @param tableName The name of the table to create. Defaults to the file name without the extension
      * @param callback The callback
      */
-    upload(filePath: string, tableName: string, callback: ClientMethodCallback<DataTable>): void;
+    upload(file: FileDescriptor, tableName: string, callback: ClientMethodCallback<DataTable>): void;
     /**
      * @summary Uploads a CSV or Excel file to create a new Data Table
      *
-     * @param filePath The path of the CSV or Excel file on disk
+     * @param file The path of the CSV or Excel file on disk
      * @param tableName The name of the table to create. Defaults to the file name without the extension
      * @param headerRow The row number that contains the column headers. Defaults to 1.
      * @param callback The callback
      */
-    upload(filePath: string, tableName: string, headerRow: number, callback: ClientMethodCallback<DataTable>): void;
+    upload(file: FileDescriptor, tableName: string, headerRow: number, callback: ClientMethodCallback<DataTable>): void;
     /**
      * @summary Uploads a CSV or Excel file to create a new Data Table
      *
-     * @param filePath The path of the CSV or Excel file on disk
+     * @param file The path of the CSV or Excel file on disk
      * @param tableName The name of the table to create. Defaults to the file name without the extension
      * @param headerRow The row number that contains the column headers. Defaults to 1.
      * @param sheetNumber The number of the sheet to import. Only applies to Excel files. The first sheet is imported by default.
      * @param callback The optional callback
      */
     upload(
-        filePath: string,
+        file: FileDescriptor,
         tableName: string,
         headerRow: number,
         sheetNumber: number,
@@ -410,7 +420,7 @@ export interface DataTableClientInterface {
     /**
      * @summary Uploads a CSV or Excel file to create a new Data Table
      *
-     * @param filePath The path of the CSV or Excel file on disk
+     * @param file The path of the CSV or Excel file on disk
      * @param tableName The name of the table to create. Defaults to the file name without the extension
      * @param headerRow The row number that contains the column headers. Defaults to 1.
      * @param sheetNumber The number of the sheet to import. Only applies to Excel files. The first sheet is imported by default.
@@ -418,7 +428,7 @@ export interface DataTableClientInterface {
      * @returns The newly created Data Table
      */
     upload(
-        filePath: string,
+        file: FileDescriptor,
         tableName?: string | ClientMethodCallback<DataTable>,
         headerRow?: number | ClientMethodCallback<DataTable>,
         sheetNumber?: number | ClientMethodCallback<DataTable>,
@@ -429,34 +439,34 @@ export interface DataTableClientInterface {
      * @summary Replaces an existing Data Table with a CSV or Excel file
      *
      * @param id The ID of the Data Table to replace
-     * @param filePath The path of the CSV or Excel file on disk
+     * @param file The path of the CSV or Excel file on disk
      * @returns The newly created Data Table
      */
-    replace(id: string, filePath: string): Promise<DataTable>;
+    replace(id: string, file: FileDescriptor): Promise<DataTable>;
     /**
      * @summary Replaces an existing Data Table with a CSV or Excel file
      *
      * @param id The ID of the Data Table to replace
-     * @param filePath The path of the CSV or Excel file on disk
+     * @param file The path of the CSV or Excel file on disk
      * @param headerRow The row number that contains the column headers. Defaults to 1.
      * @returns The newly created Data Table
      */
-    replace(id: string, filePath: string, headerRow: number): Promise<DataTable>;
+    replace(id: string, file: FileDescriptor, headerRow: number): Promise<DataTable>;
     /**
      * @summary Replaces an existing Data Table with a CSV or Excel file
      *
      * @param id The ID of the Data Table to replace
-     * @param filePath The path of the CSV or Excel file on disk
+     * @param file The path of the CSV or Excel file on disk
      * @param headerRow The row number that contains the column headers. Defaults to 1.
      * @param sheetNumber The number of the sheet to import. Only applies to Excel files. The first sheet is imported by default.
      * @returns The newly created Data Table
      */
-    replace(id: string, filePath: string, headerRow: number, sheetNumber: number): Promise<DataTable>;
-    replace(id: string, filePath: string, callback: ClientMethodCallback<DataTable>): void;
-    replace(id: string, filePath: string, headerRow: number, callback: ClientMethodCallback<DataTable>): void;
+    replace(id: string, file: FileDescriptor, headerRow: number, sheetNumber: number): Promise<DataTable>;
+    replace(id: string, file: FileDescriptor, callback: ClientMethodCallback<DataTable>): void;
+    replace(id: string, file: FileDescriptor, headerRow: number, callback: ClientMethodCallback<DataTable>): void;
     replace(
         id: string,
-        filePath: string,
+        file: FileDescriptor,
         headerRow: number,
         sheetNumber: number,
         callback: ClientMethodCallback<DataTable>
@@ -464,7 +474,7 @@ export interface DataTableClientInterface {
 
     replace(
         id: string,
-        filePath: string,
+        file: FileDescriptor,
         headerRow?: number | ClientMethodCallback<DataTable>,
         sheetNumber?: number | ClientMethodCallback<DataTable>,
         callback?: ClientMethodCallback<DataTable>
