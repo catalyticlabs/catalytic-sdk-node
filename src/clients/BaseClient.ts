@@ -1,13 +1,15 @@
 import axios from 'axios';
 import FormData from 'form-data';
-import { readFile, createWriteStream } from 'fs';
-import { basename } from 'path';
+import { createWriteStream } from 'fs';
 import { Stream } from 'stream';
-import { promisify, callbackify } from 'util';
+import toVFile from 'to-vfile';
+import { callbackify } from 'util';
+import vfile from 'vfile';
 
 import { CatalyticSDKAPI } from '../internal/lib/catalyticSDKAPI';
 import { InvalidAccessTokenError, UnauthorizedError, ResourceNotFoundError, InternalError } from '../errors';
 import { BaseUri, UserAgent } from '../constants';
+import { FileDescriptor } from '../entities';
 import { ClientMethodCallback, AccessTokenProvider, InternalAPIResponse, LoggerProvider } from '../types';
 
 export default abstract class BaseClient {
@@ -43,18 +45,22 @@ export default abstract class BaseClient {
         };
     }
 
-    protected async uploadFile<T>(filePath: string, endpoint = 'files:upload'): Promise<T> {
+    protected async uploadVirtualFile<T>(files: FileDescriptor[], endpoint = 'files:upload'): Promise<T> {
         const url = `${BaseUri}api${endpoint.startsWith('/') ? endpoint : `/${endpoint}`}`;
 
         const headers = this.getRequestHeaders();
 
-        const fileContents = await promisify(readFile)(filePath);
-        const form = new FormData();
-        form.append('files', fileContents, basename(filePath));
+        const form = files.reduce((form, f) => {
+            const file = vfile(f);
+            form.append('files', file.contents, file.basename);
+            return form;
+        }, new FormData());
+
+        const formHeaders = form.getHeaders ? form.getHeaders() : {};
 
         try {
             const result = await axios.post(url, form, {
-                headers: { ...headers, ...form.getHeaders(), 'User-Agent': UserAgent }
+                headers: { ...headers, ...formHeaders, 'User-Agent': UserAgent }
             });
             return result.data;
         } catch (err) {
@@ -63,6 +69,14 @@ export default abstract class BaseClient {
             const message = data?.Detail || data?.detail || data || 'Failed to upload file';
             this.throwError(message, status);
         }
+    }
+
+    protected async uploadFile<T>(files: FileDescriptor | FileDescriptor[], endpoint = 'files:upload'): Promise<T> {
+        const fileArgs = !Array.isArray(files) ? [files] : files;
+        const vfiles = await Promise.all(
+            fileArgs.map(async file => (typeof file === 'string' ? toVFile.read(file) : file))
+        );
+        return this.uploadVirtualFile<T>(vfiles, endpoint);
     }
 
     protected async getFileDownloadStream(endpoint: string): Promise<Stream> {

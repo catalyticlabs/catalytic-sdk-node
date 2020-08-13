@@ -83,7 +83,7 @@ describe('FileClient', function() {
 
                 expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockFileMetadata)));
                 expect(stub).to.have.callCount(1);
-                expect(stub).to.have.been.calledWith(filePath);
+                expect(stub).to.have.been.calledWith([filePath]);
             });
         });
 
@@ -100,7 +100,7 @@ describe('FileClient', function() {
                 expect(err).to.be.instanceOf(InternalError);
                 expect(err.message).to.include('Intentional server error');
                 expect(stub).to.have.callCount(1);
-                expect(stub).to.have.been.calledWith(filePath);
+                expect(stub).to.have.been.calledWith([filePath]);
             });
         });
 
@@ -117,7 +117,61 @@ describe('FileClient', function() {
                 expect(err).to.be.instanceOf(FileUploadError);
                 expect(err.message).to.include('Failed to upload file');
                 expect(stub).to.have.callCount(1);
-                expect(stub).to.have.been.calledWith(filePath);
+                expect(stub).to.have.been.calledWith([filePath]);
+            });
+        });
+    });
+
+    describe('Bulk Upload Files', function() {
+        it('should upload mulitple Files from local paths', async function() {
+            const filePath = join(__dirname, '../fixtures/test.txt');
+            const mockFileMetadata = mock.mockFileMetadata();
+            // stubbing protected method on BaseClient, which is called by FileClient.bulkUpload
+            const stub = sinon.stub(client.files, 'uploadFile' as any).callsFake(() => {
+                const result = new FileMetadataPage();
+                result.files = [mockFileMetadata];
+                return Promise.resolve(result);
+            });
+
+            return executeTest(client.files, 'bulkUpload', [[filePath]], (err, result) => {
+                expect(err).to.not.be.ok;
+                expect(result).to.deep.equal(JSON.parse(JSON.stringify([mockFileMetadata])));
+                expect(stub).to.have.callCount(1);
+                expect(stub).to.have.been.calledWith([filePath]);
+            });
+        });
+
+        it('should return expected error response when file fails to upload', function() {
+            const filePath = join(__dirname, '../fixtures/test.txt');
+            // stubbing protected method on BaseClient, which is called by FileClient.bulkUpload
+            const stub = sinon.stub(client.files, 'uploadFile' as any).callsFake(() => {
+                throw new InternalError('Intentional server error');
+            });
+
+            return executeTest(client.files, 'bulkUpload', [[filePath]], (err, result) => {
+                expect(result).to.not.be.ok;
+                expect(err).to.be.ok;
+                expect(err).to.be.instanceOf(InternalError);
+                expect(err.message).to.include('Intentional server error');
+                expect(stub).to.have.callCount(1);
+                expect(stub).to.have.been.calledWith([filePath]);
+            });
+        });
+
+        it('should return FileUploadError if uploaded file not included in response', function() {
+            const filePath = join(__dirname, '../fixtures/test.txt');
+            // stubbing protected method on BaseClient, which is called by FileClient.bulkUpload
+            const stub = sinon
+                .stub(client.files, 'uploadFile' as any)
+                .callsFake(() => Promise.resolve(new FileMetadataPage()));
+
+            return executeTest(client.files, 'bulkUpload', [[filePath]], (err, result) => {
+                expect(result).to.not.be.ok;
+                expect(err).to.be.ok;
+                expect(err).to.be.instanceOf(FileUploadError);
+                expect(err.message).to.include('Failed to upload file');
+                expect(stub).to.have.callCount(1);
+                expect(stub).to.have.been.calledWith([filePath]);
             });
         });
     });

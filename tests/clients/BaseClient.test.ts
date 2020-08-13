@@ -1,11 +1,14 @@
 import { expect } from 'chai';
+import FormData from 'form-data';
 import { readFileSync, createReadStream } from 'fs';
 import nock from 'nock';
 import { tmpdir } from 'os';
 import { join, basename } from 'path';
+import toVFile from 'to-vfile';
 import { v4 } from 'uuid';
 
 import mock from '../helpers/mockEntities';
+
 import CatalyticClient from '../../src/CatalyticClient';
 import { BaseUri } from '../../src/constants';
 import { InternalError, UnauthorizedError, InvalidAccessTokenError } from '../../src/errors';
@@ -85,13 +88,13 @@ describe('BaseClient', function() {
             let body;
 
             nock(BaseUri)
+                .persist()
                 .post('/api/custom/endpoint')
                 .reply(function(uri, requestBody) {
                     headers = this.req.headers;
                     body = requestBody;
                     return [201, response];
-                })
-                .persist();
+                });
 
             const filePath = join(__dirname, '../fixtures/test.txt');
 
@@ -112,6 +115,132 @@ describe('BaseClient', function() {
             // this directly calls `BaseClient.prototype.uploadFile`
             verify(await client.files['uploadFile'](filePath, '/custom/endpoint'));
             verify(await client.files['uploadFile'](filePath, 'custom/endpoint'));
+        });
+
+        it('should upload a virtual file from a buffer', async function() {
+            const response = mock.mockFileMetadataPage();
+            let headers;
+            let body;
+
+            nock(BaseUri)
+                .post('/api/files:upload')
+                .reply(function(uri, requestBody) {
+                    headers = this.req.headers;
+                    body = requestBody;
+                    return [201, response];
+                });
+
+            const filePath = join(__dirname, '../fixtures/test.txt');
+            const file = await toVFile.read(filePath);
+
+            // this directly calls `BaseClient.prototype.uploadFile`
+            const result = await client.files['uploadFile']([
+                file,
+                { contents: 'Hello!', path: '~/hello.txt' },
+                { contents: Buffer.from('Goodbye!'), path: '~/goodbye.txt' }
+            ]);
+
+            expect(result).to.deep.equal(response);
+
+            expect(body)
+                .to.include(`Content-Disposition: form-data`)
+                .and.to.include('name="files"')
+                .and.to.include(`filename="${basename(filePath)}"`)
+                .and.to.include(readFileSync(filePath).toString())
+                .and.to.include(`filename="hello.txt"`)
+                .and.to.include(`Hello!`)
+                .and.to.include(`filename="goodbye.txt"`)
+                .and.to.include(`Goodbye!`);
+
+            Object.keys(expectedCustomHeaders).forEach(k =>
+                expect(headers).to.have.property(k, expectedCustomHeaders[k])
+            );
+        });
+
+        it('should upload a virtual file from a string', async function() {
+            const response = mock.mockFileMetadataPage();
+            let headers;
+            let body;
+
+            nock(BaseUri)
+                .post('/api/files:upload')
+                .reply(function(uri, requestBody) {
+                    headers = this.req.headers;
+                    body = requestBody;
+                    return [201, response];
+                });
+
+            // this directly calls `BaseClient.prototype.uploadVirtualFile`
+            const result = await client.files['uploadVirtualFile'](['Hello there!']);
+
+            expect(result).to.deep.equal(response);
+
+            expect(body)
+                .to.include(`Content-Disposition: form-data`)
+                .and.to.include('name="files"')
+                .and.to.include(`Hello there!`);
+
+            Object.keys(expectedCustomHeaders).forEach(k =>
+                expect(headers).to.have.property(k, expectedCustomHeaders[k])
+            );
+        });
+
+        it('should upload a virtual file from a buffer using the passed endpoint', async function() {
+            const response = mock.mockFileMetadataPage();
+            let headers;
+            let body;
+
+            nock(BaseUri)
+                .persist()
+                .post('/api/virtual/endpoint')
+                .reply(function(uri, requestBody) {
+                    headers = this.req.headers;
+                    body = requestBody;
+                    return [201, response];
+                });
+
+            const filePath = join(__dirname, '../fixtures/test.txt');
+            const file = await toVFile.read(filePath);
+
+            function verify(result): void {
+                expect(result).to.deep.equal(response);
+
+                expect(body)
+                    .to.include(`Content-Disposition: form-data`)
+                    .and.to.include('name="files"')
+                    .and.to.include(`filename="${basename(filePath)}"`)
+                    .and.to.include(readFileSync(filePath).toString())
+                    .and.to.include(`filename="hello.txt"`)
+                    .and.to.include(`Hello!`)
+                    .and.to.include(`filename="goodbye.txt"`)
+                    .and.to.include(`Goodbye!`);
+
+                Object.keys(expectedCustomHeaders).forEach(k =>
+                    expect(headers).to.have.property(k, expectedCustomHeaders[k])
+                );
+            }
+
+            // this directly calls `BaseClient.prototype.uploadFile`
+            verify(
+                await client.files['uploadFile'](
+                    [
+                        file,
+                        { contents: 'Hello!', path: '~/hello.txt' },
+                        { contents: Buffer.from('Goodbye!'), path: '~/goodbye.txt' }
+                    ],
+                    '/virtual/endpoint'
+                )
+            );
+            verify(
+                await client.files['uploadFile'](
+                    [
+                        file,
+                        { contents: 'Hello!', path: '~/hello.txt' },
+                        { contents: Buffer.from('Goodbye!'), path: '~/goodbye.txt' }
+                    ],
+                    'virtual/endpoint'
+                )
+            );
         });
 
         it('should return expected error response when file fails to upload', async function() {
@@ -222,6 +351,63 @@ describe('BaseClient', function() {
             expect(err).to.be.ok;
             expect(err).to.be.instanceOf(UnauthorizedError);
             expect(err.message).to.include('Failed to upload file');
+        });
+
+        it('should support browser form data API', async function() {
+            const response = mock.mockFileMetadataPage();
+            let headers;
+            let body;
+
+            const getHeaders = FormData.prototype.getHeaders;
+            delete FormData.prototype.getHeaders;
+
+            nock(BaseUri)
+                .persist()
+                .post('/api/files:upload')
+                .reply(function(uri, requestBody) {
+                    headers = this.req.headers;
+                    body = requestBody;
+                    return [201, response];
+                });
+
+            const filePath = join(__dirname, '../fixtures/test.txt');
+            const file = await toVFile.read(filePath);
+
+            function verify(result): void {
+                expect(result).to.deep.equal(response);
+
+                expect(body)
+                    .to.include(`Content-Disposition: form-data`)
+                    .and.to.include('name="files"')
+                    .and.to.include(`filename="${basename(filePath)}"`)
+                    .and.to.include(readFileSync(filePath).toString())
+                    .and.to.include(`filename="hello.txt"`)
+                    .and.to.include(`Hello!`)
+                    .and.to.include(`filename="goodbye.txt"`)
+                    .and.to.include(`Goodbye!`);
+
+                Object.keys(expectedCustomHeaders).forEach(k =>
+                    expect(headers).to.have.property(k, expectedCustomHeaders[k])
+                );
+            }
+
+            // this directly calls `BaseClient.prototype.uploadFile`
+            verify(
+                await client.files['uploadFile']([
+                    file,
+                    { contents: 'Hello!', path: '~/hello.txt' },
+                    { contents: Buffer.from('Goodbye!'), path: '~/goodbye.txt' }
+                ])
+            );
+            verify(
+                await client.files['uploadFile']([
+                    file,
+                    { contents: 'Hello!', path: '~/hello.txt' },
+                    { contents: Buffer.from('Goodbye!'), path: '~/goodbye.txt' }
+                ])
+            );
+
+            FormData.prototype.getHeaders = getHeaders;
         });
     });
 
