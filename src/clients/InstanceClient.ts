@@ -172,14 +172,14 @@ export default class InstanceClient extends BaseClient implements InstanceClient
         return this.parseResponse<InstanceStep>(result, 'InstanceStep');
     }
 
-    findInstanceSteps(): Promise<InstancesPage>;
-    findInstanceSteps(options: FindInstanceStepsOptions): Promise<InstancesPage>;
-    findInstanceSteps(callback: ClientMethodCallback<InstancesPage>): void;
-    findInstanceSteps(options: FindInstanceStepsOptions, callback: ClientMethodCallback<InstancesPage>): void;
+    findInstanceSteps(): Promise<InstanceStepsPage>;
+    findInstanceSteps(options: FindInstanceStepsOptions): Promise<InstanceStepsPage>;
+    findInstanceSteps(callback: ClientMethodCallback<InstanceStepsPage>): void;
+    findInstanceSteps(options: FindInstanceStepsOptions, callback: ClientMethodCallback<InstanceStepsPage>): void;
     findInstanceSteps(
-        options?: FindInstanceStepsOptions | ClientMethodCallback<InstancesPage>,
-        callback?: ClientMethodCallback<InstancesPage>
-    ): Promise<InstancesPage> | void {
+        options?: FindInstanceStepsOptions | ClientMethodCallback<InstanceStepsPage>,
+        callback?: ClientMethodCallback<InstanceStepsPage>
+    ): Promise<InstanceStepsPage> | void {
         this.log('Finding InstanceSteps');
         if (typeof options === 'function') {
             callback = options;
@@ -569,27 +569,27 @@ export interface InstanceClientInterface {
      *
      * @returns A page of InstanceSteps
      */
-    findInstanceSteps(): Promise<InstancesPage>;
+    findInstanceSteps(): Promise<InstanceStepsPage>;
     /**
      * @summary Finds InstanceSteps
      *
      * @param options Filter criteria to narrow InstanceSteps returned
      * @returns A page of InstanceSteps
      */
-    findInstanceSteps(options: FindInstanceStepsOptions): Promise<InstancesPage>;
+    findInstanceSteps(options: FindInstanceStepsOptions): Promise<InstanceStepsPage>;
     /**
      * @summary Finds InstanceSteps
      *
      * @param callback The callback
      */
-    findInstanceSteps(callback: ClientMethodCallback<InstancesPage>): void;
+    findInstanceSteps(callback: ClientMethodCallback<InstanceStepsPage>): void;
     /**
      * @summary Finds InstanceSteps
      *
      * @param options Filter criteria to narrow InstanceSteps returned
      * @param callback The callback
      */
-    findInstanceSteps(options: FindInstanceStepsOptions, callback: ClientMethodCallback<InstancesPage>): void;
+    findInstanceSteps(options: FindInstanceStepsOptions, callback: ClientMethodCallback<InstanceStepsPage>): void;
     /**
      * @summary Finds InstanceSteps
      *
@@ -598,9 +598,9 @@ export interface InstanceClientInterface {
      * @returns A page of InstanceSteps
      */
     findInstanceSteps(
-        options?: FindInstanceStepsOptions | ClientMethodCallback<InstancesPage>,
-        callback?: ClientMethodCallback<InstancesPage>
-    ): Promise<InstancesPage> | void;
+        options?: FindInstanceStepsOptions | ClientMethodCallback<InstanceStepsPage>,
+        callback?: ClientMethodCallback<InstanceStepsPage>
+    ): Promise<InstanceStepsPage> | void;
 
     /**
      * Fetch all InstanceSteps in an Instance
