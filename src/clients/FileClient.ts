@@ -158,21 +158,21 @@ export interface FileClientInterface {
     /**
      * @summary Uploads a file to Catalytic
      *
-     * @param files The path of the file on disk
+     * @param file The path of the file on disk
      * @returns The Metadata of the uploaded File
      */
     upload(file: FileDescriptor): Promise<FileMetadata>;
     /**
      * @summary Uploads a file to Catalytic
      *
-     * @param files The path of the file on disk
+     * @param file The path of the file on disk
      * @param callback The callback
      */
     upload(file: FileDescriptor, callback: ClientMethodCallback<FileMetadata>): void;
     /**
      * @summary Uploads a file to Catalytic
      *
-     * @param files The path of the file on disk
+     * @param file The path of the file on disk
      * @param callback The optional callback
      * @returns The Metadata of the uploaded File
      */
