@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+## [v1.0.2]
+### Fixed
+- Improved handling of files when creating and replacing Data Tables in browser
+
+## [v1.0.1]
+### Fixed
+- Improved handling of files in browser
+
 ## [v1.0.0-pre-4]
 ### Added
 - Exposed a `FieldTypeEnumeration` type
@@ -35,7 +43,9 @@
 ### Added
 - `AccessToken`, `DataTable`, `File`, `Instance`, `User`, and `Workflow` clients and associated entities
 
-[Unreleased]: https://github.com/catalyticlabs/catalytic-sdk-node/compare/v1.0.0-pre-4...HEAD
+[Unreleased]: https://github.com/catalyticlabs/catalytic-sdk-node/compare/v1.0.2...HEAD
+[v1.0.2]: https://github.com/catalyticlabs/catalytic-sdk-node/compare/v1.0.1...v1.0.2
+[v1.0.1]: https://github.com/catalyticlabs/catalytic-sdk-node/compare/v1.0.0-pre-4...v1.0.1
 [v1.0.0-pre-4]: https://github.com/catalyticlabs/catalytic-sdk-node/compare/v1.0.0-pre-3...v1.0.0-pre-4
 [v1.0.0-pre-3]: https://github.com/catalyticlabs/catalytic-sdk-node/compare/v1.0.0-pre-2...v1.0.0-pre-3
 [v1.0.0-pre-2]: https://github.com/catalyticlabs/catalytic-sdk-node/compare/v1.0.0-pre-1...v1.0.0-pre-2
