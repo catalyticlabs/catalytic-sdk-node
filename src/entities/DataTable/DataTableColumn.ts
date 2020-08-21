@@ -1,5 +1,5 @@
-import { CatalyticSDKAPIModels } from '../internal/lib/catalyticSDKAPI';
-import { FieldRestrictions, FieldType } from './types';
+import { CatalyticSDKAPIModels } from '../../internal/lib/catalyticSDKAPI';
+import { FieldRestrictions, FieldType } from '../types';
 
 export default class DataTableColumn implements CatalyticSDKAPIModels.DataTableColumn {
     /**

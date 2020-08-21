@@ -677,6 +677,481 @@ class CatalyticSDKAPI extends CatalyticSDKAPIContext {
   }
 
   /**
+   * @summary Find Integration
+   * @param [options] The optional parameters
+   * @returns Promise<Models.FindIntegrationsResponse>
+   */
+  findIntegrations(options?: Models.CatalyticSDKAPIFindIntegrationsOptionalParams): Promise<Models.FindIntegrationsResponse>;
+  /**
+   * @param callback The callback
+   */
+  findIntegrations(callback: msRest.ServiceCallback<any>): void;
+  /**
+   * @param options The optional parameters
+   * @param callback The callback
+   */
+  findIntegrations(options: Models.CatalyticSDKAPIFindIntegrationsOptionalParams, callback: msRest.ServiceCallback<any>): void;
+  findIntegrations(options?: Models.CatalyticSDKAPIFindIntegrationsOptionalParams | msRest.ServiceCallback<any>, callback?: msRest.ServiceCallback<any>): Promise<Models.FindIntegrationsResponse> {
+    return this.sendOperationRequest(
+      {
+        options
+      },
+      findIntegrationsOperationSpec,
+      callback) as Promise<Models.FindIntegrationsResponse>;
+  }
+
+  /**
+   * @summary Create a new Integration
+   * @param [options] The optional parameters
+   * @returns Promise<Models.CreateIntegrationResponse>
+   */
+  createIntegration(options?: Models.CatalyticSDKAPICreateIntegrationOptionalParams): Promise<Models.CreateIntegrationResponse>;
+  /**
+   * @param callback The callback
+   */
+  createIntegration(callback: msRest.ServiceCallback<any>): void;
+  /**
+   * @param options The optional parameters
+   * @param callback The callback
+   */
+  createIntegration(options: Models.CatalyticSDKAPICreateIntegrationOptionalParams, callback: msRest.ServiceCallback<any>): void;
+  createIntegration(options?: Models.CatalyticSDKAPICreateIntegrationOptionalParams | msRest.ServiceCallback<any>, callback?: msRest.ServiceCallback<any>): Promise<Models.CreateIntegrationResponse> {
+    return this.sendOperationRequest(
+      {
+        options
+      },
+      createIntegrationOperationSpec,
+      callback) as Promise<Models.CreateIntegrationResponse>;
+  }
+
+  /**
+   * @summary Gets details of a specific Integration definition
+   * @param id The ID of the Integration to get
+   * @param [options] The optional parameters
+   * @returns Promise<Models.GetIntegrationResponse>
+   */
+  getIntegration(id: string, options?: msRest.RequestOptionsBase): Promise<Models.GetIntegrationResponse>;
+  /**
+   * @param id The ID of the Integration to get
+   * @param callback The callback
+   */
+  getIntegration(id: string, callback: msRest.ServiceCallback<any>): void;
+  /**
+   * @param id The ID of the Integration to get
+   * @param options The optional parameters
+   * @param callback The callback
+   */
+  getIntegration(id: string, options: msRest.RequestOptionsBase, callback: msRest.ServiceCallback<any>): void;
+  getIntegration(id: string, options?: msRest.RequestOptionsBase | msRest.ServiceCallback<any>, callback?: msRest.ServiceCallback<any>): Promise<Models.GetIntegrationResponse> {
+    return this.sendOperationRequest(
+      {
+        id,
+        options
+      },
+      getIntegrationOperationSpec,
+      callback) as Promise<Models.GetIntegrationResponse>;
+  }
+
+  /**
+   * @summary Update an Integration
+   * @param id The id of the action to update
+   * @param [options] The optional parameters
+   * @returns Promise<Models.UpdateIntegrationResponse>
+   */
+  updateIntegration(id: string, options?: Models.CatalyticSDKAPIUpdateIntegrationOptionalParams): Promise<Models.UpdateIntegrationResponse>;
+  /**
+   * @param id The id of the action to update
+   * @param callback The callback
+   */
+  updateIntegration(id: string, callback: msRest.ServiceCallback<any>): void;
+  /**
+   * @param id The id of the action to update
+   * @param options The optional parameters
+   * @param callback The callback
+   */
+  updateIntegration(id: string, options: Models.CatalyticSDKAPIUpdateIntegrationOptionalParams, callback: msRest.ServiceCallback<any>): void;
+  updateIntegration(id: string, options?: Models.CatalyticSDKAPIUpdateIntegrationOptionalParams | msRest.ServiceCallback<any>, callback?: msRest.ServiceCallback<any>): Promise<Models.UpdateIntegrationResponse> {
+    return this.sendOperationRequest(
+      {
+        id,
+        options
+      },
+      updateIntegrationOperationSpec,
+      callback) as Promise<Models.UpdateIntegrationResponse>;
+  }
+
+  /**
+   * @summary Deletes a specific Integration
+   * @param id The ID of the Integration to delete
+   * @param [options] The optional parameters
+   * @returns Promise<Models.DeleteIntegrationResponse>
+   */
+  deleteIntegration(id: string, options?: msRest.RequestOptionsBase): Promise<Models.DeleteIntegrationResponse>;
+  /**
+   * @param id The ID of the Integration to delete
+   * @param callback The callback
+   */
+  deleteIntegration(id: string, callback: msRest.ServiceCallback<any>): void;
+  /**
+   * @param id The ID of the Integration to delete
+   * @param options The optional parameters
+   * @param callback The callback
+   */
+  deleteIntegration(id: string, options: msRest.RequestOptionsBase, callback: msRest.ServiceCallback<any>): void;
+  deleteIntegration(id: string, options?: msRest.RequestOptionsBase | msRest.ServiceCallback<any>, callback?: msRest.ServiceCallback<any>): Promise<Models.DeleteIntegrationResponse> {
+    return this.sendOperationRequest(
+      {
+        id,
+        options
+      },
+      deleteIntegrationOperationSpec,
+      callback) as Promise<Models.DeleteIntegrationResponse>;
+  }
+
+  /**
+   * @summary Gets details of a specific Integration definition
+   * @param integrationName The name component of the ID of the Integration to get
+   * @param integrationAction The action component of the ID of the Integration to get
+   * @param integrationVersion The version component of the ID of the Integration to get
+   * @param [options] The optional parameters
+   * @returns Promise<Models.GetIntegrationUnencodedResponse>
+   */
+  getIntegrationUnencoded(integrationName: string, integrationAction: string, integrationVersion: string, options?: msRest.RequestOptionsBase): Promise<Models.GetIntegrationUnencodedResponse>;
+  /**
+   * @param integrationName The name component of the ID of the Integration to get
+   * @param integrationAction The action component of the ID of the Integration to get
+   * @param integrationVersion The version component of the ID of the Integration to get
+   * @param callback The callback
+   */
+  getIntegrationUnencoded(integrationName: string, integrationAction: string, integrationVersion: string, callback: msRest.ServiceCallback<any>): void;
+  /**
+   * @param integrationName The name component of the ID of the Integration to get
+   * @param integrationAction The action component of the ID of the Integration to get
+   * @param integrationVersion The version component of the ID of the Integration to get
+   * @param options The optional parameters
+   * @param callback The callback
+   */
+  getIntegrationUnencoded(integrationName: string, integrationAction: string, integrationVersion: string, options: msRest.RequestOptionsBase, callback: msRest.ServiceCallback<any>): void;
+  getIntegrationUnencoded(integrationName: string, integrationAction: string, integrationVersion: string, options?: msRest.RequestOptionsBase | msRest.ServiceCallback<any>, callback?: msRest.ServiceCallback<any>): Promise<Models.GetIntegrationUnencodedResponse> {
+    return this.sendOperationRequest(
+      {
+        integrationName,
+        integrationAction,
+        integrationVersion,
+        options
+      },
+      getIntegrationUnencodedOperationSpec,
+      callback) as Promise<Models.GetIntegrationUnencodedResponse>;
+  }
+
+  /**
+   * @summary Update an Integration
+   * @param integrationName The name component of the ID of the Integration to get
+   * @param integrationAction The action component of the ID of the Integration to get
+   * @param integrationVersion The version component of the ID of the Integration to get
+   * @param [options] The optional parameters
+   * @returns Promise<Models.UpdateIntegrationUnencodedResponse>
+   */
+  updateIntegrationUnencoded(integrationName: string, integrationAction: string, integrationVersion: string, options?: Models.CatalyticSDKAPIUpdateIntegrationUnencodedOptionalParams): Promise<Models.UpdateIntegrationUnencodedResponse>;
+  /**
+   * @param integrationName The name component of the ID of the Integration to get
+   * @param integrationAction The action component of the ID of the Integration to get
+   * @param integrationVersion The version component of the ID of the Integration to get
+   * @param callback The callback
+   */
+  updateIntegrationUnencoded(integrationName: string, integrationAction: string, integrationVersion: string, callback: msRest.ServiceCallback<any>): void;
+  /**
+   * @param integrationName The name component of the ID of the Integration to get
+   * @param integrationAction The action component of the ID of the Integration to get
+   * @param integrationVersion The version component of the ID of the Integration to get
+   * @param options The optional parameters
+   * @param callback The callback
+   */
+  updateIntegrationUnencoded(integrationName: string, integrationAction: string, integrationVersion: string, options: Models.CatalyticSDKAPIUpdateIntegrationUnencodedOptionalParams, callback: msRest.ServiceCallback<any>): void;
+  updateIntegrationUnencoded(integrationName: string, integrationAction: string, integrationVersion: string, options?: Models.CatalyticSDKAPIUpdateIntegrationUnencodedOptionalParams | msRest.ServiceCallback<any>, callback?: msRest.ServiceCallback<any>): Promise<Models.UpdateIntegrationUnencodedResponse> {
+    return this.sendOperationRequest(
+      {
+        integrationName,
+        integrationAction,
+        integrationVersion,
+        options
+      },
+      updateIntegrationUnencodedOperationSpec,
+      callback) as Promise<Models.UpdateIntegrationUnencodedResponse>;
+  }
+
+  /**
+   * @summary Deletes a specific Integration
+   * @param integrationName The name component of the ID of the Integration to get
+   * @param integrationAction The action component of the ID of the Integration to get
+   * @param integrationVersion The version component of the ID of the Integration to get
+   * @param [options] The optional parameters
+   * @returns Promise<Models.DeleteIntegrationUnencodedResponse>
+   */
+  deleteIntegrationUnencoded(integrationName: string, integrationAction: string, integrationVersion: string, options?: msRest.RequestOptionsBase): Promise<Models.DeleteIntegrationUnencodedResponse>;
+  /**
+   * @param integrationName The name component of the ID of the Integration to get
+   * @param integrationAction The action component of the ID of the Integration to get
+   * @param integrationVersion The version component of the ID of the Integration to get
+   * @param callback The callback
+   */
+  deleteIntegrationUnencoded(integrationName: string, integrationAction: string, integrationVersion: string, callback: msRest.ServiceCallback<any>): void;
+  /**
+   * @param integrationName The name component of the ID of the Integration to get
+   * @param integrationAction The action component of the ID of the Integration to get
+   * @param integrationVersion The version component of the ID of the Integration to get
+   * @param options The optional parameters
+   * @param callback The callback
+   */
+  deleteIntegrationUnencoded(integrationName: string, integrationAction: string, integrationVersion: string, options: msRest.RequestOptionsBase, callback: msRest.ServiceCallback<any>): void;
+  deleteIntegrationUnencoded(integrationName: string, integrationAction: string, integrationVersion: string, options?: msRest.RequestOptionsBase | msRest.ServiceCallback<any>, callback?: msRest.ServiceCallback<any>): Promise<Models.DeleteIntegrationUnencodedResponse> {
+    return this.sendOperationRequest(
+      {
+        integrationName,
+        integrationAction,
+        integrationVersion,
+        options
+      },
+      deleteIntegrationUnencodedOperationSpec,
+      callback) as Promise<Models.DeleteIntegrationUnencodedResponse>;
+  }
+
+  /**
+   * @summary Creates a new Integration Connection
+   * @param id The ID of the Integration Definition for which a Connection should be created
+   * @param [options] The optional parameters
+   * @returns Promise<Models.CreateIntegrationConnectionResponse>
+   */
+  createIntegrationConnection(id: string, options?: Models.CatalyticSDKAPICreateIntegrationConnectionOptionalParams): Promise<Models.CreateIntegrationConnectionResponse>;
+  /**
+   * @param id The ID of the Integration Definition for which a Connection should be created
+   * @param callback The callback
+   */
+  createIntegrationConnection(id: string, callback: msRest.ServiceCallback<any>): void;
+  /**
+   * @param id The ID of the Integration Definition for which a Connection should be created
+   * @param options The optional parameters
+   * @param callback The callback
+   */
+  createIntegrationConnection(id: string, options: Models.CatalyticSDKAPICreateIntegrationConnectionOptionalParams, callback: msRest.ServiceCallback<any>): void;
+  createIntegrationConnection(id: string, options?: Models.CatalyticSDKAPICreateIntegrationConnectionOptionalParams | msRest.ServiceCallback<any>, callback?: msRest.ServiceCallback<any>): Promise<Models.CreateIntegrationConnectionResponse> {
+    return this.sendOperationRequest(
+      {
+        id,
+        options
+      },
+      createIntegrationConnectionOperationSpec,
+      callback) as Promise<Models.CreateIntegrationConnectionResponse>;
+  }
+
+  /**
+   * @summary Creates a new Integration Connection
+   * @param integrationName The name component of the ID of the Integration for which a Connection
+   * should be created
+   * @param integrationAction The action component of the ID of the Integration for which a
+   * Connection should be created
+   * @param integrationVersion The version component of the ID of the Integration for which a
+   * Connection should be created
+   * @param [options] The optional parameters
+   * @returns Promise<Models.CreateIntegrationConnectionUnencodedResponse>
+   */
+  createIntegrationConnectionUnencoded(integrationName: string, integrationAction: string, integrationVersion: string, options?: Models.CatalyticSDKAPICreateIntegrationConnectionUnencodedOptionalParams): Promise<Models.CreateIntegrationConnectionUnencodedResponse>;
+  /**
+   * @param integrationName The name component of the ID of the Integration for which a Connection
+   * should be created
+   * @param integrationAction The action component of the ID of the Integration for which a
+   * Connection should be created
+   * @param integrationVersion The version component of the ID of the Integration for which a
+   * Connection should be created
+   * @param callback The callback
+   */
+  createIntegrationConnectionUnencoded(integrationName: string, integrationAction: string, integrationVersion: string, callback: msRest.ServiceCallback<any>): void;
+  /**
+   * @param integrationName The name component of the ID of the Integration for which a Connection
+   * should be created
+   * @param integrationAction The action component of the ID of the Integration for which a
+   * Connection should be created
+   * @param integrationVersion The version component of the ID of the Integration for which a
+   * Connection should be created
+   * @param options The optional parameters
+   * @param callback The callback
+   */
+  createIntegrationConnectionUnencoded(integrationName: string, integrationAction: string, integrationVersion: string, options: Models.CatalyticSDKAPICreateIntegrationConnectionUnencodedOptionalParams, callback: msRest.ServiceCallback<any>): void;
+  createIntegrationConnectionUnencoded(integrationName: string, integrationAction: string, integrationVersion: string, options?: Models.CatalyticSDKAPICreateIntegrationConnectionUnencodedOptionalParams | msRest.ServiceCallback<any>, callback?: msRest.ServiceCallback<any>): Promise<Models.CreateIntegrationConnectionUnencodedResponse> {
+    return this.sendOperationRequest(
+      {
+        integrationName,
+        integrationAction,
+        integrationVersion,
+        options
+      },
+      createIntegrationConnectionUnencodedOperationSpec,
+      callback) as Promise<Models.CreateIntegrationConnectionUnencodedResponse>;
+  }
+
+  /**
+   * @summary Get an Integration Connection by Id
+   * @param integrationId The ID of the Integration to which the Integration Connection belongs
+   * @param id The ID of the Integration Definition to get
+   * @param [options] The optional parameters
+   * @returns Promise<Models.GetIntegrationConnectionResponse>
+   */
+  getIntegrationConnection(integrationId: string, id: string, options?: msRest.RequestOptionsBase): Promise<Models.GetIntegrationConnectionResponse>;
+  /**
+   * @param integrationId The ID of the Integration to which the Integration Connection belongs
+   * @param id The ID of the Integration Definition to get
+   * @param callback The callback
+   */
+  getIntegrationConnection(integrationId: string, id: string, callback: msRest.ServiceCallback<any>): void;
+  /**
+   * @param integrationId The ID of the Integration to which the Integration Connection belongs
+   * @param id The ID of the Integration Definition to get
+   * @param options The optional parameters
+   * @param callback The callback
+   */
+  getIntegrationConnection(integrationId: string, id: string, options: msRest.RequestOptionsBase, callback: msRest.ServiceCallback<any>): void;
+  getIntegrationConnection(integrationId: string, id: string, options?: msRest.RequestOptionsBase | msRest.ServiceCallback<any>, callback?: msRest.ServiceCallback<any>): Promise<Models.GetIntegrationConnectionResponse> {
+    return this.sendOperationRequest(
+      {
+        integrationId,
+        id,
+        options
+      },
+      getIntegrationConnectionOperationSpec,
+      callback) as Promise<Models.GetIntegrationConnectionResponse>;
+  }
+
+  /**
+   * @summary Delete an Integration Connection by Id
+   * @param integrationId The ID of the Integration to which the Integration Connection belongs
+   * @param id The ID of the Integration Definition to delete
+   * @param [options] The optional parameters
+   * @returns Promise<Models.DeleteIntegrationConnectionResponse>
+   */
+  deleteIntegrationConnection(integrationId: string, id: string, options?: msRest.RequestOptionsBase): Promise<Models.DeleteIntegrationConnectionResponse>;
+  /**
+   * @param integrationId The ID of the Integration to which the Integration Connection belongs
+   * @param id The ID of the Integration Definition to delete
+   * @param callback The callback
+   */
+  deleteIntegrationConnection(integrationId: string, id: string, callback: msRest.ServiceCallback<any>): void;
+  /**
+   * @param integrationId The ID of the Integration to which the Integration Connection belongs
+   * @param id The ID of the Integration Definition to delete
+   * @param options The optional parameters
+   * @param callback The callback
+   */
+  deleteIntegrationConnection(integrationId: string, id: string, options: msRest.RequestOptionsBase, callback: msRest.ServiceCallback<any>): void;
+  deleteIntegrationConnection(integrationId: string, id: string, options?: msRest.RequestOptionsBase | msRest.ServiceCallback<any>, callback?: msRest.ServiceCallback<any>): Promise<Models.DeleteIntegrationConnectionResponse> {
+    return this.sendOperationRequest(
+      {
+        integrationId,
+        id,
+        options
+      },
+      deleteIntegrationConnectionOperationSpec,
+      callback) as Promise<Models.DeleteIntegrationConnectionResponse>;
+  }
+
+  /**
+   * @summary Get an Integration Connection by Id
+   * @param integrationName The name component of the ID of the Integration to which the Integration
+   * Connection belongs
+   * @param integrationAction The action component of the ID of the Integration to which the
+   * Integration Connection belongs
+   * @param integrationVersion The version component of the ID of the Integration to which the
+   * Integration Connection belongs
+   * @param id The ID of the Integration Definition to get
+   * @param [options] The optional parameters
+   * @returns Promise<Models.GetIntegrationConnectionUnencodedResponse>
+   */
+  getIntegrationConnectionUnencoded(integrationName: string, integrationAction: string, integrationVersion: string, id: string, options?: msRest.RequestOptionsBase): Promise<Models.GetIntegrationConnectionUnencodedResponse>;
+  /**
+   * @param integrationName The name component of the ID of the Integration to which the Integration
+   * Connection belongs
+   * @param integrationAction The action component of the ID of the Integration to which the
+   * Integration Connection belongs
+   * @param integrationVersion The version component of the ID of the Integration to which the
+   * Integration Connection belongs
+   * @param id The ID of the Integration Definition to get
+   * @param callback The callback
+   */
+  getIntegrationConnectionUnencoded(integrationName: string, integrationAction: string, integrationVersion: string, id: string, callback: msRest.ServiceCallback<any>): void;
+  /**
+   * @param integrationName The name component of the ID of the Integration to which the Integration
+   * Connection belongs
+   * @param integrationAction The action component of the ID of the Integration to which the
+   * Integration Connection belongs
+   * @param integrationVersion The version component of the ID of the Integration to which the
+   * Integration Connection belongs
+   * @param id The ID of the Integration Definition to get
+   * @param options The optional parameters
+   * @param callback The callback
+   */
+  getIntegrationConnectionUnencoded(integrationName: string, integrationAction: string, integrationVersion: string, id: string, options: msRest.RequestOptionsBase, callback: msRest.ServiceCallback<any>): void;
+  getIntegrationConnectionUnencoded(integrationName: string, integrationAction: string, integrationVersion: string, id: string, options?: msRest.RequestOptionsBase | msRest.ServiceCallback<any>, callback?: msRest.ServiceCallback<any>): Promise<Models.GetIntegrationConnectionUnencodedResponse> {
+    return this.sendOperationRequest(
+      {
+        integrationName,
+        integrationAction,
+        integrationVersion,
+        id,
+        options
+      },
+      getIntegrationConnectionUnencodedOperationSpec,
+      callback) as Promise<Models.GetIntegrationConnectionUnencodedResponse>;
+  }
+
+  /**
+   * @summary Delete an Integration Connection by Id
+   * @param integrationName The name component of the ID of the Integration to which the Integration
+   * Connection belongs
+   * @param integrationAction The action component of the ID of the Integration to which the
+   * Integration Connection belongs
+   * @param integrationVersion The version component of the ID of the Integration to which the
+   * Integration Connection belongs
+   * @param id The ID of the Integration Definition to delete
+   * @param [options] The optional parameters
+   * @returns Promise<Models.DeleteIntegrationConnectionUnencodedResponse>
+   */
+  deleteIntegrationConnectionUnencoded(integrationName: string, integrationAction: string, integrationVersion: string, id: string, options?: msRest.RequestOptionsBase): Promise<Models.DeleteIntegrationConnectionUnencodedResponse>;
+  /**
+   * @param integrationName The name component of the ID of the Integration to which the Integration
+   * Connection belongs
+   * @param integrationAction The action component of the ID of the Integration to which the
+   * Integration Connection belongs
+   * @param integrationVersion The version component of the ID of the Integration to which the
+   * Integration Connection belongs
+   * @param id The ID of the Integration Definition to delete
+   * @param callback The callback
+   */
+  deleteIntegrationConnectionUnencoded(integrationName: string, integrationAction: string, integrationVersion: string, id: string, callback: msRest.ServiceCallback<any>): void;
+  /**
+   * @param integrationName The name component of the ID of the Integration to which the Integration
+   * Connection belongs
+   * @param integrationAction The action component of the ID of the Integration to which the
+   * Integration Connection belongs
+   * @param integrationVersion The version component of the ID of the Integration to which the
+   * Integration Connection belongs
+   * @param id The ID of the Integration Definition to delete
+   * @param options The optional parameters
+   * @param callback The callback
+   */
+  deleteIntegrationConnectionUnencoded(integrationName: string, integrationAction: string, integrationVersion: string, id: string, options: msRest.RequestOptionsBase, callback: msRest.ServiceCallback<any>): void;
+  deleteIntegrationConnectionUnencoded(integrationName: string, integrationAction: string, integrationVersion: string, id: string, options?: msRest.RequestOptionsBase | msRest.ServiceCallback<any>, callback?: msRest.ServiceCallback<any>): Promise<Models.DeleteIntegrationConnectionUnencodedResponse> {
+    return this.sendOperationRequest(
+      {
+        integrationName,
+        integrationAction,
+        integrationVersion,
+        id,
+        options
+      },
+      deleteIntegrationConnectionUnencodedOperationSpec,
+      callback) as Promise<Models.DeleteIntegrationConnectionUnencodedResponse>;
+  }
+
+  /**
    * @summary Gets details of a specific User
    * @param id The ID or username of the User to get
    * @param [options] The optional parameters
@@ -893,7 +1368,7 @@ class CatalyticSDKAPI extends CatalyticSDKAPIContext {
 const serializer = new msRest.Serializer(Mappers);
 const findAccessTokensOperationSpec: msRest.OperationSpec = {
   httpMethod: "GET",
-  path: "v1.0.1-pre-35/api/access-tokens",
+  path: "v1.0.3/api/access-tokens",
   queryParameters: [
     Parameters.query,
     Parameters.status,
@@ -929,7 +1404,7 @@ const findAccessTokensOperationSpec: msRest.OperationSpec = {
 
 const getAccessTokenOperationSpec: msRest.OperationSpec = {
   httpMethod: "GET",
-  path: "v1.0.1-pre-35/api/access-tokens/{id}",
+  path: "v1.0.3/api/access-tokens/{id}",
   urlParameters: [
     Parameters.id
   ],
@@ -953,7 +1428,7 @@ const getAccessTokenOperationSpec: msRest.OperationSpec = {
 
 const revokeAccessTokenOperationSpec: msRest.OperationSpec = {
   httpMethod: "POST",
-  path: "v1.0.1-pre-35/api/access-tokens/{id}:revoke",
+  path: "v1.0.3/api/access-tokens/{id}:revoke",
   urlParameters: [
     Parameters.id
   ],
@@ -977,7 +1452,7 @@ const revokeAccessTokenOperationSpec: msRest.OperationSpec = {
 
 const createAccessTokenOperationSpec: msRest.OperationSpec = {
   httpMethod: "POST",
-  path: "v1.0.1-pre-35/api/auth",
+  path: "v1.0.3/api/auth",
   requestBody: {
     parameterPath: [
       "options",
@@ -1003,7 +1478,7 @@ const createAccessTokenOperationSpec: msRest.OperationSpec = {
 
 const createAndApproveAccessTokenOperationSpec: msRest.OperationSpec = {
   httpMethod: "POST",
-  path: "v1.0.1-pre-35/api/auth/create-and-approve",
+  path: "v1.0.3/api/auth/create-and-approve",
   requestBody: {
     parameterPath: [
       "options",
@@ -1029,7 +1504,7 @@ const createAndApproveAccessTokenOperationSpec: msRest.OperationSpec = {
 
 const waitForAccessTokenApprovalOperationSpec: msRest.OperationSpec = {
   httpMethod: "POST",
-  path: "v1.0.1-pre-35/api/auth/wait-for-approval",
+  path: "v1.0.3/api/auth/wait-for-approval",
   requestBody: {
     parameterPath: [
       "options",
@@ -1060,7 +1535,7 @@ const waitForAccessTokenApprovalOperationSpec: msRest.OperationSpec = {
 
 const getDataTableOperationSpec: msRest.OperationSpec = {
   httpMethod: "GET",
-  path: "v1.0.1-pre-35/api/tables/{id}",
+  path: "v1.0.3/api/tables/{id}",
   urlParameters: [
     Parameters.id
   ],
@@ -1081,7 +1556,7 @@ const getDataTableOperationSpec: msRest.OperationSpec = {
 
 const downloadDataTableOperationSpec: msRest.OperationSpec = {
   httpMethod: "GET",
-  path: "v1.0.1-pre-35/api/tables/{id}/download",
+  path: "v1.0.3/api/tables/{id}/download",
   urlParameters: [
     Parameters.id
   ],
@@ -1110,7 +1585,7 @@ const downloadDataTableOperationSpec: msRest.OperationSpec = {
 
 const replaceDataTableOperationSpec: msRest.OperationSpec = {
   httpMethod: "POST",
-  path: "v1.0.1-pre-35/api/tables/{id}:replace",
+  path: "v1.0.3/api/tables/{id}:replace",
   urlParameters: [
     Parameters.id
   ],
@@ -1139,7 +1614,7 @@ const replaceDataTableOperationSpec: msRest.OperationSpec = {
 
 const uploadDataTableOperationSpec: msRest.OperationSpec = {
   httpMethod: "POST",
-  path: "v1.0.1-pre-35/api/tables:upload",
+  path: "v1.0.3/api/tables:upload",
   queryParameters: [
     Parameters.tableName,
     Parameters.headerRow,
@@ -1163,7 +1638,7 @@ const uploadDataTableOperationSpec: msRest.OperationSpec = {
 
 const findDataTablesOperationSpec: msRest.OperationSpec = {
   httpMethod: "GET",
-  path: "v1.0.1-pre-35/api/tables",
+  path: "v1.0.3/api/tables",
   queryParameters: [
     Parameters.query,
     Parameters.status,
@@ -1193,7 +1668,7 @@ const findDataTablesOperationSpec: msRest.OperationSpec = {
 
 const getFileOperationSpec: msRest.OperationSpec = {
   httpMethod: "GET",
-  path: "v1.0.1-pre-35/api/files/{id}",
+  path: "v1.0.3/api/files/{id}",
   urlParameters: [
     Parameters.id
   ],
@@ -1214,7 +1689,7 @@ const getFileOperationSpec: msRest.OperationSpec = {
 
 const downloadFileOperationSpec: msRest.OperationSpec = {
   httpMethod: "GET",
-  path: "v1.0.1-pre-35/api/files/{id}/download",
+  path: "v1.0.3/api/files/{id}/download",
   urlParameters: [
     Parameters.id
   ],
@@ -1240,7 +1715,7 @@ const downloadFileOperationSpec: msRest.OperationSpec = {
 
 const uploadFilesOperationSpec: msRest.OperationSpec = {
   httpMethod: "POST",
-  path: "v1.0.1-pre-35/api/files:upload",
+  path: "v1.0.3/api/files:upload",
   formDataParameters: [
     Parameters.files
   ],
@@ -1259,7 +1734,7 @@ const uploadFilesOperationSpec: msRest.OperationSpec = {
 
 const findInstancesOperationSpec: msRest.OperationSpec = {
   httpMethod: "GET",
-  path: "v1.0.1-pre-35/api/instances",
+  path: "v1.0.3/api/instances",
   queryParameters: [
     Parameters.query,
     Parameters.status,
@@ -1289,7 +1764,7 @@ const findInstancesOperationSpec: msRest.OperationSpec = {
 
 const startInstanceOperationSpec: msRest.OperationSpec = {
   httpMethod: "POST",
-  path: "v1.0.1-pre-35/api/instances",
+  path: "v1.0.3/api/instances",
   requestBody: {
     parameterPath: [
       "options",
@@ -1312,7 +1787,7 @@ const startInstanceOperationSpec: msRest.OperationSpec = {
 
 const getInstanceOperationSpec: msRest.OperationSpec = {
   httpMethod: "GET",
-  path: "v1.0.1-pre-35/api/instances/{id}",
+  path: "v1.0.3/api/instances/{id}",
   urlParameters: [
     Parameters.id
   ],
@@ -1333,7 +1808,7 @@ const getInstanceOperationSpec: msRest.OperationSpec = {
 
 const stopInstanceOperationSpec: msRest.OperationSpec = {
   httpMethod: "POST",
-  path: "v1.0.1-pre-35/api/instances/{id}:stop",
+  path: "v1.0.3/api/instances/{id}:stop",
   urlParameters: [
     Parameters.id
   ],
@@ -1354,7 +1829,7 @@ const stopInstanceOperationSpec: msRest.OperationSpec = {
 
 const findInstanceStepsOperationSpec: msRest.OperationSpec = {
   httpMethod: "GET",
-  path: "v1.0.1-pre-35/api/instances/{instanceId}/steps",
+  path: "v1.0.3/api/instances/{instanceId}/steps",
   urlParameters: [
     Parameters.instanceId
   ],
@@ -1387,7 +1862,7 @@ const findInstanceStepsOperationSpec: msRest.OperationSpec = {
 
 const getInstanceStepOperationSpec: msRest.OperationSpec = {
   httpMethod: "GET",
-  path: "v1.0.1-pre-35/api/instances/{instanceId}/steps/{id}",
+  path: "v1.0.3/api/instances/{instanceId}/steps/{id}",
   urlParameters: [
     Parameters.id,
     Parameters.instanceId
@@ -1409,7 +1884,7 @@ const getInstanceStepOperationSpec: msRest.OperationSpec = {
 
 const completeStepOperationSpec: msRest.OperationSpec = {
   httpMethod: "POST",
-  path: "v1.0.1-pre-35/api/instances/{instanceId}/steps/{id}:complete",
+  path: "v1.0.3/api/instances/{instanceId}/steps/{id}:complete",
   urlParameters: [
     Parameters.id,
     Parameters.instanceId
@@ -1442,7 +1917,7 @@ const completeStepOperationSpec: msRest.OperationSpec = {
 
 const startStepOperationSpec: msRest.OperationSpec = {
   httpMethod: "POST",
-  path: "v1.0.1-pre-35/api/instances/{instanceId}/steps/{id}:start",
+  path: "v1.0.3/api/instances/{instanceId}/steps/{id}:start",
   urlParameters: [
     Parameters.id,
     Parameters.instanceId
@@ -1467,7 +1942,7 @@ const startStepOperationSpec: msRest.OperationSpec = {
 
 const snoozeStepOperationSpec: msRest.OperationSpec = {
   httpMethod: "POST",
-  path: "v1.0.1-pre-35/api/instances/{instanceId}/steps/{id}:snooze",
+  path: "v1.0.3/api/instances/{instanceId}/steps/{id}:snooze",
   urlParameters: [
     Parameters.id,
     Parameters.instanceId
@@ -1492,7 +1967,7 @@ const snoozeStepOperationSpec: msRest.OperationSpec = {
 
 const reassignStepOperationSpec: msRest.OperationSpec = {
   httpMethod: "POST",
-  path: "v1.0.1-pre-35/api/instances/{instanceId}/steps/{id}:reassign",
+  path: "v1.0.3/api/instances/{instanceId}/steps/{id}:reassign",
   urlParameters: [
     Parameters.id,
     Parameters.instanceId
@@ -1523,9 +1998,387 @@ const reassignStepOperationSpec: msRest.OperationSpec = {
   serializer
 };
 
+const findIntegrationsOperationSpec: msRest.OperationSpec = {
+  httpMethod: "GET",
+  path: "v1.0.3/api/integrations",
+  queryParameters: [
+    Parameters.query,
+    Parameters.status,
+    Parameters.processId,
+    Parameters.runId,
+    Parameters.owner,
+    Parameters.category,
+    Parameters.participatingUsers,
+    Parameters.startedBefore,
+    Parameters.startedAfter,
+    Parameters.endedBefore,
+    Parameters.endedAfter,
+    Parameters.pageToken,
+    Parameters.pageSize
+  ],
+  responses: {
+    200: {
+      bodyMapper: Mappers.IntegrationsPage
+    },
+    400: {
+      bodyMapper: Mappers.ProblemDetails
+    },
+    401: {
+      bodyMapper: Mappers.ProblemDetails
+    },
+    default: {}
+  },
+  serializer
+};
+
+const createIntegrationOperationSpec: msRest.OperationSpec = {
+  httpMethod: "POST",
+  path: "v1.0.3/api/integrations",
+  requestBody: {
+    parameterPath: [
+      "options",
+      "body"
+    ],
+    mapper: Mappers.IntegrationCreationRequest
+  },
+  contentType: "application/json-patch+json; charset=utf-8",
+  responses: {
+    201: {
+      bodyMapper: Mappers.Integration
+    },
+    401: {
+      bodyMapper: Mappers.ProblemDetails
+    },
+    default: {}
+  },
+  serializer
+};
+
+const getIntegrationOperationSpec: msRest.OperationSpec = {
+  httpMethod: "GET",
+  path: "v1.0.3/api/integrations/{id}",
+  urlParameters: [
+    Parameters.id
+  ],
+  responses: {
+    200: {
+      bodyMapper: Mappers.Integration
+    },
+    401: {
+      bodyMapper: Mappers.ProblemDetails
+    },
+    404: {
+      bodyMapper: Mappers.ProblemDetails
+    },
+    default: {}
+  },
+  serializer
+};
+
+const updateIntegrationOperationSpec: msRest.OperationSpec = {
+  httpMethod: "PATCH",
+  path: "v1.0.3/api/integrations/{id}",
+  urlParameters: [
+    Parameters.id
+  ],
+  requestBody: {
+    parameterPath: [
+      "options",
+      "body"
+    ],
+    mapper: Mappers.IntegrationUpdateRequest
+  },
+  contentType: "application/json-patch+json; charset=utf-8",
+  responses: {
+    200: {
+      bodyMapper: Mappers.Integration
+    },
+    401: {
+      bodyMapper: Mappers.ProblemDetails
+    },
+    404: {
+      bodyMapper: Mappers.ProblemDetails
+    },
+    default: {}
+  },
+  serializer
+};
+
+const deleteIntegrationOperationSpec: msRest.OperationSpec = {
+  httpMethod: "DELETE",
+  path: "v1.0.3/api/integrations/{id}",
+  urlParameters: [
+    Parameters.id
+  ],
+  responses: {
+    204: {
+      bodyMapper: {
+        serializedName: "parsedResponse",
+        type: {
+          name: "Object"
+        }
+      }
+    },
+    401: {
+      bodyMapper: Mappers.ProblemDetails
+    },
+    404: {
+      bodyMapper: Mappers.ProblemDetails
+    },
+    default: {}
+  },
+  serializer
+};
+
+const getIntegrationUnencodedOperationSpec: msRest.OperationSpec = {
+  httpMethod: "GET",
+  path: "v1.0.3/api/integrations/{integrationName}/{integrationAction}/{integrationVersion}",
+  urlParameters: [
+    Parameters.integrationName,
+    Parameters.integrationAction,
+    Parameters.integrationVersion
+  ],
+  responses: {
+    200: {
+      bodyMapper: Mappers.Integration
+    },
+    401: {
+      bodyMapper: Mappers.ProblemDetails
+    },
+    404: {
+      bodyMapper: Mappers.ProblemDetails
+    },
+    default: {}
+  },
+  serializer
+};
+
+const updateIntegrationUnencodedOperationSpec: msRest.OperationSpec = {
+  httpMethod: "PATCH",
+  path: "v1.0.3/api/integrations/{integrationName}/{integrationAction}/{integrationVersion}",
+  urlParameters: [
+    Parameters.integrationName,
+    Parameters.integrationAction,
+    Parameters.integrationVersion
+  ],
+  requestBody: {
+    parameterPath: [
+      "options",
+      "body"
+    ],
+    mapper: Mappers.IntegrationUpdateRequest
+  },
+  contentType: "application/json-patch+json; charset=utf-8",
+  responses: {
+    200: {
+      bodyMapper: Mappers.Integration
+    },
+    401: {
+      bodyMapper: Mappers.ProblemDetails
+    },
+    404: {
+      bodyMapper: Mappers.ProblemDetails
+    },
+    default: {}
+  },
+  serializer
+};
+
+const deleteIntegrationUnencodedOperationSpec: msRest.OperationSpec = {
+  httpMethod: "DELETE",
+  path: "v1.0.3/api/integrations/{integrationName}/{integrationAction}/{integrationVersion}",
+  urlParameters: [
+    Parameters.integrationName,
+    Parameters.integrationAction,
+    Parameters.integrationVersion
+  ],
+  responses: {
+    204: {
+      bodyMapper: {
+        serializedName: "parsedResponse",
+        type: {
+          name: "Object"
+        }
+      }
+    },
+    401: {
+      bodyMapper: Mappers.ProblemDetails
+    },
+    404: {
+      bodyMapper: Mappers.ProblemDetails
+    },
+    default: {}
+  },
+  serializer
+};
+
+const createIntegrationConnectionOperationSpec: msRest.OperationSpec = {
+  httpMethod: "POST",
+  path: "v1.0.3/api/integrations/{id}/connections",
+  urlParameters: [
+    Parameters.id
+  ],
+  requestBody: {
+    parameterPath: [
+      "options",
+      "body"
+    ],
+    mapper: Mappers.IntegrationConnectionCreationRequest
+  },
+  contentType: "application/json-patch+json; charset=utf-8",
+  responses: {
+    201: {
+      bodyMapper: Mappers.IntegrationConnection
+    },
+    400: {
+      bodyMapper: Mappers.ProblemDetails
+    },
+    401: {
+      bodyMapper: Mappers.ProblemDetails
+    },
+    default: {}
+  },
+  serializer
+};
+
+const createIntegrationConnectionUnencodedOperationSpec: msRest.OperationSpec = {
+  httpMethod: "POST",
+  path: "v1.0.3/api/integrations/{integrationName}/{integrationAction}/{integrationVersion}/connections",
+  urlParameters: [
+    Parameters.integrationName,
+    Parameters.integrationAction,
+    Parameters.integrationVersion
+  ],
+  requestBody: {
+    parameterPath: [
+      "options",
+      "body"
+    ],
+    mapper: Mappers.IntegrationConnectionCreationRequest
+  },
+  contentType: "application/json-patch+json; charset=utf-8",
+  responses: {
+    201: {
+      bodyMapper: Mappers.IntegrationConnection
+    },
+    400: {
+      bodyMapper: Mappers.ProblemDetails
+    },
+    401: {
+      bodyMapper: Mappers.ProblemDetails
+    },
+    default: {}
+  },
+  serializer
+};
+
+const getIntegrationConnectionOperationSpec: msRest.OperationSpec = {
+  httpMethod: "GET",
+  path: "v1.0.3/api/integrations/{integrationId}/connections/{id}",
+  urlParameters: [
+    Parameters.integrationId,
+    Parameters.id
+  ],
+  responses: {
+    200: {
+      bodyMapper: Mappers.IntegrationConnection
+    },
+    401: {
+      bodyMapper: Mappers.ProblemDetails
+    },
+    403: {
+      bodyMapper: Mappers.ProblemDetails
+    },
+    404: {
+      bodyMapper: Mappers.ProblemDetails
+    },
+    default: {}
+  },
+  serializer
+};
+
+const deleteIntegrationConnectionOperationSpec: msRest.OperationSpec = {
+  httpMethod: "DELETE",
+  path: "v1.0.3/api/integrations/{integrationId}/connections/{id}",
+  urlParameters: [
+    Parameters.integrationId,
+    Parameters.id
+  ],
+  responses: {
+    204: {
+      bodyMapper: Mappers.IntegrationConnection
+    },
+    401: {
+      bodyMapper: Mappers.ProblemDetails
+    },
+    403: {
+      bodyMapper: Mappers.ProblemDetails
+    },
+    404: {
+      bodyMapper: Mappers.ProblemDetails
+    },
+    default: {}
+  },
+  serializer
+};
+
+const getIntegrationConnectionUnencodedOperationSpec: msRest.OperationSpec = {
+  httpMethod: "GET",
+  path: "v1.0.3/api/integrations/{integrationName}/{integrationAction}/{integrationVersion}/connections/{id}",
+  urlParameters: [
+    Parameters.integrationName,
+    Parameters.integrationAction,
+    Parameters.integrationVersion,
+    Parameters.id
+  ],
+  responses: {
+    200: {
+      bodyMapper: Mappers.IntegrationConnection
+    },
+    401: {
+      bodyMapper: Mappers.ProblemDetails
+    },
+    403: {
+      bodyMapper: Mappers.ProblemDetails
+    },
+    404: {
+      bodyMapper: Mappers.ProblemDetails
+    },
+    default: {}
+  },
+  serializer
+};
+
+const deleteIntegrationConnectionUnencodedOperationSpec: msRest.OperationSpec = {
+  httpMethod: "DELETE",
+  path: "v1.0.3/api/integrations/{integrationName}/{integrationAction}/{integrationVersion}/connections/{id}",
+  urlParameters: [
+    Parameters.integrationName,
+    Parameters.integrationAction,
+    Parameters.integrationVersion,
+    Parameters.id
+  ],
+  responses: {
+    204: {
+      bodyMapper: Mappers.IntegrationConnection
+    },
+    401: {
+      bodyMapper: Mappers.ProblemDetails
+    },
+    403: {
+      bodyMapper: Mappers.ProblemDetails
+    },
+    404: {
+      bodyMapper: Mappers.ProblemDetails
+    },
+    default: {}
+  },
+  serializer
+};
+
 const getUserOperationSpec: msRest.OperationSpec = {
   httpMethod: "GET",
-  path: "v1.0.1-pre-35/api/users/{id}",
+  path: "v1.0.3/api/users/{id}",
   urlParameters: [
     Parameters.id
   ],
@@ -1546,7 +2399,7 @@ const getUserOperationSpec: msRest.OperationSpec = {
 
 const findUsersOperationSpec: msRest.OperationSpec = {
   httpMethod: "GET",
-  path: "v1.0.1-pre-35/api/users",
+  path: "v1.0.3/api/users",
   queryParameters: [
     Parameters.query,
     Parameters.status,
@@ -1576,7 +2429,7 @@ const findUsersOperationSpec: msRest.OperationSpec = {
 
 const findWorkflowsOperationSpec: msRest.OperationSpec = {
   httpMethod: "GET",
-  path: "v1.0.1-pre-35/api/workflows",
+  path: "v1.0.3/api/workflows",
   queryParameters: [
     Parameters.query,
     Parameters.status,
@@ -1606,7 +2459,7 @@ const findWorkflowsOperationSpec: msRest.OperationSpec = {
 
 const getWorkflowOperationSpec: msRest.OperationSpec = {
   httpMethod: "GET",
-  path: "v1.0.1-pre-35/api/workflows/{id}",
+  path: "v1.0.3/api/workflows/{id}",
   urlParameters: [
     Parameters.id
   ],
@@ -1627,7 +2480,7 @@ const getWorkflowOperationSpec: msRest.OperationSpec = {
 
 const importWorkflowOperationSpec: msRest.OperationSpec = {
   httpMethod: "POST",
-  path: "v1.0.1-pre-35/api/workflows:import",
+  path: "v1.0.3/api/workflows:import",
   requestBody: {
     parameterPath: [
       "options",
@@ -1653,7 +2506,7 @@ const importWorkflowOperationSpec: msRest.OperationSpec = {
 
 const getWorkflowImportOperationSpec: msRest.OperationSpec = {
   httpMethod: "GET",
-  path: "v1.0.1-pre-35/api/workflows/imports/{id}",
+  path: "v1.0.3/api/workflows/imports/{id}",
   urlParameters: [
     Parameters.id
   ],
@@ -1674,7 +2527,7 @@ const getWorkflowImportOperationSpec: msRest.OperationSpec = {
 
 const exportWorkflowOperationSpec: msRest.OperationSpec = {
   httpMethod: "POST",
-  path: "v1.0.1-pre-35/api/workflows/{id}:export",
+  path: "v1.0.3/api/workflows/{id}:export",
   urlParameters: [
     Parameters.id
   ],
@@ -1703,7 +2556,7 @@ const exportWorkflowOperationSpec: msRest.OperationSpec = {
 
 const getWorkflowExportOperationSpec: msRest.OperationSpec = {
   httpMethod: "GET",
-  path: "v1.0.1-pre-35/api/workflows/exports/{id}",
+  path: "v1.0.3/api/workflows/exports/{id}",
   urlParameters: [
     Parameters.id
   ],

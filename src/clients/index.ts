@@ -2,5 +2,6 @@ export { default as AccessTokenClient, AccessTokenClientInterface } from './Acce
 export { default as DataTableClient, DataTableClientInterface } from './DataTableClient';
 export { default as FileClient, FileClientInterface } from './FileClient';
 export { default as InstanceClient, InstanceClientInterface } from './InstanceClient';
+export { default as IntegrationClient, IntegrationClientInterface } from './IntegrationClient';
 export { default as UserClient, UserClientInterface } from './UserClient';
 export { default as WorkflowClient, WorkflowClientInterface } from './WorkflowClient';

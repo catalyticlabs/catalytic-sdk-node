@@ -104,6 +104,46 @@ export const instanceId: msRest.OperationURLParameter = {
     }
   }
 };
+export const integrationAction: msRest.OperationURLParameter = {
+  parameterPath: "integrationAction",
+  mapper: {
+    required: true,
+    serializedName: "integrationAction",
+    type: {
+      name: "String"
+    }
+  }
+};
+export const integrationId: msRest.OperationURLParameter = {
+  parameterPath: "integrationId",
+  mapper: {
+    required: true,
+    serializedName: "integrationId",
+    type: {
+      name: "String"
+    }
+  }
+};
+export const integrationName: msRest.OperationURLParameter = {
+  parameterPath: "integrationName",
+  mapper: {
+    required: true,
+    serializedName: "integrationName",
+    type: {
+      name: "String"
+    }
+  }
+};
+export const integrationVersion: msRest.OperationURLParameter = {
+  parameterPath: "integrationVersion",
+  mapper: {
+    required: true,
+    serializedName: "integrationVersion",
+    type: {
+      name: "String"
+    }
+  }
+};
 export const owner: msRest.OperationQueryParameter = {
   parameterPath: [
     "options",

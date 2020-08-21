@@ -12,6 +12,7 @@ const SWAGGER_URL = `${BASE_URI}/swagger/v1/swagger.json`;
 
 getSwagger(SWAGGER_URL)
     .then((swagger: Dictionary<object>) => {
+        swagger.servers[0].url = BASE_URI;
         return Bluebird.fromCallback(callback => fs.mkdtemp(path.join(os.tmpdir(), 'foo-'), callback)).then(
             (folder: string) => {
                 const swaggerPath = path.join(folder, 'swagger.json');
@@ -25,6 +26,9 @@ getSwagger(SWAGGER_URL)
     .catch(err => console.error(err));
 
 function getSwagger(swaggerUrl): Bluebird<object> {
+    if (process.env.SWAGGER_FILE) {
+        return Bluebird.resolve(JSON.parse(fs.readFileSync(process.env.SWAGGER_FILE).toString()));
+    }
     return Bluebird.resolve(axios.get(swaggerUrl).then(response => response.data));
 }
 

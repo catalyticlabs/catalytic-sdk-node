@@ -1,6 +1,6 @@
-import { CatalyticSDKAPIModels } from '../internal/lib/catalyticSDKAPI';
+import { CatalyticSDKAPIModels } from '../../internal/lib/catalyticSDKAPI';
 import DataTableColumn from './DataTableColumn';
-import { DataTableType, Visibility } from './types';
+import { DataTableType, Visibility } from '../types';
 
 export default class DataTable implements CatalyticSDKAPIModels.DataTable {
     /**

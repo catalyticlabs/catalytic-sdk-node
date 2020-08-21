@@ -1,6 +1,6 @@
-import { CatalyticSDKAPIModels } from '../internal/lib/catalyticSDKAPI';
-import BasePage from './BasePage';
-import { DataTable } from '.';
+import { CatalyticSDKAPIModels } from '../../internal/lib/catalyticSDKAPI';
+import BasePage from '../BasePage';
+import { DataTable } from '..';
 
 export default class DataTablesPage extends BasePage implements CatalyticSDKAPIModels.DataTablesPage {
     /**

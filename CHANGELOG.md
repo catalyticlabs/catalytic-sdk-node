@@ -1,6 +1,8 @@
 # Changelog
 
 ## [Unreleased]
+### Added
+- Added Integrations client and entities
 
 ## [v1.0.2]
 ### Fixed

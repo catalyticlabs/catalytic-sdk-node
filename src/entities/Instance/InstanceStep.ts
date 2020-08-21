@@ -1,6 +1,6 @@
-import Field from './Field';
+import Field from '../Field';
 
-import { InstanceStepStatus } from './types';
+import { InstanceStepStatus } from '../types';
 
 export default class InstanceStep {
     /**

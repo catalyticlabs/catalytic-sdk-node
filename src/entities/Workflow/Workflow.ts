@@ -1,7 +1,7 @@
-import { CatalyticSDKAPIModels } from '../internal/lib/catalyticSDKAPI';
-import Field from './Field';
+import { CatalyticSDKAPIModels } from '../../internal/lib/catalyticSDKAPI';
+import Field from '../Field';
 
-import { FieldVisibility, InstanceVisibility } from './types';
+import { FieldVisibility, InstanceVisibility } from '../types';
 
 export default class Workflow implements CatalyticSDKAPIModels.Workflow {
     /**

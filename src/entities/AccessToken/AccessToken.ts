@@ -1,9 +1,9 @@
 import { homedir } from 'os';
 import { join } from 'path';
 
-import { CatalyticSDKAPIModels } from '../internal/lib/catalyticSDKAPI';
-import { InvalidAccessTokenError, AccessTokenNameConflictError } from '../errors';
-import { exists, readFile, readdir, unlink, writeFile, mkdir } from '../utils';
+import { CatalyticSDKAPIModels } from '../../internal/lib/catalyticSDKAPI';
+import { InvalidAccessTokenError, AccessTokenNameConflictError } from '../../errors';
+import { exists, readFile, readdir, unlink, writeFile, mkdir } from '../../utils';
 
 const TOKEN_DELIMITER = ':';
 const ENV_VAR_NAME = 'CATALYTIC_TOKEN';

@@ -1,6 +1,6 @@
-import { CatalyticSDKAPIModels } from '../internal/lib/catalyticSDKAPI';
-import BasePage from './BasePage';
-import { FileMetadata } from '.';
+import { CatalyticSDKAPIModels } from '../../internal/lib/catalyticSDKAPI';
+import BasePage from '../BasePage';
+import { FileMetadata } from '..';
 
 export default class FileMetadataPage extends BasePage implements CatalyticSDKAPIModels.FileMetadataPage {
     /**
