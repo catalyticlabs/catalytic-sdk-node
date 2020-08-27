@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import FormData from 'form-data';
 import { createWriteStream } from 'fs';
 import { Stream } from 'stream';
@@ -7,10 +7,16 @@ import { callbackify } from 'util';
 import vfile from 'vfile';
 
 import { CatalyticSDKAPI } from '../internal/lib/catalyticSDKAPI';
-import { InvalidAccessTokenError, UnauthorizedError, ResourceNotFoundError, InternalError } from '../errors';
+import {
+    InvalidAccessTokenError,
+    UnauthorizedError,
+    ResourceNotFoundError,
+    InternalError,
+    isAxiosError
+} from '../errors';
 import { BaseUri, UserAgent } from '../constants';
 import { FileDescriptor } from '../entities';
-import { ClientMethodCallback, AccessTokenProvider, InternalAPIResponse, LoggerProvider } from '../types';
+import { ClientMethodCallback, AccessTokenProvider, InternalAPIResponse, LoggerProvider, ResponseType } from '../types';
 
 export default abstract class BaseClient {
     static entity: string;
@@ -79,42 +85,56 @@ export default abstract class BaseClient {
         return this.uploadVirtualFile<T>(vfiles, endpoint);
     }
 
-    protected async getFileDownloadStream(endpoint: string): Promise<Stream> {
+    protected async getFileDownload<T = Stream>(endpoint: string, responseType: ResponseType): Promise<T> {
         const url = `${BaseUri}api${endpoint.startsWith('/') ? endpoint : `/${endpoint}`}`;
         const headers = { ...this.getRequestHeaders(), 'User-Agent': UserAgent };
 
         try {
-            const response = await axios({
-                url,
-                method: 'GET',
-                responseType: 'stream',
+            const response: AxiosResponse<T> = await axios.get(url, {
+                responseType,
                 headers
             });
 
-            return response.data as Stream;
+            return response.data;
         } catch (err) {
-            const status = err.response?.status;
-            let message;
+            let status = 500;
+            let message = err.toString();
 
-            if (err.response?.data) {
-                const stream = err.response.data;
+            if (!isAxiosError<T>(err)) {
+                this.throwError(message, status);
+            }
+
+            status = err.response?.status || status;
+            const raw = err.response?.data;
+
+            if (raw instanceof Stream) {
+                const stream = raw;
                 const chunks = [];
                 await new Promise((resolve, reject) => {
-                    stream.on('data', chunk => chunks.push(chunk));
+                    stream.on('data', (chunk: any) => chunks.push(chunk));
                     stream.on('error', reject);
                     stream.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')));
                 });
-                const raw = chunks.join('');
-                try {
-                    const data = JSON.parse(raw);
-                    message = data.detail || data.Detail || raw;
-                } catch (e) {
-                    message = raw;
-                }
+                message = chunks.join('');
+            } else {
+                message = raw as any;
             }
+
+            try {
+                const data = JSON.parse(message);
+                message = data.detail || data.Detail;
+            } catch (e) {}
 
             this.throwError(message || 'Failed to get download stream', status);
         }
+    }
+
+    protected async getFileDownloadBlob(endpoint: string): Promise<Blob> {
+        return this.getFileDownload<Blob>(endpoint, ResponseType.BLOB);
+    }
+
+    protected async getFileDownloadStream(endpoint: string): Promise<Stream> {
+        return this.getFileDownload<Stream>(endpoint, ResponseType.STREAM);
     }
 
     protected async downloadFile(endpoint: string, path: string): Promise<void> {
@@ -135,7 +155,7 @@ export default abstract class BaseClient {
         return response._response.parsedBody as T;
     }
 
-    private handleError(response: InternalAPIResponse, entity?: string): void {
+    private handleError(response: InternalAPIResponse, entity?: string): never {
         let detail = '';
         try {
             // ProblemDetails responses can come back with Pascal cased JSON, so casting may drop properties
@@ -146,7 +166,7 @@ export default abstract class BaseClient {
         this.throwError(detail || response._response.bodyAsText, response._response.status, entity);
     }
 
-    private throwError(message: string, status: number, entity?: string): void {
+    private throwError(message: string, status: number, entity?: string): never {
         switch (status) {
             case 401:
                 throw new UnauthorizedError(message);

@@ -8,3 +8,4 @@ export { default as ResourceNotFoundError } from './ResourceNotFoundError';
 export { default as UnauthorizedError } from './UnauthorizedError';
 export { default as WorkflowExportError } from './WorkflowExportError';
 export { default as WorkflowImportError } from './WorkflowImportError';
+export { isAxiosError } from './utils';

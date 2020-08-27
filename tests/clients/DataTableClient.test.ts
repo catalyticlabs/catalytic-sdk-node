@@ -117,6 +117,45 @@ describe('DataTableClient', function() {
         });
     });
 
+    describe('Get a Download Blob', function() {
+        it('should get a download blob by ID', async function() {
+            const filePath = join(__dirname, '../fixtures/test.txt');
+            const id = v4();
+            const format = DataTableExportFormat.CSV;
+            const stream = createReadStream(filePath);
+            // stubbing protected method on BaseClient, which is called by dataTables.getDownloadBlob
+            const stub = sinon
+                .stub(client.dataTables, 'getFileDownloadBlob' as any)
+                .callsFake(() => Promise.resolve(stream));
+
+            return executeTest(client.dataTables, 'getDownloadBlob', [id, format], (err, result) => {
+                expect(err).to.not.be.ok;
+
+                expect(result).to.deep.equal(stream);
+                expect(stub).to.have.callCount(1);
+                expect(stub).to.have.been.calledWith(`/tables/${id}/download?format=${format}`);
+            });
+        });
+
+        it('should return expected error response when error fetching download blob', function() {
+            const id = v4();
+            const format = DataTableExportFormat.CSV;
+            // stubbing protected method on BaseClient, which is called by dataTables.getDownloadBlob
+            const stub = sinon.stub(client.dataTables, 'getFileDownloadBlob' as any).callsFake(() => {
+                throw new InternalError('Intentional server error');
+            });
+
+            return executeTest(client.dataTables, 'getDownloadBlob', [id, format], (err, result) => {
+                expect(result).to.not.be.ok;
+                expect(err).to.be.ok;
+                expect(err).to.be.instanceOf(InternalError);
+                expect(err.message).to.include('Intentional server error');
+                expect(stub).to.have.callCount(1);
+                expect(stub).to.have.been.calledWith(`/tables/${id}/download?format=${format}`);
+            });
+        });
+    });
+
     describe('Get a Download Stream', function() {
         it('should get a download stream by ID', async function() {
             const filePath = join(__dirname, '../fixtures/test.txt');

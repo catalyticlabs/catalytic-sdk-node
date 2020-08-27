@@ -61,3 +61,8 @@ export interface Logger {
     warn: (message: string) => void;
     error: (message: string) => void;
 }
+
+export enum ResponseType {
+    BLOB = 'blob',
+    STREAM = 'stream'
+}

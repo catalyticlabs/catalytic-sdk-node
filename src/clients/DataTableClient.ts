@@ -76,6 +76,26 @@ export default class DataTableClient extends BaseClient implements DataTableClie
         return this.downloadFile(endpoint, path);
     }
 
+    getDownloadBlob(id: string, format: DataTableExportFormat): Promise<Blob>;
+    getDownloadBlob(id: string, format: DataTableExportFormat, callback: ClientMethodCallback<Blob>): void;
+    getDownloadBlob(
+        id: string,
+        format: DataTableExportFormat,
+        callback?: ClientMethodCallback<Blob>
+    ): Promise<Blob> | void {
+        this.log(`Getting download blob for Data Table ${id}`);
+        if (callback) {
+            return this.callbackifyBound(this._getDownloadBlob)(id, format, callback);
+        }
+
+        return this._getDownloadBlob(id, format);
+    }
+
+    private _getDownloadBlob(id: string, format: DataTableExportFormat): Promise<Blob> {
+        const endpoint = this._getDownloadEndpoint(id, format);
+        return this.getFileDownloadBlob(endpoint);
+    }
+
     getDownloadStream(id: string, format: DataTableExportFormat): Promise<Stream>;
     getDownloadStream(id: string, format: DataTableExportFormat, callback: ClientMethodCallback<Stream>): void;
     getDownloadStream(
@@ -312,6 +332,36 @@ export interface DataTableClientInterface {
         path: string,
         callback?: ClientMethodCallback<void>
     ): Promise<void> | void;
+
+    /**
+     * @summary Gets a download blob for a Catalytic DataTable
+     *
+     * @param id The ID of the Data Table to download
+     * @param format The download blob content format ('xlsx' or 'csv')
+     * @returns A Promise that resolves with the Data Table download blob
+     */
+    getDownloadBlob(id: string, format: DataTableExportFormat): Promise<Blob>;
+    /**
+     * @summary Gets a download blob for a Catalytic DataTable
+     *
+     * @param id The ID of the Data Table to download
+     * @param format The download blob content format ('xlsx' or 'csv')
+     * @param callback The callback
+     */
+    getDownloadBlob(id: string, format: DataTableExportFormat, callback: ClientMethodCallback<Blob>): void;
+    /**
+     * @summary Gets a download blob for a Catalytic DataTable
+     *
+     * @param id The ID of the Data Table to download
+     * @param format The download blob content format ('xlsx' or 'csv')
+     * @param callback The optional callback
+     * @returns A Promise that resolves with the Data Table download blob
+     */
+    getDownloadBlob(
+        id: string,
+        format: DataTableExportFormat,
+        callback?: ClientMethodCallback<Blob>
+    ): Promise<Blob> | void;
 
     /**
      * @summary Gets a download stream for a Catalytic DataTable
