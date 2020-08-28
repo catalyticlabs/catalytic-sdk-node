@@ -14,12 +14,16 @@ import { Field } from './entities';
  * @returns The matching field
  */
 export function findMatchingField(input: FieldInput, sourceFields: Field[]): Field {
-    const matchingField = sourceFields.find(
-        field =>
-            field.name === input.name ||
-            displayNameToInternal(field.referenceName) === displayNameToInternal(input.name) ||
-            displayNameToInternal(field.name) === displayNameToInternal(input.name)
-    );
+    let matchingField = sourceFields.find(field => field.referenceName === input.name);
+
+    if (!matchingField) {
+        matchingField = sourceFields.find(
+            field =>
+                field.name === input.name ||
+                displayNameToInternal(field.referenceName) === displayNameToInternal(input.name) ||
+                displayNameToInternal(field.name) === displayNameToInternal(input.name)
+        );
+    }
 
     if (!matchingField) {
         throw new FieldInputError(`No corresponding input field found with name '${input.name}'`);

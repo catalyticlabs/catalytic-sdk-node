@@ -1,4 +1,4 @@
-import { displayNameToInternal, validateTeamName, getDomainFromTeamName } from '../src/utils';
+import { displayNameToInternal, findMatchingField, validateTeamName, getDomainFromTeamName } from '../src/utils';
 import { expect } from 'chai';
 import { InvalidTeamNameError } from '../src/errors';
 
@@ -86,6 +86,39 @@ describe('Utils', function() {
                 'my+team'
             ];
             cases.forEach(input => expect(() => getDomainFromTeamName(input), input).to.throw(InvalidTeamNameError));
+        });
+    });
+
+    describe('findMatchingField', function() {
+        it('should select a field by reference name', async function() {
+            const field = findMatchingField({ name: 'foo', value: 'bar' }, [
+                { referenceName: 'bar', name: 'Bar' },
+                { referenceName: 'foo', name: 'Foo' }
+            ]);
+            expect(field).to.deep.equal({
+                referenceName: 'foo',
+                name: 'Foo'
+            });
+        });
+        it('should select a field by name', async function() {
+            const field = findMatchingField({ name: 'Foo', value: 'bar' }, [
+                { referenceName: 'bar', name: 'Bar' },
+                { referenceName: 'foo', name: 'Foo' }
+            ]);
+            expect(field).to.deep.equal({
+                referenceName: 'foo',
+                name: 'Foo'
+            });
+        });
+        it('should select the more specific field', async function() {
+            const field = findMatchingField({ name: 'foo', value: 'bar' }, [
+                { referenceName: 'bar', name: 'Foo' },
+                { referenceName: 'foo', name: 'Foo' }
+            ]);
+            expect(field).to.deep.equal({
+                referenceName: 'foo',
+                name: 'Foo'
+            });
         });
     });
 });
