@@ -1,9 +1,11 @@
+import axios from 'axios';
 import { expect } from 'chai';
 import FormData from 'form-data';
 import { readFileSync, createReadStream } from 'fs';
 import nock from 'nock';
 import { tmpdir } from 'os';
 import { join, basename } from 'path';
+import sinon from 'sinon';
 import toVFile from 'to-vfile';
 import { v4 } from 'uuid';
 
@@ -16,15 +18,21 @@ import { InternalError, UnauthorizedError, InvalidAccessTokenError } from '../..
 describe('BaseClient', function() {
     let client: CatalyticClient;
     let expectedCustomHeaders;
+    let sandbox;
 
     before(function() {
         client = new CatalyticClient();
         client.accessToken = mock.mockAccessToken();
         expectedCustomHeaders = { authorization: `Bearer ${client.accessToken.token}` };
+        sandbox = sinon.createSandbox();
     });
 
     after(function() {
         nock.restore();
+    });
+
+    afterEach(function() {
+        sandbox.restore();
     });
 
     describe('GetRequestHeaders', function() {
@@ -411,6 +419,206 @@ describe('BaseClient', function() {
         });
     });
 
+    describe('Get File Download', function() {
+        it('should get a file download blob', async function() {
+            const filePath = join(__dirname, '../fixtures/test.txt');
+            const blob = createReadStream(filePath);
+            const endpoint = '/download/something';
+
+            let headers: any;
+
+            nock(BaseUri)
+                .get('/api' + endpoint)
+                .reply(function() {
+                    headers = this.req.headers;
+                    return [200, blob];
+                });
+
+            // this directly calls `BaseClient.prototype.getFileDownload`
+            const result = await client.files['getFileDownload'](endpoint, 'blob');
+
+            expect(result).to.deep.equal(readFileSync(filePath).toString());
+
+            Object.keys(expectedCustomHeaders).forEach(k =>
+                expect(headers).to.have.property(k, expectedCustomHeaders[k])
+            );
+        });
+
+        it('should get a file download stream', async function() {
+            const filePath = join(__dirname, '../fixtures/test.txt');
+            const blob = createReadStream(filePath);
+            const endpoint = '/download/something';
+
+            let headers: any;
+
+            nock(BaseUri)
+                .get('/api' + endpoint)
+                .reply(function() {
+                    headers = this.req.headers;
+                    return [200, blob];
+                });
+
+            // this directly calls `BaseClient.prototype.getFileDownload`
+            const result = await client.files['getFileDownload'](endpoint, 'stream');
+
+            const chunks = [];
+            await new Promise((resolve, reject) => {
+                result.on('data', (chunk: any) => chunks.push(chunk));
+                result.on('error', reject);
+                result.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')));
+            });
+
+            expect(chunks.join('')).to.deep.equal(readFileSync(filePath).toString());
+
+            Object.keys(expectedCustomHeaders).forEach(k =>
+                expect(headers).to.have.property(k, expectedCustomHeaders[k])
+            );
+        });
+
+        it('should return error on unexpected error', async function() {
+            const endpoint = '/download/something';
+            sandbox.stub(axios, 'get').throws('Oh noes!');
+
+            let err: Error;
+            try {
+                // this directly calls `BaseClient.prototype.getFileDownload`
+                await client.files['getFileDownload'](endpoint, 'blob');
+            } catch (e) {
+                err = e;
+            }
+
+            expect(err).to.be.ok;
+            expect(err).to.be.instanceOf(InternalError);
+            expect(err.message).to.include('Oh noes!');
+        });
+
+        it('should return expected error response when file fails to upload', async function() {
+            const endpoint = '/download/something';
+
+            nock(BaseUri)
+                .get('/api' + endpoint)
+                .reply(500, 'Intentional server error');
+
+            let err: Error;
+            try {
+                // this directly calls `BaseClient.prototype.getFileDownload`
+                await client.files['getFileDownload'](endpoint, 'blob');
+            } catch (e) {
+                err = e;
+            }
+
+            expect(err).to.be.ok;
+            expect(err).to.be.instanceOf(InternalError);
+            expect(err.message).to.include('Intentional server error');
+        });
+
+        it('should return auth error response on a 401', async function() {
+            const endpoint = '/download/something';
+
+            nock(BaseUri)
+                .get('/api' + endpoint)
+                .reply(401, 'Intentional auth error');
+
+            let err: Error;
+            try {
+                // this directly calls `BaseClient.prototype.getFileDownload`
+                await client.files['getFileDownload'](endpoint, 'blob');
+            } catch (e) {
+                err = e;
+            }
+
+            expect(err).to.be.ok;
+            expect(err).to.be.instanceOf(UnauthorizedError);
+            expect(err.message).to.include('Intentional auth error');
+        });
+
+        it('should parse an empty JSON error response', async function() {
+            const endpoint = '/download/something';
+
+            nock(BaseUri)
+                .get('/api' + endpoint)
+                .replyWithError({ foo: 'bar' });
+
+            let err: Error;
+            try {
+                // this directly calls `BaseClient.prototype.getFileDownload`
+                await client.files['getFileDownload'](endpoint, 'blob');
+            } catch (e) {
+                err = e;
+            }
+
+            expect(err).to.be.ok;
+            expect(err).to.be.instanceOf(InternalError);
+            expect(err.message).to.include('Failed to get download stream');
+        });
+    });
+
+    describe('Get File Download Blob', function() {
+        it('should get a file download blob', async function() {
+            const filePath = join(__dirname, '../fixtures/test.txt');
+            const blob = await createReadStream(filePath);
+            const endpoint = '/download/something';
+
+            let headers;
+
+            nock(BaseUri)
+                .get('/api' + endpoint)
+                .reply(function() {
+                    headers = this.req.headers;
+                    return [200, blob];
+                });
+
+            // this directly calls `BaseClient.prototype.getFileDownloadBlob`
+            const result = await client.files['getFileDownloadBlob'](endpoint);
+
+            expect(result).to.deep.equal(readFileSync(filePath).toString());
+
+            Object.keys(expectedCustomHeaders).forEach(k =>
+                expect(headers).to.have.property(k, expectedCustomHeaders[k])
+            );
+        });
+
+        it('should return expected error response when file fails to upload', async function() {
+            const endpoint = '/download/something';
+
+            nock(BaseUri)
+                .get('/api' + endpoint)
+                .reply(500, 'Intentional server error');
+
+            let err;
+            try {
+                // this directly calls `BaseClient.prototype.getFileDownloadBlob`
+                await client.files['getFileDownloadBlob'](endpoint);
+            } catch (e) {
+                err = e;
+            }
+
+            expect(err).to.be.ok;
+            expect(err).to.be.instanceOf(InternalError);
+            expect(err.message).to.include('Intentional server error');
+        });
+
+        it('should return auth error response on a 401', async function() {
+            const endpoint = '/download/something';
+
+            nock(BaseUri)
+                .get('/api' + endpoint)
+                .reply(401, 'Intentional auth error');
+
+            let err;
+            try {
+                // this directly calls `BaseClient.prototype.getFileDownloadBlob`
+                await client.files['getFileDownloadBlob'](endpoint);
+            } catch (e) {
+                err = e;
+            }
+
+            expect(err).to.be.ok;
+            expect(err).to.be.instanceOf(UnauthorizedError);
+            expect(err.message).to.include('Intentional auth error');
+        });
+    });
+
     describe('Get File Download Stream', function() {
         it('should get a file download stream', async function() {
             const filePath = join(__dirname, '../fixtures/test.txt');
@@ -431,7 +639,7 @@ describe('BaseClient', function() {
 
             const chunks = [];
             await new Promise((resolve, reject) => {
-                result.on('data', chunk => chunks.push(chunk));
+                result.on('data', (chunk: any) => chunks.push(chunk));
                 result.on('error', reject);
                 result.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')));
             });
@@ -613,6 +821,59 @@ describe('BaseClient', function() {
             expect(err).to.be.ok;
             expect(err).to.be.instanceOf(UnauthorizedError);
             expect(err.message).to.include('Failed to get download stream');
+        });
+    });
+    describe('Handle Error', function() {
+        it('should parse the response body as JSON', function() {
+            let err: Error;
+            try {
+                client.files['handleError'](
+                    {
+                        _response: {
+                            bodyAsText: JSON.stringify({ detail: 'Oh noes!' }),
+                            status: 500
+                        }
+                    },
+                    'Entity'
+                );
+            } catch (e) {
+                err = e;
+            }
+            expect(err).to.be.ok;
+            expect(err.message).to.include('Oh noes!');
+        });
+        it('should parse the response body as text', function() {
+            let err: Error;
+            try {
+                client.files['handleError'](
+                    {
+                        _response: {
+                            bodyAsText: 'Oh noes!',
+                            status: 500
+                        }
+                    },
+                    'Entity'
+                );
+            } catch (e) {
+                err = e;
+            }
+            expect(err).to.be.ok;
+            expect(err.message).to.include('Oh noes!');
+        });
+        it('should parse the response body without entity', function() {
+            let err: Error;
+            try {
+                client.files['handleError']({
+                    _response: {
+                        bodyAsText: 'Oh noes!',
+                        status: 500
+                    }
+                });
+            } catch (e) {
+                err = e;
+            }
+            expect(err).to.be.ok;
+            expect(err.message).to.include('Oh noes!');
         });
     });
 });
