@@ -82,6 +82,7 @@ async function pushAllDocs(args): Promise<void[]> {
                 .toString()
                 .trim();
             await pushContent(filename, { body });
+            console.log('⬆️', filename);
         },
         { concurrency: 5 }
     );
