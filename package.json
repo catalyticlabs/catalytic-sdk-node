@@ -16,12 +16,16 @@
   "files": [
     "dist/**/*"
   ],
+  "engines": {
+    "node": ">=10"
+  },
   "scripts": {
     "autorest": "autorest",
     "swagger": "ts-node ./bin/build-swagger.ts",
     "build": "tsc",
     "lint": "eslint ./bin/*.ts ./src/*.ts ./src/**/*.ts ./tests/*.ts ./tests/**/*.ts",
     "test": "mocha -r ts-node/register tests/*.test.ts tests/**/*.test.ts",
+    "watch": "yarn test --watch --watch-files src, tests",
     "cover": "nyc yarn test",
     "prepublishOnly": "yarn lint && yarn build && yarn test",
     "docs:compare": "ts-node ./bin/docs compare",

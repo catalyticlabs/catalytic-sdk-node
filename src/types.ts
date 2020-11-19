@@ -31,6 +31,64 @@ export interface BaseFindOptions {
     pageSize?: number;
 }
 
+export interface BaseSearchOptions {
+    /**
+     * Free text query terms to search for
+     */
+    query?: UserSearchClause;
+    /**
+     * The token representing the result page to get
+     */
+    pageToken?: string;
+    /**
+     * The page size requested
+     */
+    pageSize?: number;
+}
+
+export interface UserSearchClause {
+    and?: UserSearchClause[];
+    or?: UserSearchClause[];
+    id?: GuidSearchExpression;
+    email?: StringSearchExpression;
+    fullName?: StringSearchExpression;
+    isTeamAdmin?: BooleanSearchExpression;
+    isDeactivated?: BooleanSearchExpression;
+    isLockedOut?: BooleanSearchExpression;
+    createdDate?: DateTimeSearchExpression;
+}
+
+export interface BooleanSearchExpression {
+    isEqualTo?: boolean;
+    contains?: boolean;
+}
+
+export interface StringSearchExpression {
+    isEqualTo?: string;
+    between?: StringRange;
+    contains?: string;
+}
+
+export interface StringRange {
+    lowerBoundInclusive: string;
+    upperBoundInclusive?: string;
+}
+
+export interface GuidSearchExpression {
+    isEqualTo?: string;
+}
+
+export interface DateTimeSearchExpression {
+    isEqualTo?: Date;
+    between?: DateTimeRange;
+    contains?: Date;
+}
+
+export interface DateTimeRange {
+    lowerBoundInclusive: Date;
+    upperBoundInclusive?: Date;
+}
+
 export interface ClientMethodCallback<TResult> {
     /**
      * A method that will be invoked as a callback to a service function.

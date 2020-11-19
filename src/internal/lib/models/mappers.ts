@@ -1498,6 +1498,297 @@ export const UsersPage: msRest.CompositeMapper = {
   }
 };
 
+export const GuidNullableRange: msRest.CompositeMapper = {
+  serializedName: "GuidNullableRange",
+  type: {
+    name: "Composite",
+    className: "GuidNullableRange",
+    modelProperties: {
+      lowerBoundInclusive: {
+        serializedName: "lowerBoundInclusive",
+        type: {
+          name: "Uuid"
+        }
+      },
+      upperBoundInclusive: {
+        serializedName: "upperBoundInclusive",
+        type: {
+          name: "Uuid"
+        }
+      }
+    }
+  }
+};
+
+export const GuidSearchExpression: msRest.CompositeMapper = {
+  serializedName: "GuidSearchExpression",
+  type: {
+    name: "Composite",
+    className: "GuidSearchExpression",
+    modelProperties: {
+      isEqualTo: {
+        serializedName: "isEqualTo",
+        type: {
+          name: "Uuid"
+        }
+      },
+      between: {
+        serializedName: "between",
+        type: {
+          name: "Composite",
+          className: "GuidNullableRange"
+        }
+      },
+      contains: {
+        serializedName: "contains",
+        type: {
+          name: "Uuid"
+        }
+      }
+    }
+  }
+};
+
+export const StringRange: msRest.CompositeMapper = {
+  serializedName: "StringRange",
+  type: {
+    name: "Composite",
+    className: "StringRange",
+    modelProperties: {
+      lowerBoundInclusive: {
+        serializedName: "lowerBoundInclusive",
+        type: {
+          name: "String"
+        }
+      },
+      upperBoundInclusive: {
+        serializedName: "upperBoundInclusive",
+        type: {
+          name: "String"
+        }
+      }
+    }
+  }
+};
+
+export const StringSearchExpression: msRest.CompositeMapper = {
+  serializedName: "StringSearchExpression",
+  type: {
+    name: "Composite",
+    className: "StringSearchExpression",
+    modelProperties: {
+      isEqualTo: {
+        serializedName: "isEqualTo",
+        type: {
+          name: "String"
+        }
+      },
+      between: {
+        serializedName: "between",
+        type: {
+          name: "Composite",
+          className: "StringRange"
+        }
+      },
+      contains: {
+        serializedName: "contains",
+        type: {
+          name: "String"
+        }
+      }
+    }
+  }
+};
+
+export const BooleanNullableRange: msRest.CompositeMapper = {
+  serializedName: "BooleanNullableRange",
+  type: {
+    name: "Composite",
+    className: "BooleanNullableRange",
+    modelProperties: {
+      lowerBoundInclusive: {
+        nullable: true,
+        serializedName: "lowerBoundInclusive",
+        type: {
+          name: "Boolean"
+        }
+      },
+      upperBoundInclusive: {
+        nullable: true,
+        serializedName: "upperBoundInclusive",
+        type: {
+          name: "Boolean"
+        }
+      }
+    }
+  }
+};
+
+export const BoolSearchExpression: msRest.CompositeMapper = {
+  serializedName: "BoolSearchExpression",
+  type: {
+    name: "Composite",
+    className: "BoolSearchExpression",
+    modelProperties: {
+      isEqualTo: {
+        nullable: true,
+        serializedName: "isEqualTo",
+        type: {
+          name: "Boolean"
+        }
+      },
+      between: {
+        serializedName: "between",
+        type: {
+          name: "Composite",
+          className: "BooleanNullableRange"
+        }
+      },
+      contains: {
+        nullable: true,
+        serializedName: "contains",
+        type: {
+          name: "Boolean"
+        }
+      }
+    }
+  }
+};
+
+export const DateTimeOffsetNullableRange: msRest.CompositeMapper = {
+  serializedName: "DateTimeOffsetNullableRange",
+  type: {
+    name: "Composite",
+    className: "DateTimeOffsetNullableRange",
+    modelProperties: {
+      lowerBoundInclusive: {
+        serializedName: "lowerBoundInclusive",
+        type: {
+          name: "DateTime"
+        }
+      },
+      upperBoundInclusive: {
+        serializedName: "upperBoundInclusive",
+        type: {
+          name: "DateTime"
+        }
+      }
+    }
+  }
+};
+
+export const DateTimeSearchExpression: msRest.CompositeMapper = {
+  serializedName: "DateTimeSearchExpression",
+  type: {
+    name: "Composite",
+    className: "DateTimeSearchExpression",
+    modelProperties: {
+      isEqualTo: {
+        serializedName: "isEqualTo",
+        type: {
+          name: "DateTime"
+        }
+      },
+      between: {
+        serializedName: "between",
+        type: {
+          name: "Composite",
+          className: "DateTimeOffsetNullableRange"
+        }
+      },
+      contains: {
+        serializedName: "contains",
+        type: {
+          name: "DateTime"
+        }
+      }
+    }
+  }
+};
+
+export const UserSearchClause: msRest.CompositeMapper = {
+  serializedName: "UserSearchClause",
+  type: {
+    name: "Composite",
+    className: "UserSearchClause",
+    modelProperties: {
+      and: {
+        serializedName: "and",
+        type: {
+          name: "Sequence",
+          element: {
+            type: {
+              name: "Composite",
+              className: "UserSearchClause"
+            }
+          }
+        }
+      },
+      or: {
+        serializedName: "or",
+        type: {
+          name: "Sequence",
+          element: {
+            type: {
+              name: "Composite",
+              className: "UserSearchClause"
+            }
+          }
+        }
+      },
+      id: {
+        serializedName: "id",
+        type: {
+          name: "Composite",
+          className: "GuidSearchExpression"
+        }
+      },
+      email: {
+        serializedName: "email",
+        type: {
+          name: "Composite",
+          className: "StringSearchExpression"
+        }
+      },
+      fullName: {
+        serializedName: "fullName",
+        type: {
+          name: "Composite",
+          className: "StringSearchExpression"
+        }
+      },
+      isTeamAdmin: {
+        serializedName: "isTeamAdmin",
+        type: {
+          name: "Composite",
+          className: "BoolSearchExpression"
+        }
+      },
+      isDeactivated: {
+        serializedName: "isDeactivated",
+        type: {
+          name: "Composite",
+          className: "BoolSearchExpression"
+        }
+      },
+      isLockedOut: {
+        serializedName: "isLockedOut",
+        type: {
+          name: "Composite",
+          className: "BoolSearchExpression"
+        }
+      },
+      createdDate: {
+        serializedName: "createdDate",
+        type: {
+          name: "Composite",
+          className: "DateTimeSearchExpression"
+        }
+      }
+    }
+  }
+};
+
 export const Workflow: msRest.CompositeMapper = {
   serializedName: "Workflow",
   type: {
@@ -1688,6 +1979,82 @@ export const WorkflowsPage: msRest.CompositeMapper = {
         serializedName: "count",
         type: {
           name: "Number"
+        }
+      }
+    }
+  }
+};
+
+export const WorkflowSearchClause: msRest.CompositeMapper = {
+  serializedName: "WorkflowSearchClause",
+  type: {
+    name: "Composite",
+    className: "WorkflowSearchClause",
+    modelProperties: {
+      and: {
+        serializedName: "and",
+        type: {
+          name: "Sequence",
+          element: {
+            type: {
+              name: "Composite",
+              className: "WorkflowSearchClause"
+            }
+          }
+        }
+      },
+      or: {
+        serializedName: "or",
+        type: {
+          name: "Sequence",
+          element: {
+            type: {
+              name: "Composite",
+              className: "WorkflowSearchClause"
+            }
+          }
+        }
+      },
+      id: {
+        serializedName: "id",
+        type: {
+          name: "Composite",
+          className: "GuidSearchExpression"
+        }
+      },
+      name: {
+        serializedName: "name",
+        type: {
+          name: "Composite",
+          className: "StringSearchExpression"
+        }
+      },
+      description: {
+        serializedName: "description",
+        type: {
+          name: "Composite",
+          className: "StringSearchExpression"
+        }
+      },
+      owner: {
+        serializedName: "owner",
+        type: {
+          name: "Composite",
+          className: "StringSearchExpression"
+        }
+      },
+      category: {
+        serializedName: "category",
+        type: {
+          name: "Composite",
+          className: "StringSearchExpression"
+        }
+      },
+      createdDate: {
+        serializedName: "createdDate",
+        type: {
+          name: "Composite",
+          className: "DateTimeSearchExpression"
         }
       }
     }

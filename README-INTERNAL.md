@@ -85,7 +85,7 @@ Run `npm test` to run tests. No build step required.
 
 ## Publishing
 
-This SDK is [published to NPM as `@catalytic/sdk`](https://www.npmjs.com/package/@catalytic/sdk).
+This SDK is published to npm as [`@catalytic/sdk`](https://www.npmjs.com/package/@catalytic/sdk).
 
 1. Checkout a new `release/v{version}` branch;
     - Update version in the `package.json` and `src/constants.ts`

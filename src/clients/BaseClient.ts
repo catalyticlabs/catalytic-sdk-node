@@ -52,7 +52,7 @@ export default abstract class BaseClient {
     }
 
     protected async uploadVirtualFile<T>(files: FileDescriptor[], endpoint = 'files:upload'): Promise<T> {
-        const url = `${BaseUri}api${endpoint.startsWith('/') ? endpoint : `/${endpoint}`}`;
+        const url = `${BaseUri}/api${endpoint.startsWith('/') ? endpoint : `/${endpoint}`}`;
 
         const headers = this.getRequestHeaders();
 
@@ -86,7 +86,7 @@ export default abstract class BaseClient {
     }
 
     protected async getFileDownload<T = Stream>(endpoint: string, responseType: ResponseType): Promise<T> {
-        const url = `${BaseUri}api${endpoint.startsWith('/') ? endpoint : `/${endpoint}`}`;
+        const url = `${BaseUri}/api${endpoint.startsWith('/') ? endpoint : `/${endpoint}`}`;
         const headers = { ...this.getRequestHeaders(), 'User-Agent': UserAgent };
 
         try {

@@ -1,6 +1,20 @@
 # Changelog
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
 
 ## [Unreleased]
+### Deprecate
+- Find Users method. Use Search Users method instead.
+
+### Added
+- Minimum supported version of Node (10.0.0)
+- Officially supporting Node 14
+- Search Users method.
+- Start and end date to Instance
+- Start and end date to InstanceStep
 
 ## [1.1.0]
 ### Added

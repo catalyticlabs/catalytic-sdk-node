@@ -9,7 +9,6 @@ import path from 'path';
 
 import { BaseUri as BASE_URI } from '../src/constants';
 const SWAGGER_URL = `${BASE_URI}/swagger/v1/swagger.json`;
-
 getSwagger(SWAGGER_URL)
     .then((swagger: Dictionary<object>) => {
         swagger.servers[0].url = BASE_URI;
@@ -35,7 +34,8 @@ function getSwagger(swaggerUrl): Bluebird<object> {
 function autorest(swaggerPath: string): Bluebird<string> {
     return Bluebird.fromCallback(callback => {
         exec(
-            `npm run autorest -- autorest.yaml --input-file="${swaggerPath}"`,
+            // Pinned to specific version due to regression bug https://github.com/Azure/autorest/issues/3441#issuecomment-730558073
+            `npm run autorest -- autorest.yaml --input-file="${swaggerPath}" --version:3.0.6130`,
             {
                 maxBuffer: 10000 * 1024
             },
