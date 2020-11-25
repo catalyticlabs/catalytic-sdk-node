@@ -27,21 +27,31 @@ export default class InstanceStep {
      */
     teamName: string;
     /**
-     *  The position of this Task amongst the other
+     * The position of this Task amongst the other
      * Tasks in the Instance
      */
     position?: number;
     /**
-     *  A description or instructions of the Task
+     * A description or instructions of the Task
      */
     description?: string;
     /**
-     *  Possible values include: 'pending', 'active',
+     * Possible values include: 'pending', 'active',
      * 'completed', 'cancelled', 'snoozed', 'skipped', 'error'
      */
     status?: InstanceStepStatus;
     /**
-     *  The email of the user (if any) that this
+     * The start date of the step, or null if the step
+     * has not started
+     */
+    startDate?: Date;
+    /**
+     * The end date of the step, or null if the step has
+     * not started
+     */
+    endDate?: Date;
+    /**
+     * The email of the user (if any) that this
      * InstanceStep is assigned to
      */
     assignedTo?: string;

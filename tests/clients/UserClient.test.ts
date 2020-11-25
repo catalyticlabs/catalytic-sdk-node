@@ -59,7 +59,7 @@ describe('UserClient', function() {
     });
 
     describe('Find Users', function() {
-        it('should find DataTables with no filter options', async function() {
+        it('should find Users with no filter options', async function() {
             const mockUsersPage = mock.mockUsersPage();
             sinon
                 .stub(client._internalClient, 'findUsers')
@@ -76,7 +76,7 @@ describe('UserClient', function() {
             });
         });
 
-        it('should find DataTables with filter options', async function() {
+        it('should find Users with filter options', async function() {
             const options = { pageSize: 3, query: 'some table' };
             const mockUsersPage = mock.mockUsersPage();
             sinon
@@ -100,12 +100,66 @@ describe('UserClient', function() {
                 .stub(client._internalClient, 'findUsers')
                 .callsFake(() => Promise.resolve(createResponse({ detail: 'Intentional bad request error' }, 400)));
 
-            return executeTest(client.users, 'find', [], (error, result) => {
+            return executeTest(client.users, 'find', [], (err, result) => {
                 expect(result).to.not.be.ok;
-                expect(error).to.be.ok;
-                expect(error.message).to.include('Intentional bad request error');
+                expect(err).to.be.ok;
+                expect(err.message).to.include('Intentional bad request error');
                 expect(client._internalClient.findUsers).to.have.callCount(1);
                 expect(client._internalClient.findUsers).to.have.been.calledWith({
+                    customHeaders: expectedCustomHeaders
+                });
+            });
+        });
+    });
+
+    describe('Search Users', function() {
+        it('should find Users with no filter options', function() {
+            const mockUsersPage = mock.mockUsersPage();
+            sinon
+                .stub(client._internalClient, 'searchUsers')
+                .callsFake(() => Promise.resolve(createResponse(mockUsersPage)));
+
+            return executeTest(client.users, 'search', [], (err, result) => {
+                expect(err).to.not.be.ok;
+
+                expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockUsersPage)));
+                expect(client._internalClient.searchUsers).to.have.callCount(1);
+                expect(client._internalClient.searchUsers).to.have.been.calledWith({
+                    customHeaders: expectedCustomHeaders
+                });
+            });
+        });
+
+        it('should find Users by id', async function() {
+            const options = { query: { id: '123' } };
+            const mockUsersPage = mock.mockUsersPage();
+            sinon
+                .stub(client._internalClient, 'searchUsers')
+                .callsFake(() => Promise.resolve(createResponse(mockUsersPage)));
+
+            return executeTest(client.users, 'search', [options], (err, result) => {
+                expect(err).to.not.be.ok;
+
+                expect(result).to.deep.equal(JSON.parse(JSON.stringify(mockUsersPage)));
+                expect(client._internalClient.searchUsers).to.have.callCount(1);
+                expect(client._internalClient.searchUsers).to.have.been.calledWith({
+                    customHeaders: expectedCustomHeaders,
+                    ...options
+                });
+            });
+        });
+
+        it('should return exception when bad response code returned', async function() {
+            sinon
+                .stub(client._internalClient, 'searchUsers')
+                .callsFake(() => Promise.resolve(createResponse({ detail: 'Intentional bad request error' }, 400)));
+
+            return executeTest(client.users, 'search', [], (err, result) => {
+                expect(result).to.not.be.ok;
+                expect(err).to.be.ok;
+                expect(err.message).to.include('Intentional bad request error');
+                expect(client._internalClient.searchUsers).to.have.callCount(1);
+                expect(client._internalClient.searchUsers).to.have.been.calledWith({
                     customHeaders: expectedCustomHeaders
                 });
             });

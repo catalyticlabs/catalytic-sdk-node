@@ -56,6 +56,15 @@ export default class Instance implements CatalyticSDKAPIModels.Instance {
      */
     status?: InstanceStatus;
     /**
+     * The start date of the instance
+     */
+    startDate?: Date;
+    /**
+     * The end date of the instance, or null if the step
+     * has not started
+     */
+    endDate?: Date;
+    /**
      * Possible values include:
      * 'public', 'internal', 'confidential', 'highlyConfidential'
      */

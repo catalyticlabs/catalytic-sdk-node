@@ -17,9 +17,13 @@ Key Benefits:
 -   Easily connect actions users take in your app to backoffice processes in your business.
 -   Let Catalytic handle the compliance burden of storing and processing PII and ePHI securely
 
+## Requirements
+
+Node 10 and later
+
 ## Installation
 
-You can install [the `@catalytic/sdk` package from NPM](https://www.npmjs.com/package/@catalytic/sdk).
+Via [npm](https://www.npmjs.com/package/@catalytic/sdk)
 
 ```
 $ npm install @catalytic/sdk
@@ -27,4 +31,4 @@ $ npm install @catalytic/sdk
 
 ## Documentation
 
-Visit https://sdk.catalytic.com or https://github.com/catalyticlabs/catalytic-sdk-node/tree/master/docs for further help and documentation.
+Documentation can be found at [https://sdk.catalytic.com](https://sdk.catalytic.com).

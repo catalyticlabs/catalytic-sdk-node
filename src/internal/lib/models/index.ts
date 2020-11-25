@@ -1027,6 +1027,185 @@ export interface UsersPage {
 
 /**
  * @interface
+ * An interface representing GuidNullableRange.
+ */
+export interface GuidNullableRange {
+  /**
+   * @member {string} [lowerBoundInclusive]
+   */
+  lowerBoundInclusive?: string;
+  /**
+   * @member {string} [upperBoundInclusive]
+   */
+  upperBoundInclusive?: string;
+}
+
+/**
+ * @interface
+ * An interface representing GuidSearchExpression.
+ */
+export interface GuidSearchExpression {
+  /**
+   * @member {string} [isEqualTo]
+   */
+  isEqualTo?: string;
+  /**
+   * @member {GuidNullableRange} [between]
+   */
+  between?: GuidNullableRange;
+  /**
+   * @member {string} [contains]
+   */
+  contains?: string;
+}
+
+/**
+ * @interface
+ * An interface representing StringRange.
+ */
+export interface StringRange {
+  /**
+   * @member {string} [lowerBoundInclusive]
+   */
+  lowerBoundInclusive?: string;
+  /**
+   * @member {string} [upperBoundInclusive]
+   */
+  upperBoundInclusive?: string;
+}
+
+/**
+ * @interface
+ * An interface representing StringSearchExpression.
+ */
+export interface StringSearchExpression {
+  /**
+   * @member {string} [isEqualTo]
+   */
+  isEqualTo?: string;
+  /**
+   * @member {StringRange} [between]
+   */
+  between?: StringRange;
+  /**
+   * @member {string} [contains]
+   */
+  contains?: string;
+}
+
+/**
+ * @interface
+ * An interface representing BooleanNullableRange.
+ */
+export interface BooleanNullableRange {
+  /**
+   * @member {boolean} [lowerBoundInclusive]
+   */
+  lowerBoundInclusive?: boolean;
+  /**
+   * @member {boolean} [upperBoundInclusive]
+   */
+  upperBoundInclusive?: boolean;
+}
+
+/**
+ * @interface
+ * An interface representing BoolSearchExpression.
+ */
+export interface BoolSearchExpression {
+  /**
+   * @member {boolean} [isEqualTo]
+   */
+  isEqualTo?: boolean;
+  /**
+   * @member {BooleanNullableRange} [between]
+   */
+  between?: BooleanNullableRange;
+  /**
+   * @member {boolean} [contains]
+   */
+  contains?: boolean;
+}
+
+/**
+ * @interface
+ * An interface representing DateTimeOffsetNullableRange.
+ */
+export interface DateTimeOffsetNullableRange {
+  /**
+   * @member {Date} [lowerBoundInclusive]
+   */
+  lowerBoundInclusive?: Date;
+  /**
+   * @member {Date} [upperBoundInclusive]
+   */
+  upperBoundInclusive?: Date;
+}
+
+/**
+ * @interface
+ * An interface representing DateTimeSearchExpression.
+ */
+export interface DateTimeSearchExpression {
+  /**
+   * @member {Date} [isEqualTo]
+   */
+  isEqualTo?: Date;
+  /**
+   * @member {DateTimeOffsetNullableRange} [between]
+   */
+  between?: DateTimeOffsetNullableRange;
+  /**
+   * @member {Date} [contains]
+   */
+  contains?: Date;
+}
+
+/**
+ * @interface
+ * An interface representing UserSearchClause.
+ */
+export interface UserSearchClause {
+  /**
+   * @member {UserSearchClause[]} [and]
+   */
+  and?: UserSearchClause[];
+  /**
+   * @member {UserSearchClause[]} [or]
+   */
+  or?: UserSearchClause[];
+  /**
+   * @member {GuidSearchExpression} [id]
+   */
+  id?: GuidSearchExpression;
+  /**
+   * @member {StringSearchExpression} [email]
+   */
+  email?: StringSearchExpression;
+  /**
+   * @member {StringSearchExpression} [fullName]
+   */
+  fullName?: StringSearchExpression;
+  /**
+   * @member {BoolSearchExpression} [isTeamAdmin]
+   */
+  isTeamAdmin?: BoolSearchExpression;
+  /**
+   * @member {BoolSearchExpression} [isDeactivated]
+   */
+  isDeactivated?: BoolSearchExpression;
+  /**
+   * @member {BoolSearchExpression} [isLockedOut]
+   */
+  isLockedOut?: BoolSearchExpression;
+  /**
+   * @member {DateTimeSearchExpression} [createdDate]
+   */
+  createdDate?: DateTimeSearchExpression;
+}
+
+/**
+ * @interface
  * An interface representing Workflow.
  * A Workflow is an automation on the Catalytic platform. It is a template
  * of the process you want to run each time your Workflow is started.
@@ -1160,6 +1339,45 @@ export interface WorkflowsPage {
    * @member {number} [count]
    */
   count?: number;
+}
+
+/**
+ * @interface
+ * An interface representing WorkflowSearchClause.
+ */
+export interface WorkflowSearchClause {
+  /**
+   * @member {WorkflowSearchClause[]} [and]
+   */
+  and?: WorkflowSearchClause[];
+  /**
+   * @member {WorkflowSearchClause[]} [or]
+   */
+  or?: WorkflowSearchClause[];
+  /**
+   * @member {GuidSearchExpression} [id]
+   */
+  id?: GuidSearchExpression;
+  /**
+   * @member {StringSearchExpression} [name]
+   */
+  name?: StringSearchExpression;
+  /**
+   * @member {StringSearchExpression} [description]
+   */
+  description?: StringSearchExpression;
+  /**
+   * @member {StringSearchExpression} [owner]
+   */
+  owner?: StringSearchExpression;
+  /**
+   * @member {StringSearchExpression} [category]
+   */
+  category?: StringSearchExpression;
+  /**
+   * @member {DateTimeSearchExpression} [createdDate]
+   */
+  createdDate?: DateTimeSearchExpression;
 }
 
 /**
@@ -1923,6 +2141,28 @@ export interface CatalyticSDKAPIFindUsersOptionalParams extends msRest.RequestOp
 
 /**
  * @interface
+ * An interface representing CatalyticSDKAPISearchUsersOptionalParams.
+ * Optional Parameters.
+ *
+ * @extends RequestOptionsBase
+ */
+export interface CatalyticSDKAPISearchUsersOptionalParams extends msRest.RequestOptionsBase {
+  /**
+   * @member {UserSearchClause} [body]
+   */
+  body?: UserSearchClause;
+  /**
+   * @member {string} [pageToken] The token representing the result page to get
+   */
+  pageToken?: string;
+  /**
+   * @member {number} [pageSize] The page size requested
+   */
+  pageSize?: number;
+}
+
+/**
+ * @interface
  * An interface representing CatalyticSDKAPIFindWorkflowsOptionalParams.
  * Optional Parameters.
  *
@@ -1979,6 +2219,28 @@ export interface CatalyticSDKAPIFindWorkflowsOptionalParams extends msRest.Reque
    * search for
    */
   endedAfter?: string;
+  /**
+   * @member {string} [pageToken] The token representing the result page to get
+   */
+  pageToken?: string;
+  /**
+   * @member {number} [pageSize] The page size requested
+   */
+  pageSize?: number;
+}
+
+/**
+ * @interface
+ * An interface representing CatalyticSDKAPISearchWorkflowsOptionalParams.
+ * Optional Parameters.
+ *
+ * @extends RequestOptionsBase
+ */
+export interface CatalyticSDKAPISearchWorkflowsOptionalParams extends msRest.RequestOptionsBase {
+  /**
+   * @member {WorkflowSearchClause} [body]
+   */
+  body?: WorkflowSearchClause;
   /**
    * @member {string} [pageToken] The token representing the result page to get
    */
@@ -3039,9 +3301,55 @@ export type FindUsersResponse = {
 };
 
 /**
+ * Contains response data for the searchUsers operation.
+ */
+export type SearchUsersResponse = {
+  /**
+   * The parsed response body.
+   */
+  body: any;
+  /**
+   * The underlying HTTP response.
+   */
+  _response: msRest.HttpResponse & {
+      /**
+       * The response body as text (string format)
+       */
+      bodyAsText: string;
+      /**
+       * The response body as parsed JSON or XML
+       */
+      parsedBody: any;
+    };
+};
+
+/**
  * Contains response data for the findWorkflows operation.
  */
 export type FindWorkflowsResponse = {
+  /**
+   * The parsed response body.
+   */
+  body: any;
+  /**
+   * The underlying HTTP response.
+   */
+  _response: msRest.HttpResponse & {
+      /**
+       * The response body as text (string format)
+       */
+      bodyAsText: string;
+      /**
+       * The response body as parsed JSON or XML
+       */
+      parsedBody: any;
+    };
+};
+
+/**
+ * Contains response data for the searchWorkflows operation.
+ */
+export type SearchWorkflowsResponse = {
   /**
    * The parsed response body.
    */
