@@ -35,7 +35,7 @@
     "form-data": "^3.0.0",
     "open": "^7.0.4",
     "to-vfile": "^6.1.0",
-    "vfile": "^4.2.0"
+    "vfile": "^4.2.1"
   },
   "devDependencies": {
     "@types/bluebird": "^3.5.32",
